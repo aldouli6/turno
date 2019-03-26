@@ -2,7 +2,7 @@
     $varUbicacion = 'login';
     include_once("class/class.brain.php");
     Sessions::validarlogin();
-?>
+?>   
 
 <!DOCTYPE html>
 <html>
