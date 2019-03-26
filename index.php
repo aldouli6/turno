@@ -18,7 +18,7 @@
             <div class="bg-pic">
                 <div class="bg-caption bottom-right txt-al-rigth text-white p-r-20 m-b-20">
                     <h2 class="semi-bold text-white">
-                        Sistema de administración<br /><?=$nombreEmpresaCompleto ?>
+                        Sistema de Administración<br /><?=$nombreEmpresaCompleto ?>
                     </h2>
                     <p class="small">
                         Sistema de control de citas para la prestación de servicios.
