@@ -1,0 +1,12 @@
+{
+  "name": "zibatacomp",
+  "version": "1.1.0",
+  "description": "",
+  "type": "overlay",
+  "format": "png",
+  "minzoom": "13",
+  "maxzoom": "18",
+  "scale": "1.000000",
+  "bounds": [-100.34397100, 20.67077916, -100.31127703, 20.68991678],
+  "profile": "mercator"
+}
