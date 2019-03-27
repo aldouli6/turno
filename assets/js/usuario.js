@@ -290,11 +290,9 @@ $('#formRegistroUsuario').validate({ /*Método que valida que todos los campos r
 /*Esta parte se hacen las validaciones para el formulario de edición del usuario-----------------------------------------------------------------------------------------------*/
 
 function editUsuarioData(id_usuario) {
-
     /*Esta funcion recibe como parámetro el ID del usuario y con este se obtendrán los datos del usuario para posteriormente proseguir con la edición*/
 
     //console.log(id_usuario);
-
     var url_request = "modules/module.usuarios.php";
     var method = "POST";
     $.ajax({
@@ -306,29 +304,20 @@ function editUsuarioData(id_usuario) {
             claveUsuario: id_usuario
         },
         success: function(response) {
-
-            //console.log(response);
-
-
-            var DatosUsuario = jQuery.parseJSON(response);           
-
-
-            _oldPassword = DatosUsuario.UsuarioPassword;
-            
-
-            $("#idUsuarioSistemaEditar").val(DatosUsuario.UsuarioId);
-            $("#editUsuarioNombre").val(DatosUsuario.UsuarioNombre);
-            $("#editUsuarioApellidos").val(DatosUsuario.UsuarioApellidos);
-            $("#editUsuarioEmail").val(DatosUsuario.UsuarioNickName);
-            $("#editUsuarioPass").val(DatosUsuario.UsuarioPassword);
-            $("#editTipoUsuarios").html('<option value="' + DatosUsuario.TipoUsuarioId + '">' +DatosUsuario.TipoUsuarioDescripcion + '</option>');
-            $("#editTipoUsuarios").select2("val",DatosUsuario.TipoUsuarioId);
-            $("#edithoraInicio1").val(DatosUsuario.horaEntrada);
-            $("#edithoraFin2").val(DatosUsuario.horaSalida);            
-            $("#EditStatusUsuarioSistema").val(DatosUsuario.EstatusUsuario);            
+            console.log(response);
+            var DatosUsuario = jQuery.parseJSON(response);  
+            _oldPassword = DatosUsuario.password;
+            $("#idUsuarioSistemaEditar").val(DatosUsuario.usuarioId);
+            $("#editUsuarioNombre").val(DatosUsuario.nombre);
+            $("#editUsuarioApellidos").val(DatosUsuario.apellidos);
+            $("#editUsuarioEmail").val(DatosUsuario.email);
+            $("#editUsuarioPass").val(DatosUsuario.password);
+            $("#editTipoUsuarios").html('<option value="' + DatosUsuario.tipoUsuarioId + '">' +DatosUsuario.descripcion + '</option>');
+            $("#editTipoUsuarios").select2("val",DatosUsuario.tipoUsuarioId);          
+            $("#EditStatusUsuarioSistema").val(DatosUsuario.estatus);            
 
 
-            if(DatosUsuario.EstatusUsuario == 1)
+            if(DatosUsuario.estatus == 1)
             {
                 $('input').lcs_on();               
                 //console.log('encendido');
@@ -337,7 +326,7 @@ function editUsuarioData(id_usuario) {
                 // $("#EditStatusUsuarioSistema").val(valSwitch);
                 
             }
-            else if(DatosUsuario.EstatusUsuario == 0)
+            else if(DatosUsuario.estatus == 0)
             {
                     $('input').lcs_off();  
                     //console.log('apagado');
@@ -435,7 +424,6 @@ function eliminarUsuarioData(id_usuario) {
 
 function refreshUsuarioSistemaTable() {
     
-        var subfracc = $('#SubfraccionamientoRelacion').val();
         var url_request = "modules/module.usuarios.php";
         var method = "POST";
         $.ajax({
@@ -444,10 +432,9 @@ function refreshUsuarioSistemaTable() {
             type: method,
             data: {
                 cmd: "dataTableUsuario",
-                subfraccionamientoRelacion: subfracc
-            },
-    
+            },  
             success: function(response) {
+                //console.log(response);
                 $("#contenidoListaUsuarioSistema").html(response);
 
                 referenceTableUsuarios();            

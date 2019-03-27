@@ -2599,8 +2599,8 @@ Alternate buttons
 .btn-primary:active:focus,
 .btn-primary:active:hover,
 .open .dropdown-toggle.btn-primary {
-  background-color: #E93C2B;
-  border-color: #E93C2B;
+  background-color: #009699;
+  border-color: #009699;
   color: #ffffff;
 }
 .btn-primary.hover,

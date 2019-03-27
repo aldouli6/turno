@@ -28,51 +28,35 @@ $database = new db();
                 //Unas vez obtenidos los datos se separan por comas(indicador que nos sirve para poder dividir al información) y así obtener cada uno de los elementos
                 $InfoUsuaro=array("usuarioId"=>$getUsuarioData["usuarioId"],
                     "nombre"=>$getUsuarioData["nombre"],
-                    "apellidos"=>$getUsuarioData["apellidoPaterno"]." ".$getUsuarioData["apellidoMAterno"],
+                    "apellidos"=>$getUsuarioData["apellidos"],
                     "tipoUsuarioId"=>$getUsuarioData["tipoUsuarioId"],
-                    "password"=>$getUsuarioData["password"],
+                    //"password"=>$getUsuarioData["password"],
                     "username"=>$getUsuarioData["username"],
                     "email"=>$getUsuarioData["email"]);
                 $jsonInfoUsuario=json_encode($InfoUsuaro);
                 echo $jsonInfoUsuario;
             } 
+        break;                
+        case "editarPerfilUsuario":
+            $idUsuarioEditar=$_REQUEST['profileUserId'];
+            //Se editan los datos del usuario permitidos por el sistema, todo esto por medio del ID del usuario
+            $editarDatosUsuario="UPDATE usuarios set nombre='".$_REQUEST["perfilNombre"]."', apellidos='".$_REQUEST["perfilApellidos"]."',  email='".$_REQUEST["perfilEmail"]
+            ."' where usuarioId=?";
+            $editUsuarioData=$database->updateRow($editarDatosUsuario,array($idUsuarioEditar));
+            if($editUsuarioData==true){
+                $ConsultarGetUsuario="SELECT nombre, apellidos, email FROM usuarios WHERE usuarioId = ?";
+                $GetUsuario=$database->getRow($ConsultarGetUsuario,array($idUsuarioEditar));
+                if($GetUsuario==true){
+                    $jsonGetUsuario=json_encode($GetUsuario);
+                    echo $jsonGetUsuario;
+                }else{
+                    echo "0";
+                }
+            }else{
+                echo "0";
+            }
         break;
-                    
-
-          		case "editarPerfilUsuario":
-
-                              $idUsuarioEditar=$_REQUEST['profileUserId'];
-                              //Se editan los datos del usuario permitidos por el sistema, todo esto por medio del ID del usuario
-
-                              $editarDatosUsuario="UPDATE usuario set UsuarioNombre='".$_REQUEST["perfilNombre"]."', UsuarioApellidos='".$_REQUEST["perfilApellidos"]."', UsuarioNickName='".$_REQUEST["perfilEmail"]
-                                ."', UsuarioPassword='".$_REQUEST["perfilPassword"]."' where UsuarioId=?";
-
-                              $editUsuarioData=$database->updateRow($editarDatosUsuario,array($idUsuarioEditar));
-
-                              if($editUsuarioData==true)
-                              {
-
-                                            $ConsultarGetUsuario="SELECT usuario.UsuarioId, usuario.UsuarioNombre, usuario.UsuarioApellidos, usuario.TipoUsuarioId, usuario.UsuarioPassword,
-                                                    usuario.UsuarioNickName FROM usuario WHERE UsuarioId = ?";
-
-                                            $GetUsuario=$database->getRow($ConsultarGetUsuario,array($idUsuarioEditar));
-
-                                            if($GetUsuario==true)
-                                            {
-                                                echo $GetUsuario["UsuarioId"]."%".$GetUsuario["UsuarioNombre"]."%".$GetUsuario["UsuarioApellidos"]."%".$GetUsuario["UsuarioNickName"]."%".$GetUsuario["UsuarioPassword"];                                              
-                                            }
-                                            else
-                                            {
-                                                echo "0";
-                                            }
-                              }
-                              else{
-                                  echo "0";
-                              }
-
-          		break;
-
-         }
+    }
 }
 
 

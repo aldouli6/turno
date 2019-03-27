@@ -46,14 +46,52 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
               <?php
                  //Este método se manda llamar desde la carpeta class/class.mostrarusuario.php
                  MostrarPerfilUsuario::MostrarPerfil();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios.
-                 //MostrarUsuario::formularioRegistroUsuario();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios.
-                 //MostrarUsuario::formularioEdicionUsuario();//Se carga el método formularioEdicionUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal de edición de usuarios.
+                 MostrarUsuario::formularioRegistroUsuario();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios.
+                 MostrarUsuario::formularioEdicionUsuario();//Se carga el método formularioEdicionUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal de edición de usuarios.
                  if($_SESSION['typeuser'] != "root"){
                     echo '<div class="row full-height no-margin">
                       <div class="col-md-9">';
                   }                
                 // *******************************
               ?>
+              <div class="row" style="padding: 35px;background: #ffffff;margin-left: 5px;margin-right: 10px;border: 1px solid #e7e7e7;">
+                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#formRegUsuario" id="regButtonUsuario">
+                  <span class="fa fa-plus fa-x2"></span>&nbsp;Registrar Usuario
+                </button>
+                <br>
+                <br>
+                <div class=" table table-responsive">
+                  <table id="usuarioSistemaDataTable" class="table table-hover " cellspacing="0" width="100%" style="background: #f0f0f0;">
+                    <thead>
+                      <tr id="TrUsuario">
+                        <th>ID Usuario</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>                                                                          
+                        <th>Usuario</th>
+                        <th>Tipo de Usuario</th>
+                        <th>Status</th>
+                        <th></th>
+                        <th></th>                                                                  
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <th>ID Usuario</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>                                                                          
+                        <th>Usuario</th>
+                        <th>Tipo de Usuario</th>
+                        <th>Status</th>
+                        <th></th>
+                        <th></th>                                                        
+                      </tr>
+                    </tfoot>
+                    <tbody id="contenidoListaUsuarioSistema">
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>

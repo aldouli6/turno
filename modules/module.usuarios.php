@@ -1,10 +1,9 @@
 <?php
 /*
- * CREATOR: VZERT.COM
- * DEVELOPER: Francisco Javier Salazar González
- * DATE: 09/06/2016
- * TIME: 11:00
- * PROJECT:Aseguradora
+ * CREATOR: VELEZOFT
+ * DEVELOPER: ALDO ULISES CORNEJO VELEZ
+ * DATE: 25/03/19
+ * PROJECT: turno
  *
  * DESCRIPTION: Este archivo realiza todas las transacciones del módulo de usuario (altas,bajas,modificaciones,etc.)
  *
@@ -12,49 +11,42 @@
 
 $varUbicacion = 'securezone';
 include_once("../class/class.brain.php");
+
 $database = new db();
 
- if(!empty($_POST)){
-          extract($_REQUEST);
-
-          switch($cmd){
-
-               case "dataTableUsuario":
-
-
-               if($_SESSION["typeuser"] == "root")
-               {
-                        //Este case trae todo los datos de los usuarios de la tabla usuarios y los recrea en un datatable.
-                        $consultaDatosUsuario="SELECT  usuario.UsuarioId, usuario.UsuarioNombre, usuario.UsuarioApellidos,usuario.UsuarioNickName,
-                        tipousuario.TipoUsuarioDescripcion, usuario.EstatusUsuario
-                                                FROM usuario
-                                                inner join tipousuario on usuario.TipoUsuarioId=tipousuario.TipoUsuarioId       
-                           where usuario.TipoUsuarioId = 2
-                           order by usuario.UsuarioId";
-
-                        $getUsuario = $database->getRows($consultaDatosUsuario);
-
-                          if($getUsuario!=false)
-                          {
-
-                                foreach ($getUsuario as $rsUsuario) {
-
-                                      echo "<tr id='Usuario".$rsUsuario["UsuarioId"]."'>
-                                                <td>".$rsUsuario["UsuarioId"]."</td><td>".$rsUsuario["UsuarioNombre"]."</td><td>".$rsUsuario["UsuarioApellidos"]."</td>"
-                                                ."</td><td>".$rsUsuario["UsuarioNickName"]."</td><td>".$rsUsuario["TipoUsuarioDescripcion"]."</td><td>".$rsUsuario["EstatusUsuario"]."</td>"
-                                              .'<td>
-                                                  <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#formEditUsuario" onclick="editUsuarioData('.$rsUsuario["UsuarioId"].');">
-                                                  <span class="glyphicon glyphicon-pencil capa"></span>
-                                                  </button>
-                                                </td>'
-                                              .'<td>
-                                                  <button style="background:gray;" type="button" class="btn btn-default btn-sm" onclick="eliminarUsuarioData('.$rsUsuario["UsuarioId"].');">
-                                                      <span class="glyphicon glyphicon-trash capa" style="color:white"></span>
-                                                  </button>
-                                              </td>
-                                          </tr>';
-                              }//Fin foreach
-                          }
+if(!empty($_POST)){
+   
+    extract($_REQUEST);
+        switch($cmd){
+            case "dataTableUsuario":
+                if($_SESSION["typeuser"] == "root"){
+                    //Este case trae todo los datos de los usuarios de la tabla usuarios y los recrea en un datatable.
+                    $consultaDatosUsuario="SELECT  u.usuarioId, u.nombre, u.apellidos, u.email, t.nombre as descripcion, u.estatus
+                                        FROM usuarios as u
+                                        inner join tiposUsuarios as t on u.tipoUsuarioId=t.tipoUsuarioId       
+                                        
+                                        order by u.usuarioId";
+                                         
+                    $getUsuario = $database->getRows($consultaDatosUsuario);
+                    
+                    if($getUsuario!=false){
+                        foreach ($getUsuario as $rsUsuario) {
+                            echo "<tr id='Usuario".$rsUsuario["usuarioId"]."'>
+                                    <td>".$rsUsuario["usuarioId"]."</td><td>".$rsUsuario["nombre"]."</td><td>".$rsUsuario["apellidos"]."</td>"
+                                    ."</td><td>".$rsUsuario["email"]."</td><td>".$rsUsuario["descripcion"]."</td><td>".$rsUsuario["estatus"]."</td>"
+                                    .'<td>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#formEditUsuario" onclick="editUsuarioData('.$rsUsuario["usuarioId"].');">
+                                        <span class="glyphicon glyphicon-pencil capa"></span>
+                                        </button>
+                                    </td>'
+                                    .'<td>
+                                        <button style="background:gray;" type="button" class="btn btn-default btn-sm" onclick="eliminarUsuarioData('.$rsUsuario["usuarioId"].');">
+                                            <span class="glyphicon glyphicon-trash capa" style="color:white"></span>
+                                        </button>
+                                    </td>
+                                </tr>';
+                        }//Fin foreach
+                    }
 
                }
                if($_SESSION["typeuser"] == "admin")
@@ -221,40 +213,37 @@ $database = new db();
                     }
                 break;
 
-                  case "setDatosUsuario":
-                  
-                          		    //Se muestran los datos del usuario seleccionado en el formulario de edición por medio del ID de usuario.
-                          		    if(SeguridadSistema::validarEntero(trim($_REQUEST['claveUsuario']))==true){
-
-                                    $InfoUsuaro=null;
-                                    $jsonInfoUsuario=null;
-
-                          		    //Se obtienen los datos del usuario por medio de su ID Usuario y se muestran en el modal form de la edición del usuario
-                                              $consultaInfoUsuario="SELECT usuario.UsuarioId, usuario.UsuarioNombre, usuario.UsuarioApellidos, usuario.TipoUsuarioId, usuario.UsuarioPassword,
-                                              tipousuario.TipoUsuarioDescripcion, usuario.UsuarioNickName, usuario.UsuarioFechaRegistro,usuario.EstatusUsuario, usuario.horaEntrada, usuario.horaSalida 
-                                              FROM usuario inner join tipousuario on tipousuario.TipoUsuarioId=usuario.TipoUsuarioId WHERE UsuarioId = ?";
-                                              
-                                              $getIDUsuario=$_REQUEST["claveUsuario"];
-
-                                              $getUsuarioData=$database->getRow($consultaInfoUsuario, array($getIDUsuario));
-
-                                              if($getUsuarioData != false){
-                                                        /*Se obtienen los datos en caso de que la consulta haya sido efectuada correctamente*/
-                                                        //Unas vez obtenidos los datos se separan por comas(indicador que nos sirve para poder dividir al información) y así obtener cada uno de los elementos
-
-
-                                                        $InfoUsuaro=array("UsuarioId"=>$getUsuarioData["UsuarioId"],"UsuarioNombre"=>$getUsuarioData["UsuarioNombre"],"UsuarioApellidos"=>$getUsuarioData["UsuarioApellidos"],                                                                    
-                                                                          "TipoUsuarioId"=>$getUsuarioData["TipoUsuarioId"],"UsuarioPassword"=>$getUsuarioData["UsuarioPassword"],"TipoUsuarioDescripcion"=>$getUsuarioData["TipoUsuarioDescripcion"],
-                                                                          "UsuarioNickName"=>$getUsuarioData["UsuarioNickName"],"UsuarioFechaRegistro"=>$getUsuarioData["UsuarioFechaRegistro"],
-                                                                          "EstatusUsuario"=>$getUsuarioData["EstatusUsuario"],"horaEntrada"=>$getUsuarioData["horaEntrada"],"horaSalida"=>$getUsuarioData["horaSalida"]);
-
-                                                        $jsonInfoUsuario=json_encode($InfoUsuaro);
-
-                                                        echo $jsonInfoUsuario;
-                                              }
-                          		}
-
-                    break;
+                case "setDatosUsuario":    
+                    //Se muestran los datos del usuario seleccionado en el formulario de edición por medio del ID de usuario.
+                    if(SeguridadSistema::validarEntero(trim($_REQUEST['claveUsuario']))==true){
+                        $InfoUsuaro=null;
+                        $jsonInfoUsuario=null;
+                        //Se obtienen los datos del usuario por medio de su ID Usuario y se muestran en el modal form de la edición del usuario
+                        $consultaInfoUsuario="SELECT u.usuarioId, u.nombre, u.apellidos, u.tipoUsuarioId, u.password,
+                        t.nombre as descripcion, u.email, u.fecha_registro,u.estatus 
+                        FROM usuarios as u
+                        inner join tiposUsuarios as t on t.tipoUsuarioId=u.tipoUsuarioId 
+                        WHERE usuarioId = ?";                        
+                        $getIDUsuario=$_REQUEST["claveUsuario"];
+                        $getUsuarioData=$database->getRow($consultaInfoUsuario, array($getIDUsuario));
+                        if($getUsuarioData != false){
+                            /*Se obtienen los datos en caso de que la consulta haya sido efectuada correctamente*/
+                            //Unas vez obtenidos los datos se separan por comas(indicador que nos sirve para poder dividir al información) y así obtener cada uno de los elementos
+                            $InfoUsuaro=array("usuarioId"=>$getUsuarioData["usuarioId"],
+                                "nombre"=>$getUsuarioData["nombre"],
+                                "apellidos"=>$getUsuarioData["apellidos"],                                                                     
+                                "tipoUsuarioId"=>$getUsuarioData["tipoUsuarioId"],
+                                "password"=>$getUsuarioData["password"],
+                                "descripcion"=>$getUsuarioData["descripcion"],
+                                "email"=>$getUsuarioData["email"],
+                                "fecha_registro"=>$getUsuarioData["fecha_registro"],
+                                "estatus"=>$getUsuarioData["estatus"]
+                            );
+                            $jsonInfoUsuario=json_encode($InfoUsuaro);
+                            echo $jsonInfoUsuario;
+                        }
+                    }
+                break;
                     
 
           		case "editarUsuario":
