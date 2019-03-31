@@ -330,7 +330,7 @@ body.dashboard .page-container {
 */
 .page-sidebar {
   width: 280px;
-  background-color: #2b303b;
+  background-color: #263056;
   z-index: 1000;
   left: -210px;
   position: fixed;
@@ -369,7 +369,7 @@ body.dashboard .page-container {
   display: block;
   height: 60px;
   line-height: 60px;
-  background-color: #272b35;
+  background-color: #111942;
   border-bottom: 1px solid #232730;
   color: #ffffff;
   width: 100%;
@@ -2137,7 +2137,7 @@ hr.dotted {
 ------------------------------------
 */
 .bg-success {
-  background-color: #C62E2A;
+  background-color: #005194;
 }
 .bg-success-dark {
   background-color: #0da899;

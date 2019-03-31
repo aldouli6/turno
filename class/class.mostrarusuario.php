@@ -58,14 +58,28 @@ class MostrarUsuario{
                         <div class="row clearfix">
                           <div class="col-sm-6">
                             <div class="form-group form-group-default required">
-                              <label>Usuario (Correo Electrónico)</label>
-                              <input type="email" class="form-control" name="regUsuario" id="regUsuario" required>
+                              <label>Correo Electrónico</label>
+                              <input type="email" class="form-control" name="regEmail" id="regEmail" required>
                             </div>
                           </div>
                           <div class="col-sm-6">
                             <div class="form-group form-group-default required">
                               <label>Contraseña</label>
                               <input type="password" class="form-control" name="regUsuarioPass" id="regUsuarioPass" required>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row clearfix">
+                          <div class="col-sm-6">
+                            <div class="form-group form-group-default required">
+                              <label>Teléfono</label>
+                              <input type="text" class="form-control" name="regTelefono" id="regTelefono" required>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group form-group-default required">
+                              <label>Username</label>
+                              <input type="text" class="form-control" name="regUsername" id="regUsername" required>
                             </div>
                           </div>
                         </div>
@@ -77,26 +91,7 @@ class MostrarUsuario{
                         </div>
                       </div>
                       <br>
-                      <div class="form-group-attached">
-                        <div class="row clearfix" id="horarioRow">
-                          <p class="m-t-10" style="display:table-caption;">Horario</p>
-                          <div class="col-sm-6" style="padding-right: 10px !important;">
-                            <label style="font-weight: bold;">Hora de entrada</label>
-                            <div class="input-group bootstrap-timepicker">
-                              <input id="horaInicio" name="horaInicio" class="form-control" value="00:00" aria-invalid="false" type="text">
-                              <span class="input-group-addon"><i class="pg-clock"></i></span>
-                            </div>
-                          </div>
-                          <div class="col-sm-6" style="padding-left: 10px !important;">
-                            <label style="font-weight: bold;">Hora de salida</label>
-                            <div class="input-group bootstrap-timepicker">
-                              <input id="horaFin" name="horaFin" class="form-control" value="23:59" aria-invalid="false" type="text">
-                              <span class="input-group-addon"><i class="pg-clock"></i></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <br>
+                      
                       <div class="form-group form-group-default input-group">
                         <div id="divstatus1" style="display: block;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="StatusUsuario1" name="StatusUsuario1">Habilitado</label></div>
                         <div id="divstatus2" style="display: none;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="StatusUsuario2" name="StatusUsuario2">Deshabilitado</label></div>
@@ -148,7 +143,7 @@ class MostrarUsuario{
    public static function formularioEdicionUsuario(){
     //Mostrará en el módulo de usuario el modal form de edición del usuario
     echo '
-        <!--  start modal registro usuario -->
+        <!--  start modal edicion usuario -->
         <div class="modal fade slide-up disable-scroll" id="formEditUsuario" tabindex="-1" role="dialog" aria-hidden="false">
           <div class="modal-dialog ">
             <div class="modal-content-wrapper">
@@ -156,8 +151,8 @@ class MostrarUsuario{
                 <div class="modal-header clearfix text-left">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i>
                   </button>
-                  <h5>Registrar usuario</h5>
-                  <p class="p-b-10">Formulario de registro de usuarios</p>
+                  <h5>Editar usuario</h5>
+                  <p class="p-b-10">Formulario de edición de usuarios</p>
                 </div>
                 <div class="modal-body">
                   <!-- START PANEL -->
@@ -185,19 +180,27 @@ class MostrarUsuario{
                         <p class="m-t-10">Datos de la cuenta</p>
                         <div class="form-group-attached">
                           <div class="row clearfix">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                               <div class="form-group form-group-default required">
-                                <label>Usuario (Correo Electrónico)</label>
+                                <label>Correo Electrónico</label>
                                 <input type="email" class="form-control" name="editUsuarioEmail" id="editUsuarioEmail" required>
                               </div>
                             </div>
-                            <div class="col-sm-6">
-                              <div class="form-group form-group-default required">
-                                <label>Contraseña</label>
-                                <input type="password" class="form-control" name="editUsuarioPass" id="editUsuarioPass" required>
-                              </div>
+                          </div>
+                          <div class="row clearfix">
+                          <div class="col-sm-6">
+                            <div class="form-group form-group-default required">
+                              <label>Teléfono</label>
+                              <input type="text" class="form-control" name="editTelefono" id="editTelefono" required>
                             </div>
                           </div>
+                          <div class="col-sm-6">
+                            <div class="form-group form-group-default required">
+                              <label>Username</label>
+                              <input type="text" class="form-control" name="editUsername" id="editUsername" required>
+                            </div>
+                          </div>
+                        </div>
                           <div class="form-group form-group-default  required">
                             <label>Tipo usuario</label>
                             <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Select Country" data-init-plugin="select2" name="editTipoUsuarios" id="editTipoUsuarios" required>
@@ -206,35 +209,16 @@ class MostrarUsuario{
                           </div>
                         </div>
                         <br>
-                        <div class="form-group-attached">
-                          <div class="row clearfix" id="horarioRowEdit">
-                            <p class="m-t-10" style="display:table-caption;">Horario</p>
-                            <div class="col-sm-6" style="padding-right: 10px !important;">
-                              <label style="font-weight: bold;">Hora de entrada</label>
-                              <div class="input-group bootstrap-timepicker">
-                                <input id="edithoraInicio1" name="edithoraInicio1" class="form-control" value="1:00 PM" aria-invalid="false" type="text">
-                                <span class="input-group-addon"><i class="pg-clock"></i></span>
-                              </div>
-                            </div>
-                            <div class="col-sm-6" style="padding-left: 10px !important;">
-                              <label style="font-weight: bold;">Hora de salida</label>
-                              <div class="input-group bootstrap-timepicker">
-                                <input id="edithoraFin2" name="edithoraFin2" class="form-control" value="12:00 AM" aria-invalid="false" type="text">
-                                <span class="input-group-addon"><i class="pg-clock"></i></span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                         <div class="form-group form-group-default input-group">
                           <div id="divstatus1Edit" style="display: block;">
-                            <label class="inline" style="margin-top: 15px; margin-left: 12px" id="StatusColono1Edit" name="StatusColono1Edit">Habilitado</label>
+                            <label class="inline" style="margin-top: 15px; margin-left: 12px" id="StatusUser1Edit" name="StatusUser1Edit">Habilitado</label>
                           </div>
                           <div id="divstatus2Edit" style="display: none;">
-                            <label class="inline" style="margin-top: 15px; margin-left: 12px" id="StatusColono2Edit" name="StatusColono2Edit">Deshabilitado</label>
+                            <label class="inline" style="margin-top: 15px; margin-left: 12px" id="StatusUser2Edit" name="StatusUser2Edit">Deshabilitado</label>
                           </div>
                           <span class="input-group-addon bg-transparent">
                             <div class="lcs_wrap">
-                              <input name="editStatusColono" id="editStatusColono" class="lcs_checkEdit" type="checkbox">
+                              <input name="editStatusUser" id="editStatusUser" class="lcs_checkEdit" type="checkbox">
                               <div class="lcs_switch  lcs_checkbox_switch lcs_on">
                                 <div class="lcs_cursor">
                                 </div>
