@@ -93,9 +93,14 @@ class Sessions{
 			break;
 
 			case "admin":
-				if(($location=="usuarios")or($location=="colonos")or($location=="direcciones") or ($location=="alertas") or ($location=="wizard") or ($location=="zonas") or ($location=="calles") or ($location=="reportes")){
-				} else{
-					echo '<script languaje="javascript">location.href = "usuarios.php";</script>';
+				if(intval($_SESSION["EstablecimientoID"])>=1){					
+					if( $location=="wizard" or $location=="panel"){
+						echo '<script languaje="javascript">location.href = "usuarios.php";</script>';
+					}
+				}else{
+					if(($location!="wizard")){
+						echo '<script languaje="javascript">location.href = "wizard.php";</script>';
+					}
 				}
 			break;
 

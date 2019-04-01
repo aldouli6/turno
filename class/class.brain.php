@@ -40,4 +40,13 @@ switch ($varUbicacion) {
       include_once("class/class.seguridad.php");
       include_once("class/class.mostrarPerfilUsuario.php");
       break;
+    case "wizard":
+      include_once("./class/class.sesiones.php");
+      include_once("./class/class.mostrargeneral.php");
+      include_once("./class/class.conexion.php");
+      include_once("./class/class.menu.php");
+      include_once("./class/class.mostrarplugins.php");
+      include_once("./class/class.mostrarwizard.php");//
+      include_once("./class/class.mostrarPerfilUsuario.php");
+      break;
 }

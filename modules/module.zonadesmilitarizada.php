@@ -9,6 +9,7 @@ date_default_timezone_set('America/Mexico_City');
  *
  */
  //error_reporting("E_ALL & ~E_WARNING & ~E_NOTICE");
+ try {
  if(!empty($_POST))
  {
 	//No usar para variables con contenido importante - * $_POST['var'] 0 $_GET['var']
@@ -28,7 +29,8 @@ date_default_timezone_set('America/Mexico_City');
 				// SQL - Referencia de la consulta para extraer el password y compararlo según la variable del POST $password
 				$database = new db();
 				
-				$getrow = $database->getRow("SELECT  * FROM usuarios WHERE username = ?", array($usuario));
+				$getrow = $database->getRow("SELECT u.usuarioId, u.estatus,u.tipoUsuarioId,u.username,u.nombre,u.apellidos,u.password,u.email,u.telefono,u.fecha_registro,
+				e.establecimientoId FROM 	usuarios as u LEFT JOIN establecimientos as e on u.usuarioId = e.usuarioEstablecimiento WHERE u.username = ? ", array($usuario));
 
 				if($getrow != false)
 				{
@@ -41,7 +43,7 @@ date_default_timezone_set('America/Mexico_City');
                             $_SESSION["UsuarioID"] = $getrow['usuarioId'];
                             $_SESSION["UsuarioNombre"] = $getrow['nombre']." ".$getrow['apellidoPaterno'];
                             $_SESSION["UsuarioEmail"] = $getrow['email'];
-                            
+                            $_SESSION["EstablecimientoID"]=$getrow['establecimientoId'];
                             Sessions::loadvarsesion($getrow['tipoUsuarioId']);
                             
                             echo $getrow['tipoUsuarioId'];
@@ -73,5 +75,8 @@ date_default_timezone_set('America/Mexico_City');
 				}
 			break;
 	}
+}
+} catch (Exception $e) {
+    echo 'Excepción capturada: ',  $e->getMessage(), "\n";
 }
 ?>
