@@ -199,7 +199,6 @@ $('#formRegistroUsuario').validate({
         var passCifer = calcMD5($("#regUsuarioPass").val());
         $("#regUsuarioPass").val(passCifer);
         var formulario = $(form).serialize() + "&cmd=registrarUsuario";
-        console.log(formulario);
         $.ajax({
             url: "modules/module.usuarios.php",
             type: "POST",

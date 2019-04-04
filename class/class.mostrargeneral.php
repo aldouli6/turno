@@ -152,7 +152,8 @@ class Mostrargeneral
               <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>';
               break;
             case 'wizard':
-              $javascript .= '<script src="assets/js/wizard.js"></script>';
+              $javascript .= '<script src="assets/js/wizard.js"></script>
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;
             
             

@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <?php
         Mostrargeneral::mostrarTitulo($varUbicacion);
         Mostrargeneral::mostrarcss($varUbicacion);
@@ -45,18 +46,20 @@
                         
                         <?php MostrarPerfilUsuario::MostrarPerfil();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios. ?>
                         <!--  start modal registro usuario -->
-                        <!-- <div class="modal fade slide-up disable-scroll" id="formRegUsuario" tabindex="-1" role="dialog" aria-hidden="false"> -->
-                        <div class=" disable-scroll" id="formRegUsuario" tabindex="-1" role="dialog" aria-hidden="false">
+                        <!-- <div class="modal fade slide-up disable-scroll" id="formRegistroEstablecimiento" tabindex="-1" role="dialog" aria-hidden="false"> -->
+                        <div class=" disable-scroll" id="formRegistroES" tabindex="-1" role="dialog" aria-hidden="false">
                             <!-- <div class="modal-dialog "> -->
                             <div class="">
                             <!-- <div class="modal-content-wrapper"> -->
                             <div class="">
                                 <!-- <div class="modal-content"> -->
+                                <form role="form" id="formRegistroEstablecimiento" role="form" autocomplete="off">
                                 <div class="">
                                 <div class="modal-header clearfix text-left">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="pull-left">
+                                            <?php echo "Sesison".$_SESSION["EstablecimientoId"]; ?>
                                             <h5>Registrar establecimiento</h5>
                                             <p class="p-b-10">Formulario de registro de establecimiento</p>
                                         </div>
@@ -75,11 +78,11 @@
                                     <!-- START PANEL -->
                                     <div class="panel panel-transparent">
                                     <div class="panel-body">
-                                        <form role="form" id="formRegistroUsuario" role="form" autocomplete="off">
                                         <input type="hidden" name="establecimiento" id="establecimiento" value="<?php echo $_SESSION["EstablecimientoId"];?>"/>
                                         <input type="hidden" name="regEstabPais" id="regEstabPais">
-                                        <input type="hidden" name="regEstabLatitud" id="regEstabLatitud">
-                                        <input type="hidden" name="regEstabLongitud" id="regEstabLongitud">
+                                        <input type="hidden" name="regEstabLatitud" id="regEstabLatitud" required>
+                                        <input type="hidden" name="regEstabLongitud" id="regEstabLongitud" required>
+                                        <input type="hidden" name="regEstabUsuario" id="regEstabUsuario" value="<?php echo $_SESSION["UsuarioID"]; ?>">
                                         <p>Datos principales</p>
                                         <div class="form-group-attached">
                                             <div class="row clearfix">
@@ -127,8 +130,7 @@
                                         <p class="m-t-5">Datos de Ubicación</p>
                                         <div class="row clearfix">
                                             <div id="elmapa" class="col-sm-6" style="
-                                                    background: antiquewhite;
-                                                    height: 100px;
+                                                    height: 312px;
                                                 ">
                                             
                                             </div>
@@ -165,7 +167,7 @@
                                                     <div class="col-sm-6">
                                                     <div class="form-group form-group-default  ">
                                                         <label >Colonia</label>
-                                                        <select disabled title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Select Country" data-init-plugin="select2" name="regEstaColonia" id="regEstaColonia" >
+                                                        <select disabled title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Select Country" data-init-plugin="select2" name="regEstabColonia" id="regEstabColonia" >
                                                             <option value="0">Seleccione una colonia</option>
                                                         </select>
                                                     </div>
@@ -207,5 +209,9 @@
             </div>
         </div>
         <?php Mostrargeneral::mostrarjs($varUbicacion);?>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeXcEX2bq122bXJibs7C0Al_18PLyAXCY&callback=getLocation"></script>
+        
+        
+        
     </body>
 </html>

@@ -93,7 +93,7 @@ class Sessions{
 			break;
 
 			case "admin":
-				if(intval($_SESSION["EstablecimientoID"])>=1){					
+				if($_SESSION["EstablecimientoID"]!="" or $_SESSION["EstablecimientoID"]!=null){					
 					if( $location=="wizard" or $location=="panel"){
 						echo '<script languaje="javascript">location.href = "usuarios.php";</script>';
 					}
