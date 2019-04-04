@@ -352,7 +352,7 @@ function refreshUsuarioSistemaTable() {
         url: url_request,
         type: method,
         data: {
-            cmd: "dataTableUsuario",
+            cmd: "dataTableUsuario"
         },
         success: function (response) {
             //console.log(response);

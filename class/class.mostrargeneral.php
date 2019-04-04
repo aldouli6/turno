@@ -191,6 +191,7 @@ class Mostrargeneral
      public static function logoSm()
      {
          echo '<div class="brand inline"><img src="assets/img/logo_jpg.jpg" alt="logo" data-src="assets/img/logo_jpg.jpg" data-src-retina="assets/img/logo_jpg.jpg" width="100" height="33"> </div>';
+         echo '<h5 style="margin-top: -30px;position: absolute;margin-left: 137px;font-weight: bolder;">| &nbsp;'  . $_SESSION["EstablecimientoNombre"] . '</h5>' ;
       }
      //Muestra el menu del mobile
      public static function menumobile()

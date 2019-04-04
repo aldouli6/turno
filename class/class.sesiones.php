@@ -72,7 +72,7 @@ class Sessions{
 			case "2":
 				$_SESSION['desctypeuser'] = "Administrador";
 				$_SESSION['typeuser'] = "admin";
-				$_SESSION['permissions'] = array("usuarios" => "all", "colonos"=>"all", "alertas"=>"all", "wizard"=>"all","zonas" => "all","calles" => "all","reportes" => "all","direcciones"=>"all");
+				$_SESSION['permissions'] = array("usuarios" => "all",  "wizard"=>"all");
 			break;
 
 

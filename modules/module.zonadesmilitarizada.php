@@ -30,7 +30,7 @@ date_default_timezone_set('America/Mexico_City');
 				$database = new db();
 				
 				$getrow = $database->getRow("SELECT u.usuarioId, u.estatus,u.tipoUsuarioId,u.username,u.nombre,u.apellidos,u.password,u.email,u.telefono,u.fecha_registro,
-				e.establecimientoId FROM 	usuarios as u LEFT JOIN establecimientos as e on u.usuarioId = e.usuarioEstablecimiento WHERE u.username = ? ", array($usuario));
+				e.establecimientoId, e.nombre as estabNombre FROM 	usuarios as u LEFT JOIN establecimientos as e on u.establecimientoId = e.establecimientoId WHERE u.username  = ? ", array($usuario));
 
 				if($getrow != false)
 				{
@@ -44,6 +44,7 @@ date_default_timezone_set('America/Mexico_City');
                             $_SESSION["UsuarioNombre"] = $getrow['nombre']." ".$getrow['apellidoPaterno'];
                             $_SESSION["UsuarioEmail"] = $getrow['email'];
                             $_SESSION["EstablecimientoID"]=$getrow['establecimientoId'];
+                            $_SESSION["EstablecimientoNombre"]=$getrow['estabNombre'];
                             Sessions::loadvarsesion($getrow['tipoUsuarioId']);
                             
                             echo $getrow['tipoUsuarioId'];

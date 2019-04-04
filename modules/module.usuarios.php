@@ -19,15 +19,23 @@ if(!empty($_POST)){
     extract($_REQUEST);
         switch($cmd){
             case "dataTableUsuario":
-                if($_SESSION["typeuser"] == "root"){
-                    //Este case trae todo los datos de los usuarios de la tabla usuarios y los recrea en un datatable.
-                    $consultaDatosUsuario="SELECT  u.usuarioId, u.nombre, u.apellidos, u.email, t.nombre as descripcion, u.estatus
-                                        FROM usuarios as u
-                                        inner join tiposUsuarios as t on u.tipoUsuarioId=t.tipoUsuarioId       
-                                        
-                                        order by u.usuarioId";
-                                         
-                    $getUsuario = $database->getRows($consultaDatosUsuario);
+                $extra="";
+                $consultaDatosUsuario="SELECT  u.usuarioId, u.nombre, u.apellidos, u.email, t.nombre as descripcion, u.estatus
+                    FROM usuarios as u
+                    inner join tiposUsuarios as t on u.tipoUsuarioId=t.tipoUsuarioId "; 
+                switch ($_SESSION["typeuser"]) {
+                    case 'root':
+                        $extra = " where 1 ";
+                        break;
+                    case 'admin':
+                        $extra = " where u.tipoUsuarioId in('2','3') and u.establecimientoId = '".$_SESSION["EstablecimientoID"]."' ";
+                        break;
+                    default:
+                        $extra="";
+                        break;
+                }                
+                $consultaDatosUsuario.=$extra.' order by u.usuarioId';
+                $getUsuario = $database->getRows($consultaDatosUsuario);
                     if($getUsuario!=false){
                         foreach ($getUsuario as $rsUsuario) {
                             echo "<tr id='Usuario".$rsUsuario["usuarioId"]."'>
@@ -46,42 +54,7 @@ if(!empty($_POST)){
                                 </tr>';
                         }//Fin foreach
                     }
-               }
-               if($_SESSION["typeuser"] == "admin")
-               {
-                        $subfraccionamientoRelacion = $_REQUEST['subfraccionamientoRelacion'];
-                        //Este case trae todo los datos de los usuarios de la tabla usuarios y los recrea en un datatable.
-                        $consultaDatosUsuario="SELECT  usuario.UsuarioId, usuario.UsuarioNombre, usuario.UsuarioApellidos,usuario.UsuarioNickName,
-                        tipousuario.TipoUsuarioDescripcion, usuario.EstatusUsuario
-                                                FROM usuario
-                                                inner join tipousuario on usuario.TipoUsuarioId=tipousuario.TipoUsuarioId       
-                           where usuario.TipoUsuarioId = 3 or usuario.TipoUsuarioId = 5 and usuario.SubfraccionamientoId = ?
-                           order by usuario.UsuarioId";
-
-                        $getUsuario = $database->getRows($consultaDatosUsuario, array($subfraccionamientoRelacion));
-
-                          if($getUsuario!=false)
-                          {
-
-                                foreach ($getUsuario as $rsUsuario) {
-
-                                      echo "<tr id='Usuario".$rsUsuario["UsuarioId"]."'>
-                                                <td>".$rsUsuario["UsuarioId"]."</td><td>".$rsUsuario["UsuarioNombre"]."</td><td>".$rsUsuario["UsuarioApellidos"]."</td>"
-                                                ."</td><td>".$rsUsuario["UsuarioNickName"]."</td><td>".$rsUsuario["TipoUsuarioDescripcion"]."</td><td>".$rsUsuario["EstatusUsuario"]."</td>"
-                                              .'<td>
-                                                  <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#formEditUsuario" onclick="editUsuarioData('.$rsUsuario["UsuarioId"].');">
-                                                  <span class="glyphicon glyphicon-pencil capa"></span>
-                                                  </button>
-                                                </td>'
-                                              .'<td>
-                                                  <button style="background:gray;" type="button" class="btn btn-default btn-sm" onclick="eliminarUsuarioData('.$rsUsuario["UsuarioId"].',\''.$rsUsuario["nombre"].'\');">
-                                                      <span class="glyphicon glyphicon-trash capa" style="color:white"></span>
-                                                  </button>
-                                              </td>
-                                          </tr>';
-                              }//Fin foreach
-                          }
-                }                          		
+                                         		
                 break;
                 case "listaTipoUsuario":
                     $sql="SELECT  tipoUsuarioId, nombre FROM tiposusuarios ";  
@@ -108,7 +81,8 @@ if(!empty($_POST)){
                     $regUser[5]=date("Y-m-d H:i:s");
                     $regUser[6]= $_REQUEST["StatusUsuarioSistema"];
             		$regUser[7]=$_REQUEST['regUsername'];
-            		$regUser[8]=$_REQUEST['regTelefono'];;
+            		$regUser[8]=$_REQUEST['regTelefono'];
+            		$regUser[9]=$_REQUEST['regEstablecimientoId'];;
 		            $registrarUsuario=$database->insertRow("INSERT into usuarios(
                                                     nombre,
                                                     apellidos, 
@@ -118,8 +92,9 @@ if(!empty($_POST)){
                                                     fecha_registro, 
                                                     estatus, 
                                                     username,
-                                                    telefono) 
-                                                    values(?,?,?,?,?,?,?,?,?)",$regUser);
+                                                    telefono,
+                                                    establecimientoId) 
+                                                    values(?,?,?,?,?,?,?,?,?,?)",$regUser);
                   	if($registrarUsuario==true){
                         $getUserLastId=$database->lastIdDB();
                         $tipoUsuarioRegistro="";

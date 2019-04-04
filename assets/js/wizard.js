@@ -247,7 +247,7 @@ $('#formRegistroEstablecimiento').validate({
           success: function (response) {
             console.log(response);
             
-            if(response!="0"){
+            if(response=="1"){
               swal({ 
                   title: "\u00A1En hora buena!",
                   text: "El establecimiento se ha registrado correctamente",

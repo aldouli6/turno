@@ -35,6 +35,7 @@ class MostrarUsuario{
                 <div class="panel panel-transparent">
                   <div class="panel-body">
                     <form role="form" id="formRegistroUsuario" role="form" autocomplete="off">
+                      <input type="hidden" name="regEstablecimientoId" id="regEstablecimientoId" value="'.$_SESSION["EstablecimientoID"].'">
                       <p>Datos personales</p>
                       <div class="form-group-attached">
                         <div class="row clearfix">
@@ -159,6 +160,7 @@ class MostrarUsuario{
                   <div class="panel panel-transparent">
                     <div class="panel-body">
                       <form role="form" id="formEdicionUsuario" role="form" autocomplete="off">
+                      <input type="hidden" name="editEstablecimientoId" id="editEstablecimientoId" value="'.$_SESSION["EstablecimientoID"].'">
                         <p>Datos personales</p>
                         <div class="form-group-attached">
                           <div class="row clearfix">
