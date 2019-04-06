@@ -18,26 +18,69 @@ try {
         extract($_REQUEST);
         switch($cmd){
             case "listaCategorias":
-                $sql="SELECT  categoriaId, nombre FROM categorias where categoriaPadre = '0'";  
-                $getCategorias = $database->getRows($sql);
-                echo "<option value='0'>-- Seleccione una categoría --</option>";
-                foreach ($getCategorias as $rsCategoria) {
-                    echo "<option value='".$rsCategoria['categoriaId']."'>".$rsCategoria['nombre']."</option>";                                             
-                }
-            break;
-            case "listaSubcategorias":
                 $categoria=$_REQUEST["categoria"];
                 $sql="SELECT  categoriaId, nombre FROM categorias where categoriaPadre=?"; 
-                $getSubcategorias = $database->getRows($sql, array($categoria));
-                if ($getSubcategorias){
-                    echo "<option value='0'>-- Seleccione una subcategoría --</option>";
-                    foreach ($getSubcategorias as $rsSubcategoria) {
-                        echo "<option value='".$rsSubcategoria['categoriaId']."'>".$rsSubcategoria['nombre']."</option>";                                             
+                $getCategorias = $database->getRows($sql, array($categoria));
+                //print_r($getSubcategorias)
+                $jsonCategorias=json_encode($getCategorias);
+                echo $jsonCategorias;
+                
+            break;
+            case 'registraCategoria':
+                $database->beginTransactionDB();
+                $newCatego=array();
+                $newCatego[0]=$_REQUEST["newCategoria"];
+                $registrarCatego=$database->insertRow("INSERT into categorias(
+                                                nombre) 
+                                                values(?)",$newCatego);
+                if($registrarCatego==true){
+                    $getCategoLastId=$database->lastIdDB();
+                    $ConsultarGetCatego="SELECT  *
+                                            FROM categorias                                              
+                                            where categoriaId=?";
+                    $GetCategoria=$database->getRow($ConsultarGetCatego,array($getCategoLastId));
+                    if($GetCategoria==true){
+                        $database->commitDB();
+                        $jsonCategoria=json_encode($GetCategoria);
+                        echo $jsonCategoria;
+                    }else{
+                        $database->rollBackDB();
+                        echo "0";
+                    }
+                }else{
+                    $database->rollBackDB();
+                    echo "0";
+                }
+                break;
+            case "editarCategoria":
+                $editarDatosCategoria="UPDATE categorias set 
+                        nombre='".$nuevoNombre."'
+                            where categoriaId=?";
+                $editCategoData=$database->updateRow($editarDatosCategoria,array($categoria));
+                if($editCategoData==true){
+                    $ConsultarGetCatego="SELECT  *
+                        FROM categorias                                            
+                        where categoriaId=?";
+                    $GetCatego=$database->getRow($ConsultarGetCatego,array($categoria));
+                    if($GetCatego==true){
+                        echo '1';
+                    }else{
+                        echo "0";
                     }
                 }else{
                     echo "0";
                 }
-                
+                break;
+            case "eliminarCategoria":         
+                if(SeguridadSistema::validarEntero(trim($_REQUEST['categoria']))==true){
+                    $eliminarCategoInfo="DELETE FROM categorias where categoriaId=?";
+                    $eliminarCategoData=$database->deleteRow($eliminarCategoInfo,array($categoria));
+                    if($eliminarCategoData==true){
+                            echo "1";
+                    }else{
+                            echo "0";
+                    }
+                }            
             break;
 
 

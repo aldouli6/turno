@@ -155,7 +155,10 @@ class Mostrargeneral
               $javascript .= '<script src="assets/js/wizard.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;
-            
+            case 'categorias':
+              $javascript .= '<script src="assets/js/categoria.js"></script>
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
+              break;
             
             default:
               $javascript .= '';

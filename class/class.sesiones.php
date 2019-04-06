@@ -66,13 +66,18 @@ class Sessions{
 			case "1":
 				$_SESSION['desctypeuser'] = "Super Administrador";
 				$_SESSION['typeuser'] = "root";
-				$_SESSION['permissions'] = array("usuarios" => "all");
+				$_SESSION['permissions'] = array(
+						"usuarios" =>  array("where" => "all","icon" =>"fa fa-user","label" =>"Usuarios" ),
+						"categorias" =>  array("where" => "all","icon" =>"fa fa-th-list","label" =>"Categorías" )
+					);
 			break;
 
 			case "2":
 				$_SESSION['desctypeuser'] = "Administrador";
 				$_SESSION['typeuser'] = "admin";
-				$_SESSION['permissions'] = array("usuarios" => "all",  "wizard"=>"all");
+				$_SESSION['permissions'] =array(
+					"usuarios" =>  array("where" => "all","icon" =>"fa fa-user","lable" =>"Usuarios" )
+				);
 			break;
 
 
@@ -86,7 +91,7 @@ class Sessions{
 		//3.Guardia - guardia
 		switch ($usrType){
 			case "root":
-				if(($location=="usuarios") or ($location=="usuarios") ){
+				if(($location=="usuarios") or ($location=="categorias") ){
 				} else{
 					echo '<script languaje="javascript">location.href = "usuarios.php";</script>';
 				}

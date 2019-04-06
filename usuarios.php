@@ -19,7 +19,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     <div class="page-sidebar" data-pages="sidebar">
       <?php Mostrargeneral::menumobile(); ?>
       <?php Mostrargeneral::encabezadoLogo(); ?>
-      <?php Menus::menumostra($_SESSION['typeuser'], $_SESSION['permissions'],$varUbicacion);?>
+      <?php Menus::menumostra($varUbicacion, $_SESSION['permissions'],$varUbicacion);?>
     </div>
     <div class="page-container">
       <div class="header ">
@@ -27,17 +27,17 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
           <div class="pull-left full-height visible-sm visible-xs">
             <?php Mostrargeneral::actionBar(); ?>
           </div>
-            <?php Mostrargeneral::logoLg(); ?>
-          </div>
-          <div class=" pull-left sm-table hidden-xs hidden-sm">
-            <div class="header-inner">
-              <?php Mostrargeneral::logoSm(); ?>
-            </div>
-          </div>
-          <div class=" pull-right">
-            <?php MostrarPlugins::mostrarConfigUser(); ?>          
+          <?php Mostrargeneral::logoLg(); ?>
+        </div>
+        <div class=" pull-left sm-table hidden-xs hidden-sm">
+          <div class="header-inner">
+            <?php Mostrargeneral::logoSm(); ?>
           </div>
         </div>
+        <div class=" pull-right">
+          <?php MostrarPlugins::mostrarConfigUser(); ?>          
+        </div>
+      </div>
         <div class="page-content-wrapper">
           <div class="content full-height">
             <?php Mostrargeneral::mostrarTituloPage($varUbicacion); ?>
@@ -87,7 +87,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                       </tr>
                     </tfoot>
                     <tbody id="contenidoListaUsuarioSistema">
-
+                  
                     </tbody>
                   </table>
                 </div>

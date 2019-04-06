@@ -25,66 +25,16 @@ $permisos = {
 class Menus
 {
 	//Muestra el menu
-	static function menumostra($tipousuario, $permisos, $estatusMenu)
-	{
-		//echo $tipousuario;
-			$activeMenu = "";
+	static function menumostra($varUbicacion, $permisos, $estatusMenu){
 			$menu = NULL;
 			$menu .= '<div class="sidebar-menu">
-						<ul class="menu-items"><br>';
-			
-			$activeMenu = "";
-				
-			switch ($tipousuario) 
-			{					
-				case "root":
-					if($estatusMenu == 'usuarios')
-					{
-						$activeMenu = "bg-success";
-					}
-					else
-					{
-						$activeMenu = "";
-					}
-					$menu .= Menus::crearSeccionMenu('Usuarios', 'fa fa-user', 'usuarios.php', $activeMenu);
-				 	
-					
-				break;	
-
-				case "admin":
-					if($estatusMenu == 'usuarios')
-					{
-						$activeMenu = "bg-success";
-					}
-					else
-					{
-						$activeMenu = "";
-					}
-					$menu .= Menus::crearSeccionMenu('Usuarios', 'fa fa-user', 'usuarios.php', $activeMenu);
-
-					break;
-
-				case "guardia":
-					if($estatusMenu == 'alertas')
-					{
-						$activeMenu = "bg-success";
-					}
-					else
-					{
-						$activeMenu = "";
-					}
-					$menu .= Menus::crearSeccionMenu('Alertas', 'fa fa-bell', 'alertas.php', $activeMenu);	
-					
-					if ($estatusMenu == 'reportes')
-					{
-						$activeMenu = "bg-success";
-					}
-					else 
-					{
-						$activeMenu = "";
-					}
-					$menu .= Menus::crearSeccionMenu('Reportes', 'fa fa-book', 'reportes.php',$activeMenu);
-				break;
+					<ul class="menu-items"><br>';
+			foreach ($permisos as $permiso => $value) {
+				if($value["where"]=="all")
+					$menu .= Menus::crearSeccionMenu($value["label"], 
+						$value["icon"], 
+						$permiso.'.php', 
+						($estatusMenu==$permiso)?"bg-success":"");
 			}
 			$menu .= '</ul>
 			<div class="clearfix"></div>

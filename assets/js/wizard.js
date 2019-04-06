@@ -88,21 +88,37 @@ function setPosition(position) {
   initMap(position.coords.latitude, position.coords.longitude);
 }
 $(document).ready(function() {
-  traeCategorias();
+  traeCategorias('0');
   traerEstados();
 });
 
 
-function traeCategorias(){
+function traeCategorias(cat){
   $.ajax({
     async: true,
     url: "modules/module.categorias.php",
     type: "POST",
     data: {
       cmd: "listaCategorias",
+      categoria:cat
     },
     success: function(response){
-        $("#regEstabCategoria").html(response);
+        var obj = JSON.parse(response);
+        var cathtml;
+        cathtml ="<option value='0'> Seleccione una Categoría</option>";
+        $.each(obj, function( key, value ) {
+          cathtml += "<option value='"+value.categoriaId+"'>"+value.nombre+"</option>";
+        });
+        if (cat!='0') {
+            $('#regEstabSubcategoria').removeAttr("disabled");
+            $('#regEstabSubcategoria').html(cathtml);
+            $("#regEstabSubcategoria").select2("val", 0);
+        }else{
+            $("#regEstabCategoria").html(cathtml);
+        }          
+        
+        
+
       
     }
   });
@@ -199,22 +215,8 @@ $("#regEstabCategoria").change(function () {
   //Se usa el evento change en la lista de estados para que dependiendo del estado seleccionado se haga un filtrado de municipios en la lista de municipios
   $("#regEstabSubcategoria").select2("val", 0);
   $('#regEstabSubcategoria').empty();
-  $.ajax({ //Se carga la lista de los tipos de servicio en la lista desplegable
-      url: "modules/module.categorias.php",
-      type: "POST",
-      data: {
-          cmd: "listaSubcategorias",
-          categoria: $("#regEstabCategoria").val()
-      },
-      success: function (response) {
-        if(response!='0'){
-          $('#regEstabSubcategoria').removeAttr("disabled");
-          $('#regEstabSubcategoria').html(response);
-          $("#regEstabSubcategoria").select2("val", 0);
-        }
-          
-      }
-  });
+  traeCategorias($("#regEstabCategoria").val());
+  
 
 });
 
