@@ -71,7 +71,6 @@ class Mostrargeneral
                  <link href="assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen" />
                  <link href="assets/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css" media="screen" />
                  <link href="assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
-                 <link href="assets/plugins/sweetalert-master/dist/sweetalert.css" rel="stylesheet" type="text/css" media="screen" />
                  <link href="pages/css/pages-icons.css" rel="stylesheet" type="text/css">
                  <link href="pages/css/pages.css" rel="stylesheet" type="text/css" class="main-stylesheet" />
                  <link href="pages/css/dataTable.css" rel="stylesheet" type="text/css" class="main-stylesheet" />
@@ -119,7 +118,9 @@ class Mostrargeneral
 					  <script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script>
 					  <script src="assets/plugins/jquery-bez/jquery.bez.min.js"></script>
 					  <script src="assets/plugins/jquery-ios-list/jquery.ioslist.min.js" type="text/javascript"></script>
-						<script src="assets/plugins/sweetalert-master/dist/sweetalert.min.js" type="text/javascript"></script>
+            <script src="assets/plugins/sweetalert2-master/dist/sweetalert2.all.min.js"></script>
+            <script src="assets/plugins/sweetalert2-master/dist/sweetalert2.min.js"></script>
+            <script type="module"> import Swal from "./assets/plugins/sweetalert2-master/src/sweetalert2.js";    </script>
 					  <script src="assets/plugins/jquery-actual/jquery.actual.min.js"></script>
 					  <script src="assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
 					  <script src="assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript"></script>

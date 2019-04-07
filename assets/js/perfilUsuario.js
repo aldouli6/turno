@@ -39,9 +39,9 @@ $('#formEditProfileUser').validate({ /*Método que valida que todos los campos r
                     $("#perfilNombre").val(DatosPerfil.nombre);
                     $("#perfilApellidos").val(DatosPerfil.apellidos);
                     $("#perfilEmail").val(DatosPerfil.email);
-                    swal("\u00A1Perfil guardado con exito!","tu información de perfil ha sido actualizada correctamente", "success");                    
+                    Swal.fire("\u00A1Perfil guardado con exito!","tu información de perfil ha sido actualizada correctamente", "success");                    
                 }else{
-                    swal("\u00A1Error!", "Tu información de perfil no se ha podido editar", "error");
+                    Swal.fire("\u00A1Error!", "Tu información de perfil no se ha podido editar", "error");
                 }
             }
         });

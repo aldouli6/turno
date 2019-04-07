@@ -153,12 +153,12 @@ $(document).ready(function () {
                                     }
                                 }
                                 $('#formEditUsuario').modal('hide');
-                                swal("\u00A1En hora buena!", "El usuario se ha editado correctamente", "success");
+                                 Swal.fire("\u00A1En hora buena!", "El usuario se ha editado correctamente", "success");
                             }
                         });
                     } else {
                         $('#formEditUsuario').modal('hide');
-                        swal("\u00A1Error!", "El usuario no se ha podido editar", "error");
+                         Swal.fire("\u00A1Error!", "El usuario no se ha podido editar", "error");
                     }
                 } //Fin método success
             }); //Fin método ajax
@@ -207,12 +207,12 @@ $('#formRegistroUsuario').validate({
                 $("#formRegistroUsuario").get(0).reset();
                 $("#regTipoUsuario").select2("val", 0);
                 if (response != "0") {
-                    swal("\u00A1En hora buena!", "El usuario se ha registrado correctamente", "success");
+                     Swal.fire("\u00A1En hora buena!", "El usuario se ha registrado correctamente", "success");
                     $('#formRegUsuario').modal('hide');
                     getData = response.split("%");
                     $("#usuarioSistemaDataTable").DataTable().row.add(getData).draw().node();
                 } else {
-                    swal("\u00A1Error!", "El usuario no se ha podido registrar", "error");
+                     Swal.fire("\u00A1Error!", "El usuario no se ha podido registrar", "error");
                     $('#formRegUsuario').modal('hide');
                 }
             }
@@ -290,7 +290,7 @@ function editUsuarioData(id_usuario) {
 
 
 function eliminarUsuarioData(id_usuario,nombre) {
-    swal({
+     Swal.fire({
             title: "\u00BFEst\u00E1s seguro de eliminar al usuario " + nombre + "?",
             text: "\u00A1Una vez eliminado no se podra recuperar!",
             type: "warning",
@@ -299,11 +299,8 @@ function eliminarUsuarioData(id_usuario,nombre) {
             confirmButtonColor: '#428bca',
             confirmButtonText: "Si, \u00A1elim\u00EDnalo!",
             cancelButtonText: "No, cancelar",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        },
-        function (isConfirm) {
-            if (isConfirm) {
+            }).then((result) => {
+                if (result.value) {
                 var url_path = "modules/module.usuarios.php";
                 metodo = "POST";
                 $.ajax({
@@ -317,15 +314,15 @@ function eliminarUsuarioData(id_usuario,nombre) {
                     success: function (response) {
                         if (response == "1") {
                             $("#usuarioSistemaDataTable").DataTable().rows("#Usuario" + id_usuario).remove().draw();
-                            swal("\u00A1En hora buena!", "el usuario ha sido eliminado correctamente", "success");
+                             Swal.fire("\u00A1En hora buena!", "el usuario ha sido eliminado correctamente", "success");
                         } else {
-                            swal("Error", "El usuario no ha podido ser eliminado.", "error");
+                             Swal.fire("Error", "El usuario no ha podido ser eliminado.", "error");
                         }
                     }
                 });
             } //Fin if confirm
             else {
-                swal("Cancelado", "No se han realizado cambios", "error");
+                 Swal.fire("Cancelado", "No se han realizado cambios", "error");
             }
         }); //Fin mensaje cancelar usuario
 

@@ -30,9 +30,10 @@ try {
                 $database->beginTransactionDB();
                 $newCatego=array();
                 $newCatego[0]=$_REQUEST["newCategoria"];
+                $newCatego[1]=$_REQUEST["categoriaPadreInp"];
                 $registrarCatego=$database->insertRow("INSERT into categorias(
-                                                nombre) 
-                                                values(?)",$newCatego);
+                                                nombre,categoriaPadre) 
+                                                values(?,?)",$newCatego);
                 if($registrarCatego==true){
                     $getCategoLastId=$database->lastIdDB();
                     $ConsultarGetCatego="SELECT  *
