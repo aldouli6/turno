@@ -5,8 +5,6 @@
  * DATE: 23/03/19
  * PROJECT: turno
  *
- * Seguridad
- * BASE DE DATOS - aseguradora
  * DESCRIPTION:Muestra el contenido más importante del módulo de usuarios tales como: Los modales de los formularios de registro y edición de usuarios, así como los el datatable (solo encabezados y pies)
  *
  */

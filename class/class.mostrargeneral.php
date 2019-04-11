@@ -160,7 +160,10 @@ class Mostrargeneral
               $javascript .= '<script src="assets/js/categoria.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;
-            
+            case 'tipoSesion':
+              $javascript .= '<script src="assets/js/tipoSesion.js"></script>
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
+              break;
             default:
               $javascript .= '';
             break;
@@ -202,7 +205,26 @@ class Mostrargeneral
      {
          echo '<div id="appMenu" class="sidebar-overlay-slide from-top"></div>';
      }
- 
+    //Muestra el menu del mobile
+    public static function header(){
+        echo '<div class="header ">
+                <div class="container-fluid relative">
+                    <div class="pull-left full-height visible-sm visible-xs">
+                        ';
+                    Mostrargeneral::actionBar();
+        echo '
+                    </div>
+                </div>
+                <div class=" pull-left sm-table hidden-xs hidden-sm">
+                    <div class="header-inner">';
+                         Mostrargeneral::logoSm();
+                    echo'</div>
+                </div>
+                <div class=" pull-right">';
+                     MostrarPlugins::mostrarConfigUser();         
+                echo'</div>
+            </div>';
+    }
      //Muestra el ActionBar
      public static function actionBar()
      {

@@ -76,7 +76,8 @@ class Sessions{
 				$_SESSION['desctypeuser'] = "Administrador";
 				$_SESSION['typeuser'] = "admin";
 				$_SESSION['permissions'] =array(
-					"usuarios" =>  array("where" => "all","icon" =>"fa fa-user","lable" =>"Usuarios" )
+					"usuarios" =>  array("where" => "all","icon" =>"fa fa-user","label" =>"Usuarios" ),
+					"tipoSesiones" =>  array("where" => "all","icon" =>"fa fa-bookmark","label" =>"Tipos de Sesiones" ),
 				);
 			break;
 

@@ -205,7 +205,7 @@ body.dashboard .page-container {
 ------------------------------------
 */
 .pace .pace-progress {
-  background: #C62E2A;
+  background: #005199;
   height: 3px;
 }
 .pace .pace-progress-inner {
@@ -516,7 +516,7 @@ body.dashboard .page-container {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 65%;
+  width: 85%;
 }
 .page-sidebar .sidebar-menu .menu-items > li > a > .details {
   font-size: 12px;

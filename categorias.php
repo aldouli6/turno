@@ -21,24 +21,10 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
             <?php Menus::menumostra($varUbicacion, $_SESSION['permissions'],$varUbicacion);?>
         </div>
         <div class="page-container">
-            <div class="header ">
-                <div class="container-fluid relative">
-                    <div class="pull-left full-height visible-sm visible-xs">
-                        <?php Mostrargeneral::actionBar(); ?>
-                    </div>
-                </div>
-                <div class=" pull-left sm-table hidden-xs hidden-sm">
-                    <div class="header-inner">
-                        <?php Mostrargeneral::logoSm(); ?>
-                    </div>
-                </div>
-                <div class=" pull-right">
-                    <?php MostrarPlugins::mostrarConfigUser(); ?>          
-                </div>
-            </div>
+        <?php Mostrargeneral::header(); ?>
             <div class="page-content-wrapper">
                 <div class="content full-height">
-                    <?php Mostrargeneral::mostrarTituloPage($varUbicacion); ?>
+                    <?php Mostrargeneral::mostrarTituloPage($_SESSION['permissions'][$varUbicacion]['label']); ?>
                     <div class="container-fluid full-height no-padding">
                         <?php
                             //Este método se manda llamar desde la carpeta class/class.mostrarusuario.php
