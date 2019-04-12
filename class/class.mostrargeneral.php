@@ -160,8 +160,11 @@ class Mostrargeneral
               $javascript .= '<script src="assets/js/categoria.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;
-            case 'tipoSesion':
+            case 'tipoSesiones':
               $javascript .= '<script src="assets/js/tipoSesion.js"></script>
+              <script type="text/javascript" src="assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;
             default:

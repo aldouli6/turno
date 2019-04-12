@@ -53,5 +53,6 @@ switch ($varUbicacion) {
       include_once("./class/class.menu.php");
       include_once("./class/class.mostrarplugins.php");
       include_once("./class/class.mostrarPerfilUsuario.php");
+      include_once("./class/class.mostrarTipoSesion.php");
       break;
 }
