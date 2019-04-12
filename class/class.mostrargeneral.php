@@ -37,8 +37,15 @@ class Mostrargeneral
           case 'usuarios':
               $metadatos .= '<title>TURNO - Usuarios</title>';
           break;
-
-
+          case 'categorias':
+              $metadatos .= '<title>TURNO - Categorías</title>';
+          break;
+          case 'tipoSesiones':
+              $metadatos .= '<title>TURNO - Tipos de Sesiones</title>';
+          break;
+          case 'recursos':
+              $metadatos .= '<title>TURNO - Recursos</title>';
+          break;
           default:
             $metadatos .= '<title>TURNO</title>';
         }
@@ -82,7 +89,7 @@ class Mostrargeneral
                 $css .= '';
             break;
 
-            case 'usuarios':
+            case 'tipoSesiones':
                 $css .= '<link href="assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" media="screen">';
             break;
 
@@ -165,6 +172,10 @@ class Mostrargeneral
               <script type="text/javascript" src="assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
               <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
               <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
+              break;
+            case 'recursos':
+              $javascript .= '<script src="assets/js/recurso.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;
             default:

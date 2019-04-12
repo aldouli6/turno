@@ -20,6 +20,7 @@ $nombreEmpresaLegal = 'TURNO APP S.A. de C.V.';
 include_once("./class/class.sesiones.php");
 include_once("./class/class.mostrargeneral.php");
 include_once("../class/class.conexion.php");
+include_once("class/class.menu.php");
 switch ($varUbicacion) {
 	//Views
     case "login":
@@ -32,27 +33,28 @@ switch ($varUbicacion) {
       break;
     case "usuarios":
       include_once("class/class.mostrarusuario.php");
-      include_once("class/class.menu.php");
       include_once("class/class.mostrarplugins.php");
       include_once("class/class.seguridad.php");
       include_once("class/class.mostrarPerfilUsuario.php");
       break;
     case "categorias":
-      include_once("class/class.menu.php");
       include_once("class/class.mostrarplugins.php");
       include_once("class/class.seguridad.php");
       include_once("class/class.mostrarPerfilUsuario.php");
       break;
     case "wizard":
-      include_once("./class/class.menu.php");
       include_once("./class/class.mostrarplugins.php");
       include_once("./class/class.mostrarwizard.php");
       include_once("./class/class.mostrarPerfilUsuario.php");
       break;
     case "tipoSesiones":
-      include_once("./class/class.menu.php");
       include_once("./class/class.mostrarplugins.php");
       include_once("./class/class.mostrarPerfilUsuario.php");
       include_once("./class/class.mostrarTipoSesion.php");
+      break;
+      case "recursos":
+      include_once("./class/class.mostrarplugins.php");
+      include_once("./class/class.mostrarPerfilUsuario.php");
+      include_once("./class/class.mostrarRecurso.php");
       break;
 }

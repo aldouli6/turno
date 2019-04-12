@@ -78,6 +78,7 @@ class Sessions{
 				$_SESSION['permissions'] =array(
 					"usuarios" =>  array("where" => "all","icon" =>"fa fa-user","label" =>"Usuarios" ),
 					"tipoSesiones" =>  array("where" => "all","icon" =>"fa fa-bookmark","label" =>"Tipos de Sesiones" ),
+					"recursos" =>  array("where" => "all","icon" =>"fa fa-wrench","label" =>"Recursos" ),
 				);
 			break;
 
