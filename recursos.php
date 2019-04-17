@@ -68,14 +68,15 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                 </table>
                                 </div>
                             </div>
-                            <div class="col-sm-6 ">
+                            <div class="col-sm-6 hide" id="relRecursoTipoSesion">
                                 <div class="row " >
                                     <form role="form" id="formNewRelRecSes" role="form" autocomplete="off">
                                         <input type="hidden" name="recursoId" id="recursoId" >
+                                        <input type="hidden" name="cmd" value="addRelRecSesion" >
                                         <div class="col-sm-6">
                                         <div class="form-group-default required">
                                             <label style="font-weight: bold;">Tipo de Sesión</label>
-                                            <select title="" tabindex="-1" class="full-width select2-offscreen" data-init-plugin="select2" name="sesionIdSelect" id="sesionIdSelect" required>
+                                            <select title="" tabindex="-1" class="full-width select2-offscreen" data-init-plugin="select2" name="sesionIdSelect" id="sesionIdSelect"  required>
                                                 
                                             </select>
                                         </div>

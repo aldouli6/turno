@@ -17,6 +17,47 @@ try {
     if(!empty($_POST)){            
         extract($_REQUEST);
         switch($cmd){
+            case "addRelRecSesion":
+                $database->beginTransactionDB();
+                $newElement=array();
+                $newElement[0]=$recursoId;
+                $newElement[1]=$sesionIdSelect;
+                $registrarElement=$database->insertRow("INSERT into relacionesRecursoTipoSesion(
+                                                recursoId,
+                                                tipoSesionId
+                                                ) 
+                                                values(?,?)",$newElement);
+                if($registrarElement==true){
+                    $getElementLastId=$database->lastIdDB();
+                    $ConsultarGetElement="SELECT  rt.idRelacionesRecursoTipoSesion as id, t.nombre, rt.tipoSesionId
+                                            FROM relacionesRecursoTipoSesion as rt
+                                            INNER JOIN tiposSesiones as t on t.tipoSesionId = rt.tipoSesionId                                              
+                                            where idRelacionesRecursoTipoSesion=?";
+                    $GetElement=$database->getRow($ConsultarGetElement,array($getElementLastId));
+                    if($GetElement==true){
+                        $database->commitDB();
+                        $jsonElement=json_encode($GetElement);
+                        echo $jsonElement;
+                    }else{
+                        $database->rollBackDB();
+                        echo "0";
+                    }
+                }else{
+                    $database->rollBackDB();
+                    echo "0";
+                }
+            break;
+            case "eliminarRelRecSesion":         
+                if(SeguridadSistema::validarEntero(trim($relrecurso))==true){
+                    $eliminarElementInfo="DELETE FROM relacionesRecursoTipoSesion where idRelacionesRecursoTipoSesion=?";
+                    $eliminarElementData=$database->deleteRow($eliminarElementInfo,array($relrecurso));
+                    if($eliminarElementData==true){
+                            echo "1";
+                    }else{
+                            echo "0";
+                    }
+                }            
+                break;
             case "cargaSelect":
                 $sql="SELECT t.tipoSesionId as id, t.nombre FROM tiposSesiones as t
                 WHERE 1
