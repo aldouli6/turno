@@ -269,9 +269,6 @@ function editUsuarioData(id_usuario) {
                 // $("#EditStatusUsuarioSistema").val(valSwitch);
             }
 
-
-            // $("#regTipoUsuario").html(response); /*Se consultan los tipos de usuario en la base de datos y se cargan en la lista despegable del formulario de registro de usuario*/
-            //  $("#editTipoUsuarios").html(response);
         }
     });
 

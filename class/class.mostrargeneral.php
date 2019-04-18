@@ -46,6 +46,9 @@ class Mostrargeneral
           case 'recursos':
               $metadatos .= '<title>TURNO - Recursos</title>';
           break;
+          case 'horarios':
+              $metadatos .= '<title>TURNO - Horarios</title>';
+          break;
           default:
             $metadatos .= '<title>TURNO</title>';
         }
@@ -176,6 +179,10 @@ class Mostrargeneral
               break;
             case 'recursos':
               $javascript .= '<script src="assets/js/recurso.js"></script>
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
+              break;
+            case 'horarios':
+              $javascript .= '<script src="assets/js/horario.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;
             default:

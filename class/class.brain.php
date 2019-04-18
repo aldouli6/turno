@@ -52,9 +52,14 @@ switch ($varUbicacion) {
       include_once("./class/class.mostrarPerfilUsuario.php");
       include_once("./class/class.mostrarTipoSesion.php");
       break;
-      case "recursos":
+    case "recursos":
       include_once("./class/class.mostrarplugins.php");
       include_once("./class/class.mostrarPerfilUsuario.php");
       include_once("./class/class.mostrarRecurso.php");
+      break;
+    case "horarios":
+      include_once("./class/class.mostrarplugins.php");
+      include_once("./class/class.mostrarPerfilUsuario.php");
+      include_once("./class/class.mostrarHorario.php");
       break;
 }
