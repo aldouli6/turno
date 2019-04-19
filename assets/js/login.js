@@ -2,6 +2,10 @@
 $("#btn_login").click(function(){
 	login();
 });
+$("#btn_signIn").click(function(){
+	singIn();
+	
+});
 
 $(document).keypress(function(e) {
     if(e.which == 13) {
@@ -29,11 +33,58 @@ function login(){
 		deliver(txtusuario, txtpassword);
 	}
 }
+function singIn() {
+	var usernameSign = $("#usernameSign").val();
+	var apellidoSign = $("#apellidoSign").val();
+	var nombreSign = $("#nombreSign").val();
+	var telefonoSign = $("#telefonoSign").val();
+	var emailSign = $("#emailSign").val();
+	var passwordSign= $("#passwordSign").val();
+	if(usernameSign === "" || apellidoSign === "" || nombreSign === "" || telefonoSign === "" || emailSign === "" || passwordSign === "" ){
+		
+		showNotification("Por favor ingrese todos los datos","danger");
+		return false;
+	}else{
+		passwordSign = calcMD5(passwordSign);
+		singInUp(usernameSign, apellidoSign, nombreSign, telefonoSign, emailSign, passwordSign);
+	}
 
+}
+function singInUp(usernameSign, apellidoSign, nombreSign, telefonoSign, emailSign, passwordSign) {
+	var url_request = "modules/module.zonadesmilitarizada.php";
+	var method = "POST";
+	
+	$.ajax({
+		async: false,
+		url:url_request,
+		method:method,
+		data:{ 
+			username : usernameSign,
+			password : passwordSign, 
+			nombre : nombreSign, 
+			apellido : apellidoSign, 
+			telefono : telefonoSign, 
+			email : emailSign, 
+			cmd : 'singin'
+		},
+		contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+		success: (response) =>{
+
+			var obj = JSON.parse(response);
+			if(obj.state!='0'){
+				showNotification(obj.message,"success");	
+			}else{
+				showNotification(obj.message,"danger");	
+			}
+		},
+		error: (err) => {
+			console.log(err);
+		},
+	});
+}
 function deliver(txtusuario, txtpassword){
 
 
-	console.log("USUARIO CONTRASEÑA:" + txtusuario + "    " + txtpassword);
 	var url_request = "modules/module.zonadesmilitarizada.php";
 	var method = "POST";
 	$.ajax({

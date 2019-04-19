@@ -30,35 +30,99 @@
                     </p>
                 </div>
             </div>
+            
             <div class="login-container bg-white">
-                <div class="p-l-40 m-l-20 p-r-40 m-r-10 p-t-40 m-t-20 sm-p-l-5 sm-p-r-5 sm-p-t-30">
+                <div class="p-l-10 m-l-20 p-r-10 m-r-10 p-t-40 m-t-20 sm-p-l-5 sm-p-r-5 sm-p-t-30">
                     <img src="assets/img/logo_jpg.jpg" alt="logo" data-src="assets/img/logo_2x.png" data-src-retina="assets/img/logo_jpg.jpg" width="217" height="110">
-                    <p class="p-t-35">Accede al sistema desde tu cuenta</p>
-                    <div class="form-group form-group-default">
-                        <label>Iniciar Sesión</label>
-                        <div class="controls">
-                            <input type="text" id="username" name="username" placeholder="Cuenta o email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-default">
-                        <label>Contraseña</label>
-                        <div class="controls">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Credenciales" required>
-                        </div>
-                    </div>
-                    <div class="p-l-15 row">
-                        <div class="col-md-6 no-padding">
-                            <div class="checkbox ">
-                                <input type="checkbox" value="1" id="checkbox1">
-                                <label for="checkbox1">Recordarme</label>
+                    <div class="row" id="message"></div>
+
+                    <div id="exTab2" class="">	
+                        <ul class="nav nav-tabs">
+                            <li >
+                                <a  href="#1" data-toggle="tab">Inciar Sesión</a>
+                            </li>
+                            <li class="active">
+                                <a href="#2" data-toggle="tab">Registrarse</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content ">
+                            <div class="tab-pane " id="1">
+                                <p class="p-t-15">Accede al sistema desde tu cuenta</p>
+                                <div class="form-group form-group-default">
+                                    <label>Nombre de Usuario</label>
+                                    <div class="controls">
+                                        <input type="text" id="username" name="username" placeholder="Nombre de usuario" class="form-control"  required>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Contraseña</label>
+                                    <div class="controls">
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Credenciales" required>
+                                    </div>
+                                </div>
+                                <div class="p-l-15 row">
+                                    <div class="col-md-6 no-padding">
+                                        <div class="checkbox ">
+                                            <input type="checkbox" value="1" id="checkbox1">
+                                            <label for="checkbox1">Recordarme</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <a href="recover.php" class="text-info small">¿Olvidó su contraseña?</a>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-cons m-t-10" id="btn_login">Iniciar sesión</button>
+                            </div>
+                            <div class="tab-pane active" id="2">
+                                <p class="p-t-15">Registra tu cuenta como administrador</p>
+                                <div class="form-group form-group-default">
+                                    <label>Nombre de Usuario</label>
+                                    <div class="controls">
+                                        <input type="text" id="usernameSign" name="usernameSign" placeholder="Nombre de usuario" class="form-control" value="username"  required>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Email</label>
+                                    <div class="controls">
+                                        <input type="email" id="emailSign" name="emailSign" placeholder="Email" class="form-control"  value="aldouli6@gmail.com" required>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Teléfono</label>
+                                    <div class="controls">
+                                        <input type="text" id="telefonoSign" name="telefonoSign" placeholder="Teléfono" class="form-control"  value="12345678" required>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Nombre (s)</label>
+                                    <div class="controls">
+                                        <input type="text" id="nombreSign" name="nombreSign" placeholder="Nombre (s)" class="form-control"  value="username" required>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Apellido (s)</label>
+                                    <div class="controls">
+                                        <input type="text" id="apellidoSign" name="apellidoSign" placeholder="Apellido (s)" class="form-control"  value="username" required>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Contraseña</label>
+                                    <div class="controls">
+                                        <input type="password" class="form-control" id="passwordSign" name="passwordSign" placeholder="Credenciales" value="username" required>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Aquí va el no soy robot</label>
+                                </div>
+                                <button class="btn btn-primary btn-cons m-t-10" id="btn_signIn">Registrarse</button>
                             </div>
                         </div>
-                        <div class="col-md-6 text-right">
-                            <a href="recover.php" class="text-info small">¿Olvidó su contraseña?</a>
-                        </div>
                     </div>
-                    <div class="row" id="message"></div>
-                    <button class="btn btn-primary btn-cons m-t-10" id="btn_login">Iniciar sesión</button>
+
+
+
+
+
                     <div class="pull-bottom sm-pull-bottom">
                         <div class="m-b-30 sm-m-t-20 sm-p-r-15 sm-p-b-20 clearfix">
                             <div class="col-sm-3 col-md-2">
