@@ -36,7 +36,7 @@ class MostrarHorario{
                                 <div class="col-sm-12">
                                     <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                                         <label >Recurso</label>
-                                        <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Select Country" data-init-plugin="select2" name="recurso'.$action.'" id="recurso'.$action.'" required>
+                                        <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Select Country" data-init-plugin="select2" name="recursoId'.$action.'" id="recursoId'.$action.'" required>
                                             <option value="0">Seleccione un recurso</option>
                                         </select>
                                     </div>
@@ -67,7 +67,7 @@ class MostrarHorario{
                                 <div class="col-sm-12">
                                     <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                                         <label >Días Laborales</label>
-                                        <select multiple="multiple" title="" tabindex="-1" class="multiselec full-width select2-offscreen" data-placeholder="Selecciona un día" data-init-plugin="select2" name="diasLaborales'.$action.'[]" id="diasLaborales'.$action.'" required>
+                                        <select multiple="multiple" title="" tabindex="-1" class="diasLaborables multiselect full-width select2-offscreen" data-placeholder="Selecciona un día" data-init-plugin="select2" name="diasLaborales'.$action.'[]" id="diasLaborales'.$action.'" required>
                                             <option value="D">Domingo</option>
                                             <option value="L">Lunes</option>
                                             <option value="M">Martes</option>

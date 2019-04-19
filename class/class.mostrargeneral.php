@@ -183,7 +183,10 @@ class Mostrargeneral
               break;
             case 'horarios':
               $javascript .= '<script src="assets/js/horario.js"></script>
-              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>
+              <script type="text/javascript" src="assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>';
               break;
             default:
               $javascript .= '';

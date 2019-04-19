@@ -268,7 +268,7 @@ $('#formRecursoEdit').validate({
                     Swal.fire("\u00A1En hora buena!", "El recurso ha sido editado correctamente", "success");
                     $('.modalrecurso').modal('hide');
                 }else{
-                    Swal.fire("Error", "El recurso no ha podido ser eliminada.", "error");
+                    Swal.fire("Error", "El recurso no ha podido ser editada.", "error");
                     $('.modalrecurso').modal('hide');
                 }
             }

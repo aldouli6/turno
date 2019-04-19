@@ -30,7 +30,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                         <?php
                             MostrarPerfilUsuario::MostrarPerfil();
                             MostrarHorario::modalHorario('New','Registrar');
-                            // MostrarRecursop::modalRecurso('Edit','Editar');
+                            MostrarHorario::modalHorario('Edit','Editar');
                         ?>
                         <div class="row" style="padding: 35px;background: #ffffff;margin-left: 5px;margin-right: 10px;border: 1px solid #e7e7e7;">
                             <div class="row " >
@@ -44,7 +44,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                             <table id="tablaHorario" class="table table-hover " cellspacing="0" width="100%" style="background: #f0f0f0;">
                                 <thead>
                                 <tr id="trHorario">
-                                    <th>Recuso</th>
+                                    <th>Rercuso</th>
                                     <th>Dias Laborales</th>   
                                     <th>Hora Inicio</th>  
                                     <th>Hora Fin</th>  
@@ -54,7 +54,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                 </thead>
                                 <tfoot>
                                 <tr>
-                                    <th>Recuso</th>
+                                    <th>Rercuso</th>
                                     <th>Dias Laborales</th>   
                                     <th>Hora Inicio</th>  
                                     <th>Hora Fin</th>  

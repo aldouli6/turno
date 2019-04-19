@@ -12952,7 +12952,13 @@ Main components
   }
 }
 
-
+.multipledata{
+    background-color: #e6e6e6;
+    border-radius: 8px;
+    margin: 5px;
+    padding: 4px 0px;
+    text-align: center;
+}
 
 /*Muestra los asteriscos en color rojo y los acomoda, estos sirven principalmente para indicar los datos requeridos que el usuario debe ingresar*/
 .datoImportante{
