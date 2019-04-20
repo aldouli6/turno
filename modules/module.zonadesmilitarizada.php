@@ -64,7 +64,7 @@ date_default_timezone_set('America/Mexico_City');
 												where usuarioId=?";
 						$GetElement=$database->getRow($ConsultarGetElement,array($getElementLastId));
 						if($GetElement==true){
-							$database->commitDB();
+							
 							
 							include("../sendemail.php");//Mando a llamar la funcion que se encarga de enviar el correo electronico
 							// 1.Inicia sesión en tu cuenta de Google.
@@ -92,6 +92,8 @@ date_default_timezone_set('America/Mexico_City');
 									Error: '.$respuesta;
 								$json['message']=$error;
 							}
+							//El comit se deberá realizar solamente si se envió el correo si no se envía se hará un roollback
+							$database->commitDB();
 							echo json_encode($json);
 							
 						}else{

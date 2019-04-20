@@ -204,6 +204,7 @@ $('#formRegistroUsuario').validate({
             type: "POST",
             data: formulario,
             success: function (response) {
+                console.log(response)
                 $("#formRegistroUsuario").get(0).reset();
                 $("#regTipoUsuario").select2("val", 0);
                 if (response != "0") {

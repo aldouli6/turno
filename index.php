@@ -41,7 +41,7 @@
                             <li >
                                 <a  href="#1" data-toggle="tab">Inciar Sesión</a>
                             </li>
-                            <li class="active">
+                            <li class="">
                                 <a href="#2" data-toggle="tab">Registrarse</a>
                             </li>
                         </ul>
@@ -73,42 +73,42 @@
                                 </div>
                                 <button class="btn btn-primary btn-cons m-t-10" id="btn_login">Iniciar sesión</button>
                             </div>
-                            <div class="tab-pane active" id="2">
+                            <div class="tab-pane " id="2">
                                 <p class="p-t-15">Registra tu cuenta como administrador</p>
                                 <div class="form-group form-group-default">
                                     <label>Nombre de Usuario</label>
                                     <div class="controls">
-                                        <input type="text" id="usernameSign" name="usernameSign" placeholder="Nombre de usuario" class="form-control" value="username"  required>
+                                        <input type="text" id="usernameSign" name="usernameSign" placeholder="Nombre de usuario" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-default">
                                     <label>Email</label>
                                     <div class="controls">
-                                        <input type="email" id="emailSign" name="emailSign" placeholder="Email" class="form-control"  value="aldouli6@gmail.com" required>
+                                        <input type="email" id="emailSign" name="emailSign" placeholder="Email" class="form-control"  required>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-default">
                                     <label>Teléfono</label>
                                     <div class="controls">
-                                        <input type="text" id="telefonoSign" name="telefonoSign" placeholder="Teléfono" class="form-control"  value="12345678" required>
+                                        <input type="text" id="telefonoSign" name="telefonoSign" placeholder="Teléfono" class="form-control"  required>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-default">
                                     <label>Nombre (s)</label>
                                     <div class="controls">
-                                        <input type="text" id="nombreSign" name="nombreSign" placeholder="Nombre (s)" class="form-control"  value="username" required>
+                                        <input type="text" id="nombreSign" name="nombreSign" placeholder="Nombre (s)" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-default">
                                     <label>Apellido (s)</label>
                                     <div class="controls">
-                                        <input type="text" id="apellidoSign" name="apellidoSign" placeholder="Apellido (s)" class="form-control"  value="username" required>
+                                        <input type="text" id="apellidoSign" name="apellidoSign" placeholder="Apellido (s)" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-default">
                                     <label>Contraseña</label>
                                     <div class="controls">
-                                        <input type="password" class="form-control" id="passwordSign" name="passwordSign" placeholder="Credenciales" value="username" required>
+                                        <input type="password" class="form-control" id="passwordSign" name="passwordSign" placeholder="Credenciales"required>
                                     </div>
                                 </div>
                                 <div class="form-group form-group-default">

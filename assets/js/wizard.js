@@ -250,7 +250,7 @@ $('#formRegistroEstablecimiento').validate({
             console.log(response);
             
             if(response=="1"){
-              swal({ 
+              Swal.fire({ 
                   title: "\u00A1En hora buena!",
                   text: "El establecimiento se ha registrado correctamente",
                   type: "success" 
@@ -261,7 +261,7 @@ $('#formRegistroEstablecimiento').validate({
               );
               
             }else{
-              swal("\u00A1Error!", "El establecimiento no se ha podido registrar", "error");
+              Swal.fire("\u00A1Error!", "El establecimiento no se ha podido registrar", "error");
               $("#formRegistroEstablecimiento").get(0).reset();
               $("#regEstabCategoria").select2("val", 0);
               $("#regEstabSubcategoria").select2("val", 0);

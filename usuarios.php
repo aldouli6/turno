@@ -33,10 +33,10 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                  MostrarPerfilUsuario::MostrarPerfil();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios.
                  MostrarUsuario::formularioRegistroUsuario();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios.
                  MostrarUsuario::formularioEdicionUsuario();//Se carga el método formularioEdicionUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal de edición de usuarios.
-                 if($_SESSION['typeuser'] != "root"){
-                    echo '<div class="row full-height no-margin">
-                      <div class="col-md-9">';
-                  }                
+                //  if($_SESSION['typeuser'] != "root"){
+                //     echo '<div class="row full-height no-margin">
+                //       <div class="col-md-9">';
+                //   }                
                 // *******************************
               ?>
               <div class="row" style="padding: 35px;background: #ffffff;margin-left: 5px;margin-right: 10px;border: 1px solid #e7e7e7;">

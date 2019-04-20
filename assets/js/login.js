@@ -73,6 +73,12 @@ function singInUp(usernameSign, apellidoSign, nombreSign, telefonoSign, emailSig
 			var obj = JSON.parse(response);
 			if(obj.state!='0'){
 				showNotification(obj.message,"success");	
+				$("#usernameSign").val('');
+				$("#apellidoSign").val('');
+				$("#nombreSign").val('');
+				$("#telefonoSign").val('');
+				$("#emailSign").val('');
+				$("#passwordSign").val('');
 			}else{
 				showNotification(obj.message,"danger");	
 			}
