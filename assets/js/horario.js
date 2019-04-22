@@ -210,8 +210,11 @@ $('#formHorarioNew').validate({
             type: "POST",
             data: formulario,
             success: function (response) {
-                $('.formHorario').get(0).reset();
-                $(".formHorario > select").select2("val", 0);
+                $('#recursoIdNew').select2("val",'').trigger('change');
+                // $('#recursoIdNew').select2('data', {});
+                // $('#recursoIdNew').select2({ allowClear: true });
+                $('#diasLaboralesNew').select2("val",0).trigger('change');
+                $('#diasAsuetoExtraNew').select2("val",0).trigger('change');
                 if (response != "0") {
                     Swal.fire("\u00A1En hora buena!", "El Horario se ha registrado correctamente", "success");
                     $('.modalhorario').modal('hide');
@@ -237,7 +240,7 @@ $('#formHorarioNew').validate({
                     botonEliminar+=    '</button>';
                     data=value.nombre+"%"+td+"%"+value.horaInicio+"%"+value.horaFin+"%"+botonEditar+"%"+botonEliminar;
                     getData=data.split("%");
-                    $("#tablaHorario").DataTable().row.add(getData).draw().node();
+                    $("#tablaHorario").DataTable().row.add(getData).draw().node().id="horarioId"+value.id;
                 } else {
                     Swal.fire("\u00A1Error!", "El Horario no se ha podido registrar", "error");
                     $('.modalhorario').modal('hide');
@@ -310,7 +313,7 @@ function cargaSelectRecuros(id) {
         },
         success: function (response) {
             var obj = JSON.parse(response);
-            var html='<option value="">Selecciona un Recurso</option>';
+            var html='';
             $.each(obj, function( key, value ) {
                 html+= '<option value="'+value.id+'">'+value.nombre+'</option>';
             });

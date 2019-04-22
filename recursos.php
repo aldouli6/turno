@@ -77,7 +77,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                         <div class="form-group-default required">
                                             <label style="font-weight: bold;">Tipo de Sesión</label>
                                             <select title="" tabindex="-1" class="full-width select2-offscreen" data-init-plugin="select2" name="sesionIdSelect" id="sesionIdSelect"  required>
-                                                
+                                                <option  value="">Selecciona una opción</option>
                                             </select>
                                         </div>
                                         </div>

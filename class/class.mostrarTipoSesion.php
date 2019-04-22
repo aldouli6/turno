@@ -42,9 +42,9 @@ class MostrarTipoSesion{
                         </div>
                         <div class="row clearfix">
                           <div class="col-sm-6">
-                            <div class="form-group form-group-default required" aria-required="true">
+                            <div class="form-group form-group-default disabled required" aria-required="true">
                               <label>Clientes por sesión</label>
-                              <input type="number" class="form-control" value="0" name="clientesSesion'.$action.'" id="clientesSesion'.$action.'" required="" aria-required="true">
+                              <input type="number" readonly class="form-control" value="1" name="clientesSesion'.$action.'" id="clientesSesion'.$action.'" required="" aria-required="true">
                             </div>
                           </div>
                           <div class="col-sm-6">
@@ -62,7 +62,7 @@ class MostrarTipoSesion{
                             <div class="p-r-5 p-l-5 m-b-20">
                               <label style="font-weight: bold;">Duración de sesión</label>
                               <div class="input-group bootstrap-timepicker">
-                                  <input id="duracion'.$action.'" name="duracion'.$action.'" class="form-control timepicker" value="23:59" aria-invalid="false" type="text">
+                                  <input id="duracion'.$action.'" name="duracion'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
                                   <span class="input-group-addon"><i class="pg-clock"></i></span>
                               </div>
                             </div>                            
@@ -71,7 +71,7 @@ class MostrarTipoSesion{
                             <div class="p-r-5 p-l-5 m-b-20">
                               <label style="font-weight: bold;">Tiempo de espera</label>
                               <div class="input-group bootstrap-timepicker">
-                                  <input id="tiempoEspera'.$action.'" name="tiempoEspera'.$action.'" class="form-control timepicker" value="23:59" aria-invalid="false" type="text">
+                                  <input id="tiempoEspera'.$action.'" name="tiempoEspera'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
                                   <span class="input-group-addon"><i class="pg-clock"></i></span>
                               </div>
                             </div>
@@ -80,7 +80,7 @@ class MostrarTipoSesion{
                             <div class="p-r-5 p-l-5 m-b-20">
                               <label style="font-weight: bold;">Tiempo entre sesión</label>
                               <div class="input-group bootstrap-timepicker">
-                                  <input id="tiempEntreSesion'.$action.'" name="tiempEntreSesion'.$action.'" class="form-control timepicker" value="23:59" aria-invalid="false" type="text">
+                                  <input id="tiempEntreSesion'.$action.'" name="tiempEntreSesion'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
                                   <span class="input-group-addon"><i class="pg-clock"></i></span>
                               </div>
                             </div>

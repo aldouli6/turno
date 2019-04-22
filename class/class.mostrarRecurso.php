@@ -40,9 +40,9 @@ class MostrarRecursop{
                                 </div>
                             </div>
                           <div class="col-sm-6">
-                            <div class="form-group form-group-default required" aria-required="true">
+                            <div class="form-group form-group-default required disabled" aria-required="true">
                               <label>Cantidad</label>
-                              <input type="number" class="form-control" value="0" name="recursoCantidad'.$action.'" id="recursoCantidad'.$action.'" required="" aria-required="true">
+                              <input type="number" class="form-control" value="1" readonly name="recursoCantidad'.$action.'" id="recursoCantidad'.$action.'" required="" aria-required="true">
                             </div>
                           </div>
                         </div>

@@ -37,7 +37,7 @@ class MostrarHorario{
                                     <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                                         <label >Recurso</label>
                                         <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Select Country" data-init-plugin="select2" name="recursoId'.$action.'" id="recursoId'.$action.'" required>
-                                            <option value="0">Seleccione un recurso</option>
+                                            <option  value="0">Seleccione una opción</option>
                                         </select>
                                     </div>
                                 </div>

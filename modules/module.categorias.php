@@ -19,7 +19,7 @@ try {
         switch($cmd){
             case "listaCategorias":
                 $categoria=$_REQUEST["categoria"];
-                $sql="SELECT  categoriaId, nombre FROM categorias where categoriaPadre=?"; 
+                $sql="SELECT  categoriaId, nombre FROM categorias where categoriaPadre=? ORDER BY nombre"; 
                 $getCategorias = $database->getRows($sql, array($categoria));
                 //print_r($getSubcategorias)
                 $jsonCategorias=json_encode($getCategorias);

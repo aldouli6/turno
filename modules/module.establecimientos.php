@@ -67,7 +67,7 @@ try {
                                 $_SESSION["UsuarioNombre"] = $getEstab['nombre']." ".$getEstab['apellidoPaterno'];
                                 $_SESSION["UsuarioEmail"] = $getEstab['email'];
                                 $_SESSION["EstablecimientoID"]=$getEstab['establecimientoId'];
-                                $_SESSION["EstablecimientoNombre"]=$getrow['estabNombre'];
+                                $_SESSION["EstablecimientoNombre"]=$getEstab['estabNombre'];
                                 Sessions::loadvarsesion($getEstab['tipoUsuarioId']);
                                 //print_r($_SESSION);
                                 echo "1";

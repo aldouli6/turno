@@ -8,7 +8,7 @@ function tableListenerRow(){
     $('#contenidoRecurso').on('click', 'tr', function () {
         $('#relRecursoTipoSesion').removeClass('hide');
         var data = table.row( '#'+this.id ).data();
-        var recurso = data.DT_RowId.substr(9);
+        var recurso = this.id.substr(9);
         var establecimiento = $("#establecimientoIdNew").val();
         $("#thRelRecSesion").text(data[0]);
         getRelTipoSesiones(establecimiento, recurso);
@@ -31,7 +31,7 @@ function cargaSelect(estab,rec) {
         success: function (response) {
             
             var obj = JSON.parse(response);
-            var html='<option value="">Selecciona un Tipo de Sesión</option>';
+            var html='<option ></option>';
             $.each(obj, function( key, value ) {
                 html+= '<option value="'+value.id+'">'+value.nombre+'</option>';
             });
@@ -174,6 +174,7 @@ $('#formNewRelRecSes').validate({
                     data=value.nombre+"%"+botonEliminar;
                     getData=data.split("%");
                     $("#tableRelRecSesion").DataTable().row.add(getData).draw().node().id="relSesionId"+value.id;
+                    referenceTable("#tableRelRecSesion");
                 } else {
                     Swal.fire("\u00A1Error!", "La relación entre recurso y tipo de sesión no se ha podido registrar", "error");
                    
@@ -194,6 +195,7 @@ function eliminarRelSesion(id, tipoSesionId, nombre) {
         cancelButtonText: "No, cancelar",
     }).then((result) => {
         if (result.value) {
+            
             var url_path = "modules/module.recurso.php";
             metodo = "POST";
             $.ajax({
@@ -209,6 +211,7 @@ function eliminarRelSesion(id, tipoSesionId, nombre) {
                         $("#sesionIdSelect").append('<option value="'+tipoSesionId+'">'+nombre+'</option>');
                         $('#sesionIdSelect').select2("val", 0);
                         $('#tableRelRecSesion').DataTable().rows("#relSesionId" + id).remove().draw();
+                        //referenceTable("#tableRelRecSesion");
                         Swal.fire("\u00A1En hora buena!", "El tipo de sesión ha sido eliminado correctamente", "success");
                     } else {
                         Swal.fire("Error", "El tipo de sesión no ha podido ser eliminado.", "error");
@@ -242,7 +245,7 @@ $('#formRecursoNew').validate({
                     botonEliminar+=    '</button>';
                     data=value.nombre+"%"+value.cantidad+"%"+botonEditar+"%"+botonEliminar;
                     getData=data.split("%");
-                    $("#tablaRecurso").DataTable().row.add(getData).draw().node();
+                    $("#tablaRecurso").DataTable().row.add(getData).draw().node().id="recursoId"+value.recursoId;
                 } else {
                     Swal.fire("\u00A1Error!", "El recurso no se ha podido registrar", "error");
                     $('.modalrecurso').modal('hide');
@@ -307,6 +310,7 @@ function eliminarRecurso(id) {
         confirmButtonText: "Si, \u00A1elim\u00EDnalo!",
         cancelButtonText: "No, cancelar",
     }).then((result) => {
+        
         if (result.value) {
             var url_path = "modules/module.recurso.php";
             metodo = "POST";
@@ -320,6 +324,7 @@ function eliminarRecurso(id) {
                 },
                 success: function (response) {
                     if (response == "1") {
+                        $('#relRecursoTipoSesion').addClass('hide');
                         $('#tablaRecurso').DataTable().rows("#recursoId" + id).remove().draw();
                         Swal.fire("\u00A1En hora buena!", "El recurso ha sido eliminado correctamente", "success");
                     } else {

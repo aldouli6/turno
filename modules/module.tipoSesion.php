@@ -32,15 +32,14 @@ try {
                 echo $jsonTipoSesion;
             break;
             case "tipoSesionEditar":
-                $fechaFinSesionEdit=(isset($fechaFinSesionEdit))?'NULL':$fechaFinSesionEdit;
+                $fechaFinSesionEdit=(!isset($fechaFinSesionEdit))?'NULL':$fechaFinSesionEdit;
                 $costoSesionEdit=($costoSesionEdit==='')?'0':$costoSesionEdit;
-                //echo $costoSesionEdit;
                 $editarDatosElement="UPDATE tiposSesiones set 
                         nombre='".$SesionNombreEdit."',
                         clientesPorSesion='".$clientesSesionEdit."',
                         costo='".$costoSesionEdit."',
                         duracion='".$duracionEdit."',
-                        fechaFin=".$fechaFinSesionEdit.",
+                        fechaFin='".$fechaFinSesionEdit."',
                         limiteAntesAgendarDias='".$limiteAntesAgendarDiasEdit."',
                         limiteAntesAgendarHoras='".$limiteAntesAgendarHorasEdit."', 
                         limiteAntesAgendarMins='".$limiteAntesAgendarMinsEdit."',
@@ -84,7 +83,7 @@ try {
                 $newElement[10]=$limiteAntesAgendarDiasNew;
                 $newElement[11]=$limiteAntesAgendarHorasNew;
                 $newElement[12]=$limiteAntesAgendarMinsNew;
-                $newElement[13]=($fechaFinNew=='')?null:$fechaFinNew;
+                $newElement[13]=($fechaFinSesionNew=='')?null:$fechaFinSesionNew;
                 //print_r($newElement);
                 $registrarElement=$database->insertRow("INSERT into tiposSesiones(
                                                 establecimientoId,

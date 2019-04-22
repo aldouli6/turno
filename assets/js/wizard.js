@@ -8,6 +8,7 @@ var estado;
 var pais;
 function initMap(lati,long) {
   // Create a map object and specify the DOM element for display.
+  
   var mapProp = {
       center: {lat: lati, lng: long},
       scrollwheel: false,
@@ -249,16 +250,14 @@ $('#formRegistroEstablecimiento').validate({
           success: function (response) {
             console.log(response);
             
-            if(response=="1"){
+            if(response!="0"){
               Swal.fire({ 
                   title: "\u00A1En hora buena!",
                   text: "El establecimiento se ha registrado correctamente",
                   type: "success" 
-                },
-                function(){
+                }).then((result) => {
                   location.href="usuarios.php"
-                }
-              );
+                });
               
             }else{
               Swal.fire("\u00A1Error!", "El establecimiento no se ha podido registrar", "error");

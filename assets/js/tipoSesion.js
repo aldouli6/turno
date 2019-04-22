@@ -91,7 +91,7 @@ function referenceTable(tabla) {
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 
 
-            //console.log(aData);
+            ////console.log(aData);
 
             if (aData[5] == 0) {
                 $("#catId" + aData[0]).css('color', 'red');
@@ -117,7 +117,13 @@ $('#formTipoSesionNew').validate({
             data: formulario,
             success: function (response) {
                 $('.formTipoSesion').get(0).reset();
-                $(".formTipoSesion > select").select2("val", 0);
+                $(".formTipoSesion > select").select2("val", '0');
+                $('#maximoAgendarDiasNew').select2("val",'0');
+                $('#maximoAgendarHorasNew').select2("val",'0');
+                $('#maximoAgendarMinsNew').select2("val",'0');
+                $('#limiteAntesAgendarDiasNew').select2("val",'0');
+                $('#limiteAntesAgendarHorasNew').select2("val",'0');
+                $('#limiteAntesAgendarMinsNew').select2("val",'0');
                 if (response != "0") {
                     Swal.fire("\u00A1En hora buena!", "El Tipo de Sesión se ha registrado correctamente", "success");
                     $('.modalsesion').modal('hide');
@@ -131,7 +137,7 @@ $('#formTipoSesionNew').validate({
                     botonEliminar+=    '</button>';
                     data=value.nombre+"%"+value.clientesPorSesion+"%"+value.costo+"%"+value.duracion+"%"+botonEditar+"%"+botonEliminar;
                     getData=data.split("%");
-                    $("#tablaTipoSesion").DataTable().row.add(getData).draw().node();
+                    $("#tablaTipoSesion").DataTable().row.add(getData).draw().node().id="tsesId"+value.tipoSesionId;
                 } else {
                     Swal.fire("\u00A1Error!", "El TipoSesion no se ha podido registrar", "error");
                     $('.modalsesion').modal('hide');
@@ -150,6 +156,7 @@ $('#formTipoSesionEdit').validate({
             type: "POST",
             data: formulario,
             success: function (response) {
+                //console.log(response);
                 var obj = JSON.parse(response);
                 if (response!='0') {
                     $('#tablaTipoSesion').DataTable().cell(("#tsesId" +obj.tipoSesionId),0).data(obj.nombre);
@@ -179,6 +186,7 @@ function editartipoSesion(id) {
         },
         success: function (response) {
            var obj = JSON.parse(response);
+           //console.log(obj)
            $('#tipoSesionIdEdit').val(obj.tipoSesionId);
            $('#SesionNombreEdit').val(obj.nombre);
            $('#clientesSesionEdit').val(obj.clientesPorSesion);
@@ -186,13 +194,13 @@ function editartipoSesion(id) {
            $('#duracionEdit').val(obj.duracion);
            $('#tiempoEsperaEdit').val(obj.tiempoEspera);
            $('#tiempEntreSesionEdit').val(obj.tiempoEntreSesion);
-           $('#maximoAgendarDiasEdit').val(obj.maximoAgendarDias);
-           $('#maximoAgendarHorasEdit').val(obj.maximoAgendarHoras);
-           $('#maximoAgendarMinsEdit').val(obj.maximoAgendarMins);
-           $('#limiteAntesAgendarDiasEdit').val(obj.limiteAntesAgendarDias);
-           $('#limiteAntesAgendarHorasEdit').val(obj.limiteAntesAgendarHoras);
-           $('#limiteAntesAgendarMinsEdit').val(obj.limiteAntesAgendarMins);
-           $('#fechaFinEdit').val(obj.fechaFin);
+           $('#maximoAgendarDiasEdit').select2("val",obj.maximoAgendarDias);
+           $('#maximoAgendarHorasEdit').select2("val",obj.maximoAgendarHoras);
+           $('#maximoAgendarMinsEdit').select2("val",obj.maximoAgendarMins);
+           $('#limiteAntesAgendarDiasEdit').select2("val",obj.limiteAntesAgendarDias);
+           $('#limiteAntesAgendarHorasEdit').select2("val",obj.limiteAntesAgendarHoras);
+           $('#limiteAntesAgendarMinsEdit').select2("val",obj.limiteAntesAgendarMins);
+           $('#fechaFinSesionEdit').val(obj.fechaFin);
                 
         }
     });
