@@ -193,6 +193,7 @@ class Mostrargeneral
               break;
             case 'turnos':
               $javascript .= '<script src="assets/js/turno.js"></script>
+              <script src="assets/js/datejs/build/date.js"></script>
               <script src="assets/js/recurso.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;

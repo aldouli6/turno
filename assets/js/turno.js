@@ -1,15 +1,45 @@
+Date.prototype.getWeek = function(){
+    var d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()));
+    var dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+  };
+function funfirstDayOfWeek(dateObject, firstDayOfWeekIndex) {
+
+    const dayOfWeek = dateObject.getDay(),
+        firstDayOfWeek = new Date(dateObject),
+        diff = dayOfWeek >= firstDayOfWeekIndex ?
+            dayOfWeek - firstDayOfWeekIndex :
+            6 - dayOfWeek
+
+    firstDayOfWeek.setDate(dateObject.getDate() - diff)
+    firstDayOfWeek.setHours(0,0,0,0)
+
+    return firstDayOfWeek
+}
 $(document).ready(function() {
    
     //cargaSelect($('#establecimientoId').val(),'0');
     //getRecursosFromSesion($('#establecimientoId').val(), '0');
-    creaCalendario();
+    creaCalendario(new Date());
 });
 // $( "#sesionIdSelect" ).change(function() {
 //     getRecursosFromSesion($('#establecimientoId').val(), $(this).val());
 //   });
 
-function creaCalendario(params) {
+function creaCalendario(hoy) {
     
+    var mes = hoy.getMonth();
+    var meses = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var mesNombre = meses[mes];
+    var year = hoy.getFullYear();
+    var firstDayOfMonth = new Date(year, mes, 1);
+    var dayOfWeek= firstDayOfMonth.getDay();
+    var week=firstDayOfMonth.getWeek();
+    var firstDayOfWeek=funfirstDayOfWeek(firstDayOfMonth, 0);
+    console.log(firstDayOfMonth);
+    console.log(firstDayOfWeek);
 }
 
 
