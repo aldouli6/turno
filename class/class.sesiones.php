@@ -76,6 +76,7 @@ class Sessions{
 				$_SESSION['desctypeuser'] = "Administrador";
 				$_SESSION['typeuser'] = "admin";
 				$_SESSION['permissions'] =array(
+					"turnos" =>  array("where" => "all","icon" =>"fa fa-desktop","label" =>"Turnos" ),
 					"usuarios" =>  array("where" => "all","icon" =>"fa fa-user","label" =>"Usuarios" ),
 					"tipoSesiones" =>  array("where" => "all","icon" =>"fa fa-bookmark","label" =>"Tipos de Sesiones" ),
 					"recursos" =>  array("where" => "all","icon" =>"fa fa-wrench","label" =>"Recursos" ),
@@ -103,7 +104,7 @@ class Sessions{
 			case "admin":
 				if($_SESSION["EstablecimientoID"]!="" or $_SESSION["EstablecimientoID"]!=null){					
 					if( $location=="wizard" or $location=="panel"){
-						echo '<script languaje="javascript">location.href = "usuarios.php";</script>';
+						echo '<script languaje="javascript">location.href = "turnos.php";</script>';
 					}
 				}else{
 					if(($location!="wizard")){

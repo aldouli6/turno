@@ -69,8 +69,21 @@ try {
                 echo $jsonElements;
             break;
             case "getRecursos":
-                $sql="SELECT  * FROM recursos where establecimientoId=?"; 
+                $sql="SELECT  * FROM recursos where establecimientoId =? order by nombre"; 
                 $getElements = $database->getRows($sql, array($establecimiento));
+                //print_r($getElements);
+                $jsonElements=json_encode($getElements);
+                echo $jsonElements;
+            break;
+            case "getRecursosFromTipoSesion":
+                $sql="SELECT DISTINCT (r.recursoId),r.nombre FROM recursos as r
+                INNER JOIN relacionesRecursoTipoSesion as rrt
+                ON rrt.recursoId = r.recursoId
+                WHERE 1
+                AND r.establecimientoId = ? AND rrt.tipoSesionId";
+                $sql.=($tipoSesion!='0')?" = ":" <> ";
+                $sql.="? ORDER BY r.nombre"; 
+                $getElements = $database->getRows($sql, array($establecimiento, $tipoSesion));
                 //print_r($getElements);
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;

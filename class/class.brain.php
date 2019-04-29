@@ -62,4 +62,9 @@ switch ($varUbicacion) {
       include_once("./class/class.mostrarPerfilUsuario.php");
       include_once("./class/class.mostrarHorario.php");
       break;
+    case "turnos":
+      include_once("./class/class.mostrarplugins.php");
+      include_once("./class/class.mostrarPerfilUsuario.php");
+      //include_once("./class/class.mostrarHorario.php");
+      break;
 }
