@@ -37,19 +37,13 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                             <div id="prueba" class=" m-t-15" style="min-height:500px;">
                                 <div id="calendario" class="">
                                     <div id="nombreMes" class="">
-                                        El nombre del mes
                                     </div>
-                                    <div id="fechas" class="container">
-                                        <div id="semana1" style="display:flex" class="row justify-content-md-center">
-                                            <div id="week" style="width:16%">week</div>
-                                            <div id="dia0" style="width:12%">31</div>
-                                            <div id="dia1" style="width:12%">1</div>
-                                            <div id="dia2" style="width:12%">2</div>
-                                            <div id="dia3" style="width:12%">3</div>
-                                            <div id="dia4" style="width:12%">4</div>
-                                            <div id="dia5" style="width:12%">5</div>
-                                            <div id="dia6" style="width:12%">6</div>
-                                        </div>
+                                    <div id="year" class="">
+                                    </div>
+                                    <div id="nombreDiasSemana" style="display:flex" class=" justify-content-md-center">
+                                        
+                                    </div>
+                                    <div id="fechas" class="">
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +63,54 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     </body>
 </html>
 <style>
-#prueba *{
+/* #prueba *{
     border:1px solid 
+} */
+.box {
+  position: relative;
+  width: 100%;
+  /* desired width */
+  /* margin: 5px; */
+  
+}
+.box:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+  /* initial ratio of 1:1*/
+}
+.dia {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #333;
+  color: #fff;
+/*   display: flex;
+  align-items: center; */
+  line-height:100%;
+  height:100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Other ratios */
+
+.ratio4_1:before {
+  padding-top: 25%;
+}
+
+.ratio20_1:before {
+  padding-top: 5%;
+}
+
+.ratio4_3:before {
+  padding-top: 75%;
+}
+
+.ratio16_9:before {
+  padding-top: 56.25%;
 }
 </style>
