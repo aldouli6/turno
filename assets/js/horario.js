@@ -1,43 +1,16 @@
 $(document).ready(function() {
     //$('.multiselect').multiSelect();
     cargaSelectRecuros($('#establecimientoIdNew').val());
-    cargaSelectAsuetoExtra();
     getHorarios($('#establecimientoIdNew').val());
-    $('input').lc_switch("", "");
-
-    var diasAsuetoOficialesNew = 1;
-    $("#diasAsuetoOficialesNew").val(diasAsuetoOficialesNew);
-    var diasAsuetoOficialesEdit = 1;
-    $("#diasAsuetoOficialesEdit").val(diasAsuetoOficialesEdit);
-    $('body').delegate('.lcs_check', 'lcs-on', function () {
-        document.getElementById('divstatus2').style.display = 'none';
-        document.getElementById('divstatus1').style.display = 'block';
-        diasAsuetoOficialesNew = 1;
-        $("#diasAsuetoOficialesNew").val(diasAsuetoOficialesNew);
+    $('.timepicker').each(function () {
+        $(this).datetimepicker({
+            format: "HH:mm",
+            disabledTimeIntervals: [[moment({ h: 3 }), moment({ h: 8 })], [moment({ h: 18 }), moment({ h: 24 })]],
+            //sideBySide: true,
+            ignoreReadonly:true
+        });
     });
-    $('body').delegate('.lcs_check', 'lcs-off', function () {
-        document.getElementById('divstatus2').style.display = 'block';
-        document.getElementById('divstatus1').style.display = 'none';
-        diasAsuetoOficialesNew = 0;
-        $("#diasAsuetoOficialesNew").val(diasAsuetoOficialesNew);
-    });
-    $('body').delegate('.lcs_checkEdit', 'lcs-on', function () {
-        document.getElementById('divstatus2Edit').style.display = 'none';
-        document.getElementById('divstatus1Edit').style.display = 'block';
-        diasAsuetoOficialesEdit = 1;
-        $("#diasAsuetoOficialesEdit").val(diasAsuetoOficialesEdit);
-    });
-    $('body').delegate('.lcs_checkEdit', 'lcs-off', function () {
-        document.getElementById('divstatus2Edit').style.display = 'block';
-        document.getElementById('divstatus1Edit').style.display = 'none';
-        diasAsuetoOficialesEdit = 0;
-        $("#diasAsuetoOficialesEdit").val(diasAsuetoOficialesEdit);
-    });
-
-    $(".timepicker").datetimepicker({
-        format: 'HH:mm'
-    });
-
+    // $(".timepicker").datetimepicker().ignoreReadonly(true)
 
 });
 function editarHorario(horaioId) {
@@ -53,19 +26,12 @@ function editarHorario(horaioId) {
         },
         success: function (response) {
             var obj = JSON.parse(response);
-            
             var diasL = JSON.parse(obj.diasLaborables);
-            var diasAExtr = JSON.parse(obj.diasAsuetoExtra);
             $('#horarioIdEdit').val(obj.horarioRecursoId);
             $('#recursoIdEdit').select2("val",obj.recursoId);
             $('#horaInicioEdit').val(obj.horaInicio);
             $('#horaFinEdit').val(obj.horaFin);
             $('#diasLaboralesEdit').val(diasL).trigger('change');
-            $('#diasAsuetoExtraEdit').val(diasAExtr).trigger('change');
-            if(obj.diasAsuetoOficiales=='1')
-                $('input').lcs_on();
-            else
-                $('input').lcs_off();
        }
     });
 }
@@ -200,7 +166,7 @@ $('#formHorarioEdit').validate({
                 }
             }
         });
-    }
+    } 
 });
 $('#formHorarioNew').validate({
     submitHandler: function (form) {
@@ -285,21 +251,7 @@ function eliminarHorario(horarioId) {
         }
     });
 }
-function cargaSelectAsuetoExtra(params) {
-    var d = new Date();
-    var months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oc", "Nov", "Dic"];
-    var html='';
-    for (let i = 0; i < 730; i++) {
-        d.setDate(d.getDate() + 1);
-        fechaString=("0" + d.getDate()).slice(-2)+' '+months[d.getMonth()]+' '+d.getFullYear();
-        fechaValue=d.getFullYear()+'/'+("0" + (d.getMonth()+1)).slice(-2)+'/'+("0" + d.getDate()).slice(-2)
-        html+= '<option value="'+fechaValue+'">'+fechaString+'</option>';
-           
-    }
-    $("#diasAsuetoExtraNew").html(html); 
-    $("#diasAsuetoExtraEdit").html(html); 
-     
-}
+
 function cargaSelectRecuros(id) {
     var url_request = "modules/module.horarios.php";
     var method = "POST";

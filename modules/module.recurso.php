@@ -17,6 +17,27 @@ try {
     if(!empty($_POST)){            
         extract($_REQUEST);
         switch($cmd){
+            case "getRecursosHoy":
+                $claves=["D","L","M","X","J","V","S"];
+                $clave=$claves[$dia];
+                $sql='SELECT DISTINCT recursoId, nombre FROM (
+                    SELECT r.recursoId, r.nombre, r.diasAsuetoExtra, r.diasAsuetoOficiales, h.horaInicio, h.horaFin, h.diasLaborables,
+                    if( r.diasAsuetoOficiales  = \'0\' , \'[]\',
+                          (SELECT CONCAT(\'[\',  GROUP_CONCAT(JSON_ARRAy(dia)), \']\' )   FROM diasAsuetoOficiales ) ) as oficiales
+                
+                    FROM recursos r
+                    INNER JOIN horariosRecursos as h
+                    ON h.recursoId= r.recursoId
+                    WHERE r.establecimientoId = '.$establecimiento.'
+                    and JSON_CONTAINS(h.diasLaborables, \'["'.$clave.'"]\') -- para el filtrar por el día de hoy
+                    and !JSON_CONTAINS(r.diasAsuetoExtra, \'["'.$date.'"]\') -- para filtrar los dias de asueto extra
+                   -- 
+                 ) as interna  WHERE !JSON_CONTAINS(oficiales, \'["'.$date.'"]\')  -- para filtrar los dias de asueto oficiales';
+
+                $getElements = $database->getRows($sql);
+                $jsonElements=json_encode($getElements);
+                echo $jsonElements;
+            break;
             case "addRelRecSesion":
                 $database->beginTransactionDB();
                 $newElement=array();
@@ -89,16 +110,18 @@ try {
                 echo $jsonElements;
             break;
             case "getRelTipoSesiones":
-                $sql="SELECT rt.idRelacionesRecursoTipoSesion as id, r.recursoId, t.tipoSesionId, r.establecimientoId, t.nombre 
+                $sql="SELECT DISTINCT t.tipoSesionId, t.nombre 
                 FROM relacionesRecursoTipoSesion as rt
                 INNER JOIN recursos as r on r.recursoId = rt.recursoId 
                 INNER JOIN tiposSesiones as t on t.tipoSesionId = rt.tipoSesionId
                 WHERE 1
                 AND r.establecimientoId = ?
                 AND t.establecimientoId = ?
-                AND rt.recursoId = ? "; 
+                AND rt.recursoId ";
+                $sql.=($recurso!='0')?" = ":" <> ";
+                $sql.="? ORDER BY t.nombre"; 
                 $getElements = $database->getRows($sql, array($establecimiento, $establecimiento, $recurso));
-                //print_r($getElements);
+                // print_r($sql);
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;
             break;
@@ -110,9 +133,12 @@ try {
                 echo $jsonElement;
             break;
             case "recursoEditar":
+                $jsondiasAsuetoExtraEdit=json_encode($diasAsuetoExtraEdit);
                 $editarDatosElement="UPDATE recursos set 
                         nombre='".$recursoNombreEdit."',
-                        cantidad='".$recursoCantidadEdit."'
+                        cantidad='".$recursoCantidadEdit."',
+                        diasAsuetoOficiales='".$diasAsuetoOficialesEdit."',
+                        diasAsuetoExtra='".$jsondiasAsuetoExtraEdit."'
                             where recursoId=?";
                 
                 $editElementData=$database->updateRow($editarDatosElement,array($recursoIdEdit));
@@ -138,12 +164,16 @@ try {
                 $newElement[0]=$establecimientoIdNew;
                 $newElement[1]=$recursoNombreNew;
                 $newElement[2]=$recursoCantidadNew;
+                $newElement[4]=$diasAsuetoOficialesNew;
+                $newElement[5]=json_encode($diasAsuetoExtraNew);
                 $registrarElement=$database->insertRow("INSERT into recursos(
                                                 establecimientoId,
                                                 nombre,
-                                                cantidad
+                                                cantidad,
+                                                diasAsuetoOficiales,
+                                                diasAsuetoExtra
                                                 ) 
-                                                values(?,?,?)",$newElement);
+                                                values(?,?,?,?,?)",$newElement);
                 if($registrarElement==true){
                     $getElementLastId=$database->lastIdDB();
                     $ConsultarGetElement="SELECT  *

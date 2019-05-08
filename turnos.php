@@ -27,6 +27,91 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                 <div class="content full-height">
                     <?php Mostrargeneral::mostrarTituloPage($_SESSION['permissions'][$varUbicacion]['label']); ?>
                     <div class="container-fluid full-height no-padding">
+                    <div class="modal fade slide-up disable-scroll modalturno" id="formturno" tabindex="-1" role="dialog" aria-hidden="false">
+                        <div class="modal-dialog ">
+                        <div class="modal-content-wrapper">
+                            <div class="modal-content">
+                            <div class="modal-header clearfix text-left">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i>
+                                </button>
+                                <h5 >Turnos del día</h5>
+                                <p id="eldia" class="p-b-10"></p>
+                            </div>
+                            <div class="modal-body">
+                                <!-- START PANEL -->
+                                <div class="panel panel-transparent">
+                                <div class="panel-body">
+                                    <form role="form" class="formturno" id="formturno" autocomplete="off" novalidate="novalidate">
+                                    <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?=$_SESSION['EstablecimientoID']?>">
+                                    <input type="hidden" name="cmd" value="turno'.$name.'">
+                                    <input type="hidden" name="turnoId" id="turnoId">
+                                    <p>Datos principales</p>
+                                    <div class="form-group-attached">
+                                        <!-- <div class="row clearfix">
+                                            <div class="col-sm-6">
+                                                        <div class="p-r-5 p-l-5 m-b-20">
+                                                            <label style="font-weight: bold;">Hora </label>
+                                                    <div class="input-group bootstrap-timepicker">
+                                                        <input id="hora" name="hora" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
+                                                        <span class="input-group-addon"><i class="pg-clock"></i></span>
+                                                    </div>
+                                                </div>                            
+                                            </div>
+                                        </div> -->
+                                        <div class="row clearfix">
+                                            <div class="col-sm-6">
+                                                <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                                    <label >Recurso</label>
+                                                    <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="recursoId" id="recursoId" required>
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                                    <label >Tipo de Sesión</label>
+                                                    <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="tipoSesionId" id="tipoSesionId" required>
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cuerpo" style="
+    background: antiquewhite;
+    height: 44vh;
+">
+                                        </div>
+                                        
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-sm-6  m-t-10 sm-m-t-10">
+                                        <div class="pull-left">
+                                            <button class="btn btn-primary btn-lg" type="submit">
+                                            <span class="glyphicon glyphicon-floppy-save"></span> Guardar
+                                            </button>
+                                        </div>
+                                        </div>
+                                        <div class="col-sm-6 m-t-10 sm-m-t-10">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">
+                                            <span class="glyphicon glyphicon-remove-sign"></span> Cerrar
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div id="mensajeGuardadoUsuario"></div>
+                                    </form>
+                                </div>
+                                </div>
+                                <!-- END PANEL -->
+                            </div>
+                            </div>
+                        </div>
+                        <!-- /.end modal-content -->
+                        </div>
+                    </div>       
                         <?php
                             MostrarPerfilUsuario::MostrarPerfil();
                         ?>
@@ -79,13 +164,12 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
   padding-top: 100%;
   /* initial ratio of 1:1*/
 }
-.dia {
+.celda {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background: #333;
   color: #fff;
 /*   display: flex;
   align-items: center; */
@@ -96,14 +180,71 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
   align-items: center;
   justify-content: center;
 }
+
+.mes{
+    background: #019498;
+    border-radius: 25px 25px 0px 0px;
+    font-size:4.5vh;
+}
+.mes>div{
+    width:20vw;
+}
+.icon:hover{
+    background: #01868a;
+}
+.icon{
+    font-size: 3vh;;
+    cursor: pointer;
+    padding:5px
+}
+.year{
+    background: #019498;
+    font-size:3.5vh;;
+}
+.numero{
+    position: absolute;
+    top: 1vh;
+    right: 1vh;
+}
+.dia{
+    background: #f0f0f0;
+    color: #21242d;
+    height: 9.5vh;
+    margin: 1.5vh 0.5vh 0 0.5vh;
+    border-radius: 1vh;
+    font-size: 1.5vw;
+}
+.enmes:hover{
+    background: #005194;
+    height: 10vh;
+    color: #fff;
+    cursor: pointer;
+}
+.noenmes{
+    background: #868484;
+    color: #2c2c2c;
+    cursor: not-allowed;
+}
+.titulos{
+    background: #253056;
+    font-size: 2.5vw;
+}
+.semana{
+    background: #253056;
+    color: #fff;
+    height: 6.5vh;
+    margin: 1.5vh 0.5vh 0 0.5vh;
+    border-radius: 1vh;
+    font-size: 2.5vw;
+}
 /* Other ratios */
 
 .ratio4_1:before {
-  padding-top: 25%;
+  padding-top: 5vh;
 }
 
 .ratio20_1:before {
-  padding-top: 5%;
+  padding-top: 6vh;
 }
 
 .ratio4_3:before {
@@ -111,6 +252,6 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
 }
 
 .ratio16_9:before {
-  padding-top: 56.25%;
+  padding-top: 11vh;
 }
 </style>

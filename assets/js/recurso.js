@@ -1,7 +1,52 @@
 $(document).ready(function() {
     getRecursos($('#establecimientoIdNew').val());
-    
+    cargaSelectAsuetoExtra();
+    $('input').lc_switch("", "");
+
+    var diasAsuetoOficialesNew = 1;
+    $("#diasAsuetoOficialesNew").val(diasAsuetoOficialesNew);
+    var diasAsuetoOficialesEdit = 1;
+    $("#diasAsuetoOficialesEdit").val(diasAsuetoOficialesEdit);
+    $('body').delegate('.lcs_checNew', 'lcs-on', function () {
+        document.getElementById('divstatus2New').style.display = 'none';
+        document.getElementById('divstatus1New').style.display = 'block';
+        diasAsuetoOficialesNew = 1;
+        $("#diasAsuetoOficialesNew").val(diasAsuetoOficialesNew);
+    });
+    $('body').delegate('.lcs_checNew', 'lcs-off', function () {
+        document.getElementById('divstatus2New').style.display = 'block';
+        document.getElementById('divstatus1New').style.display = 'none';
+        diasAsuetoOficialesNew = 0;
+        $("#diasAsuetoOficialesNew").val(diasAsuetoOficialesNew);
+    });
+    $('body').delegate('.lcs_checkEdit', 'lcs-on', function () {
+        document.getElementById('divstatus2Edit').style.display = 'none';
+        document.getElementById('divstatus1Edit').style.display = 'block';
+        diasAsuetoOficialesEdit = 1;
+        $("#diasAsuetoOficialesEdit").val(diasAsuetoOficialesEdit);
+    });
+    $('body').delegate('.lcs_checkEdit', 'lcs-off', function () {
+        document.getElementById('divstatus2Edit').style.display = 'block';
+        document.getElementById('divstatus1Edit').style.display = 'none';
+        diasAsuetoOficialesEdit = 0;
+        $("#diasAsuetoOficialesEdit").val(diasAsuetoOficialesEdit);
+    });
 });
+function cargaSelectAsuetoExtra(params) {
+    var d = new Date();
+    var months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oc", "Nov", "Dic"];
+    var html='';
+    for (let i = 0; i < 730; i++) {
+        d.setDate(d.getDate() + 1);
+        fechaString=("0" + d.getDate()).slice(-2)+' '+months[d.getMonth()]+' '+d.getFullYear();
+        fechaValue=d.getFullYear()+'-'+("0" + (d.getMonth()+1)).slice(-2)+'-'+("0" + d.getDate()).slice(-2)
+        html+= '<option value="'+fechaValue+'">'+fechaString+'</option>';
+           
+    }
+    $("#diasAsuetoExtraNew").html(html); 
+    $("#diasAsuetoExtraEdit").html(html); 
+     
+}
 function tableListenerRow(){
     var table = $('#tablaRecurso').DataTable();
      
@@ -290,11 +335,16 @@ function editarRecurso(id) {
             recurso:id
         },
         success: function (response) {
-           var obj = JSON.parse(response);
-           $('#recursoIdEdit').val(obj.recursoId);
-           $('#recursoNombreEdit').val(obj.nombre);
-           $('#recursoCantidadEdit').val(obj.cantidad);
-                
+            var obj = JSON.parse(response);
+            var diasAExtr = JSON.parse(obj.diasAsuetoExtra);
+            $('#recursoIdEdit').val(obj.recursoId);
+            $('#recursoNombreEdit').val(obj.nombre);
+            $('#recursoCantidadEdit').val(obj.cantidad);
+            $('#diasAsuetoExtraEdit').val(diasAExtr).trigger('change');  
+            if(obj.diasAsuetoOficiales=='1')
+                $('input').lcs_on();
+            else
+                $('input').lcs_off();
         }
     });
 }

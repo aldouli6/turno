@@ -35,14 +35,86 @@ function funfirstDayOfWeek(dateObject, firstDayOfWeekIndex) {
 }
 $(document).ready(function() {
    
-    //cargaSelect($('#establecimientoId').val(),'0');
-    //getRecursosFromSesion($('#establecimientoId').val(), '0');
-    creaCalendario(new Date('2019-05-04'));
+    creaCalendario(new Date());
+    
 });
-// $( "#sesionIdSelect" ).change(function() {
-//     getRecursosFromSesion($('#establecimientoId').val(), $(this).val());
-//   });
-
+function listerners(){
+    $( ".icon" ).click(function() {
+        var target= $(this).attr('target');
+        console.log(target);
+        creaCalendario(new Date(target))
+    });
+    $( ".enmes" ).click(function() {
+        var aidi = $(this).attr('id').substring(3);
+        var year=aidi.substring(0,4);
+        var mes=aidi.substring(4,6);
+        var dia=aidi.substring(6,8);
+        cargarModal(dia,mes,year, $('#establecimientoId').val());
+    });
+}
+function cargarModal(dia,mes,year, establecimiento) {
+    var fecha=new Date(year, mes-1, dia);
+    $('#eldia').text(fechaNombre(fecha));
+    getTipoSesiones(establecimiento, '0');
+    getRecursosHoy(fecha,dia,mes,year, establecimiento);
+    $( "#recursoId" ).change(function() {
+        getTipoSesiones(establecimiento, $(this).val());
+      });
+}
+function getRecursosHoy(fecha,dia,mes,year, establecimiento) {
+    var url_request = "modules/module.recurso.php";
+    var method = "POST";
+    $('#recursoId').select2("val", 0);
+    $("#recursoId").empty();
+    $.ajax({
+        async: true,
+        url: url_request,
+        type: method,
+        data: {
+            cmd: "getRecursosHoy",
+            establecimiento:establecimiento,
+            dia:fecha.getDay(),
+            date: year+'-'+mes+'-'+dia
+        },
+        success: function (response) {
+            var obj = JSON.parse(response);
+            var html='<option ></option>';
+            $.each(obj, function( key, value ) {
+                html+= '<option value="'+value.recursoId+'">'+value.nombre+'</option>';
+            });
+            $("#recursoId").html(html);
+        }
+    });
+}
+function getTipoSesiones(establecimiento, recurso) {
+    var url_request = "modules/module.recurso.php";
+    var method = "POST";
+    $('#tipoSesionId').select2("val", 0);
+    $("#tipoSesionId").empty();
+    $.ajax({
+        async: true,
+        url: url_request,
+        type: method,
+        data: {
+            cmd: "getRelTipoSesiones",
+            establecimiento:establecimiento,
+            recurso: recurso
+        },
+        success: function (response) {
+            var obj = JSON.parse(response);
+            var html='<option ></option>';
+            $.each(obj, function( key, value ) {
+                html+= '<option value="'+value.tipoSesionId+'">'+value.nombre+'</option>';
+            });
+            $("#tipoSesionId").html(html);
+        }
+    });
+}
+function fechaNombre(fechaS) {
+    var dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    return dias[fechaS.getDay()] +', '+ fechaS.getDate()+' de '+ meses[fechaS.getMonth()]+' del '+ fechaS.getFullYear();
+}
 function creaCalendario(hoy) {
     
     var mes = hoy.getMonth(); 
@@ -52,34 +124,42 @@ function creaCalendario(hoy) {
     var year = hoy.getFullYear();
     var firstDayOfMonth = new Date(year, mes, 1);
     var firstDayOfWeek=funfirstDayOfWeek(firstDayOfMonth, 0);
-    console.log(firstDayOfMonth);
-    console.log(firstDayOfWeek);
-    $('#nombreMes').append('<div  class="box ratio20_1"><div class="dia"><i class="fa fa-chevron-left" aria-hidden="true"></i> '+mesNombre+' <i class="fa fa-chevron-right" aria-hidden="true"></i></div></div>');
-    $('#year').append('<div  class="box ratio20_1"><div class="dia">'+year+'</div></div>');
-    $('#nombreDiasSemana').append('<div  class="box ratio4_1"><div class="dia">Semana</div></div>');
+    var mesAntes = new Date(year, mes-1, 1);
+    var mesDespues =  new Date(year, mes+1, 1);
+    var yearAntes = new Date(year-1, mes, 1);
+    var yearDespues = new Date(year+1, mes, 1);
+    $('#nombreMes').empty();
+    $('#year').empty();
+    $('#nombreDiasSemana').empty();
+    $('#fechas').empty();
+    $('#nombreMes').append('<div  class="box ratio20_1"><div class=" celda mes"><i target="'+mesAntes+'" class="icon fa fa-chevron-left" aria-hidden="true"></i><div class="m-r-50 m-l-50"> '+mesNombre+'</div> <i target="'+mesDespues+'" class="icon fa fa-chevron-right" aria-hidden="true"></i></div></div>');
+    $('#year').append('<div  class="box ratio20_1"><div class="celda year"><i target="'+yearAntes+'"  class="icon fa fa-chevron-left" aria-hidden="true"></i><div class="m-r-50 m-l-50">'+year+'</div><i target="'+yearDespues+'"  class="icon fa fa-chevron-right" aria-hidden="true"></i></div></div>');
+    //$('#nombreDiasSemana').append('<div  class="box ratio4_1"><div class="celda titulos">Semana</div></div>');
     for (let i = 0; i < dias.length; i++) {
         var html='<div  class="box ratio4_1">';
-            html+='<div class="dia">'+dias[i]+'</div>';
+            html+='<div class="celda titulos">'+dias[i]+'</div>';
             html+='</div>';
             $('#nombreDiasSemana').append(html);
     }
     var fecha = firstDayOfWeek;
-    for (let j = 0; j < 6; j++) {
-        var week=fecha.getWeek();
+    for (let j = 0; j < 5; j++) {
+         var week=fecha.getWeek();
         var html='<div id="semana'+week+'" style="display:flex" class=" justify-content-md-center"></div>';
         $('#fechas').append(html);    
-        var html='<div id="week'+week+'" class="box ratio16_9"><div class="dia">'+week+' </div> ';
-        $('#semana'+week).append(html); 
+        // var html='<div id="week'+week+'" class="box ratio16_9"><div class="celda semana">'+week+' </div> ';
+        // $('#semana'+week).append(html); 
         for (let i = 0; i <= 6; i++) {
             var dayOfWeek= fecha.getDay();
             var html='';
-            html+='<div id="dia'+fecha.yyyymmdd()+'" class="box ratio16_9"><div class="dia">'+fecha.getDate()+' </div> ';
+            var enmes=(fecha.getMonth()==mes)?'enmes':'noenmes'
+            var modal=(fecha.getMonth()==mes)?'data-toggle="modal" data-target="#formturno"':'';
+            html+='<div   class="box ratio16_9"><div id="dia'+fecha.yyyymmdd()+'" '+modal+' class="'+enmes+' celda dia"><div class="numero" >'+fecha.getDate()+'</div> </div> ';
             $('#semana'+week).append(html); 
-            console.info(fecha)
             fecha.setDate(fecha.getDate() + 1);
         }
         //fecha.setDate(fecha.getDate() + 1);
     }
+    listerners();
 }
 
 

@@ -12,7 +12,7 @@
 $varUbicacion = 'securezone';
 include_once("../class/class.brain.php");
 
-$database = new db();
+$database = new db(); 
 try {
     if(!empty($_POST)){            
         extract($_REQUEST);
@@ -49,17 +49,13 @@ try {
                 $newElement[1]=$horaInicioNew;
                 $newElement[2]=$horaFinNew;
                 $newElement[3]=json_encode($diasLaboralesNew);
-                $newElement[4]=$diasAsuetoOficialesNew;
-                $newElement[5]=json_encode($diasAsuetoExtraNew);
                 $registrarElement=$database->insertRow("INSERT into horariosRecursos(
                                                 recursoId,
                                                 horaInicio,
                                                 horaFin,
-                                                diasLaborables,
-                                                diasAsuetoOficiales,
-                                                diasAsuetoExtra
+                                                diasLaborables
                                                 ) 
-                                                values(?,?,?,?,?,?)",$newElement);
+                                                values(?,?,?,?)",$newElement);
                 if($registrarElement==true){
                     $getElementLastId=$database->lastIdDB();
                     $ConsultarGetElement="SELECT h.horarioRecursoId as id, r.nombre, h.diasLaborables, h.horaInicio, h.horaFin
@@ -82,20 +78,17 @@ try {
                 break;
             case "horarioEditar":
                 $jsondiasLaboralesEdit=json_encode($diasLaboralesEdit);
-                $jsondiasAsuetoExtraEdit=json_encode($diasAsuetoExtraEdit);
                 $editarDatosElement="UPDATE horariosRecursos set 
                         recursoId='".$recursoIdEdit."',
                         horaInicio='".$horaInicioEdit."',
                         horaFin='".$horaFinEdit."',
-                        diasLaborables='".$jsondiasLaboralesEdit."',
-                        diasAsuetoOficiales='".$diasAsuetoOficialesEdit."',
-                        diasAsuetoExtra='".$jsondiasAsuetoExtraEdit."'
+                        diasLaborables='".$jsondiasLaboralesEdit."'
                             where horarioRecursoId=?";
                 //print_r($editarDatosElement);
                 $editElementData=$database->updateRow($editarDatosElement,array($horarioIdEdit));
                 
                 if($editElementData==true){
-                    $ConsultarGetElement="SELECT h.horarioRecursoId as id, r.nombre, h.diasLaborables, h.horaInicio, h.horaFin, h.diasAsuetoOficiales, h.diasAsuetoExtra
+                    $ConsultarGetElement="SELECT h.horarioRecursoId as id, r.nombre, h.diasLaborables, h.horaInicio, h.horaFin
                                             FROM horariosRecursos as h
                                             INNER JOIN recursos as r on r.recursoId = h.recursoId                                             
                                             where h.horarioRecursoId=?";

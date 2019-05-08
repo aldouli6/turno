@@ -48,6 +48,33 @@ class MostrarRecursop{
                         </div>
                       </div>
                       <br>
+                      <div class="form-group-attached">
+                        <div class="row clearfix">
+                          <div class="col-sm-6 form-group form-group-default input-group row">
+                              <label class="inline" >Días de Asueto Oficiales</label>
+                              <div id="divstatus1'.$action.'" class="col-sm-6" style="display: block;"><label class="inline" style="margin-top: 5px; margin-left: 12px" id="disasAsuetoOficialesSi" name="disasAsuetoOficialesSi">Habilitados</label></div>
+                              <div id="divstatus2'.$action.'" class="col-sm-6" style="display: none;"><label class="inline" style="margin-top: 5px; margin-left: 12px" id="disasAsuetoOficialesNo" name="disasAsuetoOficialesNo">Deshabilitados</label></div>
+                              <span class="input-group-addon bg-transparent col-sm-6">
+                              <div class="lcs_wrap">
+                                  <input name="diasAsueto'.$action.'" id="diasAsueto'.$action.'" class="lcs_check'.$action.'" type="checkbox">
+                                  <div class="lcs_switch  lcs_checkbox_switch lcs_on">
+                                  <div class="lcs_cursor"></div>
+                                  </div>
+                              </div>
+                              </span>
+                              <input type="hidden" name="diasAsuetoOficiales'.$action.'" id="diasAsuetoOficiales'.$action.'"/>
+                          </div>
+                          <div class="col-sm-6">
+                              <div  class="form-group form-group-default  p-b-15" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                  <label >Días de Asueto Extra</label>
+                                  <select title="" multiple="multiple"  tabindex="-1" class="multiselect full-width select2-offscreen" data-placeholder="Selecciona un día" data-init-plugin="select2" name="diasAsuetoExtra'.$action.'[]" id="diasAsuetoExtra'.$action.'" >
+                                      
+                                  </select>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                      <br>
                       <div class="row">
                         <div class="col-sm-6  m-t-10 sm-m-t-10">
                           <div class="pull-left">
