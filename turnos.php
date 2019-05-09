@@ -39,13 +39,10 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                             </div>
                             <div class="modal-body">
                                 <!-- START PANEL -->
-                                <div class="panel panel-transparent">
-                                <div class="panel-body">
                                     <form role="form" class="formturno" id="formturno" autocomplete="off" novalidate="novalidate">
                                     <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?=$_SESSION['EstablecimientoID']?>">
                                     <input type="hidden" name="cmd" value="turno'.$name.'">
                                     <input type="hidden" name="turnoId" id="turnoId">
-                                    <p>Datos principales</p>
                                     <div class="form-group-attached">
                                         <!-- <div class="row clearfix">
                                             <div class="col-sm-6">
@@ -59,55 +56,53 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                             </div>
                                         </div> -->
                                         <div class="row clearfix">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-5">
                                                 <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                                                     <label >Recurso</label>
                                                     <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="recursoId" id="recursoId" required>
                                                         <option></option>
                                                     </select>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-6">
+                                                <br>
                                                 <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                                                     <label >Tipo de Sesión</label>
                                                     <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="tipoSesionId" id="tipoSesionId" required>
                                                         <option></option>
                                                     </select>
                                                 </div>
+                                                <br>
+                                                <div class="row pull-down">
+                                                    <div class="col-sm-6  m-t-10 sm-m-t-10">
+                                                    <div class="pull-left">
+                                                        <button class="btn p-l-20 p-r-20  btn-primary btn-lg" type="submit">
+                                                        <span class="glyphicon glyphicon-floppy-save"></span> Guardar
+                                                        </button>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-sm-6 m-t-10 sm-m-t-10">
+                                                    <div class="pull-right">
+                                                        <button type="button" class="btn p-l-20 p-r-20 btn-primary btn-lg" data-dismiss="modal">
+                                                        <span class="glyphicon glyphicon-remove-sign"></span> Cerrar
+                                                        </button>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-7">
+                                                <div id="horasDia" class="cuerpo" ></div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="cuerpo" style="
-    background: antiquewhite;
-    height: 44vh;
-">
-                                        </div>
+                                        
                                         
                                     </div>
                                     <br>
-                                    <div class="row">
-                                        <div class="col-sm-6  m-t-10 sm-m-t-10">
-                                        <div class="pull-left">
-                                            <button class="btn btn-primary btn-lg" type="submit">
-                                            <span class="glyphicon glyphicon-floppy-save"></span> Guardar
-                                            </button>
-                                        </div>
-                                        </div>
-                                        <div class="col-sm-6 m-t-10 sm-m-t-10">
-                                        <div class="pull-right">
-                                            <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">
-                                            <span class="glyphicon glyphicon-remove-sign"></span> Cerrar
-                                            </button>
-                                        </div>
-                                        </div>
-                                    </div>
+                                    
                                     <br>
                                     <div id="mensajeGuardadoUsuario"></div>
                                     </form>
                                 </div>
                                 </div>
-                                <!-- END PANEL -->
-                            </div>
-                            </div>
                         </div>
                         <!-- /.end modal-content -->
                         </div>
@@ -148,9 +143,23 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     </body>
 </html>
 <style>
-/* #prueba *{
-    border:1px solid 
-} */
+.hora{
+    height: 6vh;
+    background: #f0f0f0;
+    color: #21242d;
+    margin: 0 0.5vh 1vh 0.5vh !important;
+    border-radius: 1vh;
+    font-size: 2vh;
+}
+.hora>.col-sm-3{
+    padding: 2vh 0;
+    text-align: center;
+}
+#horasDia{
+    height: 72vh;
+    margin: 0 1vw;
+    overflow-y: scroll;
+}
 .box {
   position: relative;
   width: 100%;

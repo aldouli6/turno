@@ -56,12 +56,56 @@ function cargarModal(dia,mes,year, establecimiento) {
     var fecha=new Date(year, mes-1, dia);
     $('#eldia').text(fechaNombre(fecha));
     getTipoSesiones(establecimiento, '0');
-    getRecursosHoy(fecha,dia,mes,year, establecimiento);
+    getRecursosHoy(fecha,dia,mes,year, establecimiento, 0);
+    cargaHorasDia();
     $( "#recursoId" ).change(function() {
         getTipoSesiones(establecimiento, $(this).val());
-      });
+        cargaHorariosRecursoHoy(fecha,dia,mes,year,establecimiento, $(this).val());
+    });
 }
-function getRecursosHoy(fecha,dia,mes,year, establecimiento) {
+function cargaHorariosRecursoHoy(fecha,dia,mes,year,establecimiento, recurso) {
+    var url_request = "modules/module.recurso.php";
+    var method = "POST";
+    $.ajax({
+        async: true,
+        url: url_request,
+        type: method,
+        data: {
+            cmd: "getRecursosHoy",
+            establecimiento:establecimiento,
+            recurso:recurso,
+            dia:fecha.getDay(),
+            date: year+'-'+mes+'-'+dia
+        },
+        success: function (response) {
+            console.log(response);
+            var obj = JSON.parse(response);
+            $.each(obj, function( key, value ) {
+                
+                var horaInicio = value.horaInicio.substring(0,2);
+                var horaFin = value.horaFin.substring(0,2);
+                //console.log(horaInicio);
+                for (let i = horaInicio; i < horaFin; i++) {
+                    console.log(i)
+                    
+                }
+            });
+        
+        }
+    });
+}
+function cargaHorasDia() {
+    for (let i = 0; i < 24; i++) {
+        var hora=(i<10)?'0'+i:i;
+        var html='';
+        html+='<div class="hora row" id="hora'+hora+'_00">';
+        html+='<div class="col-sm-3">'+hora+':00</div>';
+        html+='<div class="col-sm-9"></div>';
+        html+='</div>';
+        $("#horasDia").append(html);
+    }
+}
+function getRecursosHoy(fecha,dia,mes,year, establecimiento, recurso) {
     var url_request = "modules/module.recurso.php";
     var method = "POST";
     $('#recursoId').select2("val", 0);
@@ -73,14 +117,18 @@ function getRecursosHoy(fecha,dia,mes,year, establecimiento) {
         data: {
             cmd: "getRecursosHoy",
             establecimiento:establecimiento,
+            recurso:recurso,
             dia:fecha.getDay(),
             date: year+'-'+mes+'-'+dia
         },
         success: function (response) {
             var obj = JSON.parse(response);
             var html='<option ></option>';
+            var unicos=[];
             $.each(obj, function( key, value ) {
-                html+= '<option value="'+value.recursoId+'">'+value.nombre+'</option>';
+                if(!unicos.includes(value.recursoId))
+                    html+= '<option value="'+value.recursoId+'">'+value.nombre+'</option>';
+                unicos[key]=value.recursoId;
             });
             $("#recursoId").html(html);
         }

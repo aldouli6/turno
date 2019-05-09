@@ -20,7 +20,7 @@ try {
             case "getRecursosHoy":
                 $claves=["D","L","M","X","J","V","S"];
                 $clave=$claves[$dia];
-                $sql='SELECT DISTINCT recursoId, nombre FROM (
+                $sql='SELECT DISTINCT recursoId, nombre, horaInicio, horaFin FROM (
                     SELECT r.recursoId, r.nombre, r.diasAsuetoExtra, r.diasAsuetoOficiales, h.horaInicio, h.horaFin, h.diasLaborables,
                     if( r.diasAsuetoOficiales  = \'0\' , \'[]\',
                           (SELECT CONCAT(\'[\',  GROUP_CONCAT(JSON_ARRAy(dia)), \']\' )   FROM diasAsuetoOficiales ) ) as oficiales
@@ -28,11 +28,14 @@ try {
                     FROM recursos r
                     INNER JOIN horariosRecursos as h
                     ON h.recursoId= r.recursoId
-                    WHERE r.establecimientoId = '.$establecimiento.'
+                    WHERE r.establecimientoId = '.$establecimiento.' and r.recursoId ';
+                $sql.=($recurso>0)? ' = ': '<>';
+                $sql.=$recurso.' 
+
                     and JSON_CONTAINS(h.diasLaborables, \'["'.$clave.'"]\') -- para el filtrar por el día de hoy
                     and !JSON_CONTAINS(r.diasAsuetoExtra, \'["'.$date.'"]\') -- para filtrar los dias de asueto extra
                    -- 
-                 ) as interna  WHERE !JSON_CONTAINS(oficiales, \'["'.$date.'"]\')  -- para filtrar los dias de asueto oficiales';
+                 ) as interna  WHERE !JSON_CONTAINS(oficiales, \'["'.$date.'"]\') order by horaInicio -- para filtrar los dias de asueto oficiales';
 
                 $getElements = $database->getRows($sql);
                 $jsonElements=json_encode($getElements);
