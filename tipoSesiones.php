@@ -48,8 +48,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                             <table id="tablaTipoSesion" class="table table-hover " cellspacing="0" width="100%" style="background: #f0f0f0;">
                                 <thead>
                                 <tr id="trTipoSesion">
-                                    <th>Nombre</th>
-                                    <th>Clientes por Sesión</th>                                                                          
+                                    <th>Nombre</th>                                                                         
                                     <th>Costo</th>
                                     <th>Duración</th>
                                     <th></th>
@@ -58,8 +57,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                 </thead>
                                 <tfoot>
                                 <tr>
-                                    <th>Nombre</th>
-                                    <th>Clientes por Sesión</th>                                                                          
+                                    <th>Nombre</th>                                                                        
                                     <th>Costo</th>
                                     <th>Duración</th>
                                     <th></th>

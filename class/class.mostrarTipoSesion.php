@@ -28,23 +28,16 @@ class MostrarTipoSesion{
                   <div class="panel-body">
                     <form role="form" class="formTipoSesion" id="formTipoSesion'.$action.'" autocomplete="off" novalidate="novalidate">
                       <input type="hidden" name="establecimientoId'.$action.'" id="establecimientoId'.$action.'" value="'.$_SESSION['EstablecimientoID'].'">
+                      <input type="hidden" name="establecimientoStepping'.$action.'" id="establecimientoStepping'.$action.'" value="'.$_SESSION['EstablecimientoStepping'].'">
                       <input type="hidden" name="cmd" value="tipoSesion'.$name.'">
                       <input type="hidden" name="tipoSesionId'.$action.'" id="tipoSesionId'.$action.'">
                       <p>Datos principales</p>
                       <div class="form-group-attached">
                         <div class="row clearfix">
-                          <div class="col-sm-12">
+                          <div class="col-sm-6">
                             <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                               <label >Nombre</label>
                               <input type="text" class="form-control" name="SesionNombre'.$action.'" id="SesionNombre'.$action.'" required="" aria-required="true">
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row clearfix">
-                          <div class="col-sm-6">
-                            <div class="form-group form-group-default disabled required" aria-required="true">
-                              <label>Clientes por sesión</label>
-                              <input type="number" readonly class="form-control" value="1" name="clientesSesion'.$action.'" id="clientesSesion'.$action.'" required="" aria-required="true">
                             </div>
                           </div>
                           <div class="col-sm-6">
@@ -62,7 +55,7 @@ class MostrarTipoSesion{
                             <div class="p-r-5 p-l-5 m-b-20">
                               <label style="font-weight: bold;">Duración de sesión</label>
                               <div class="input-group bootstrap-timepicker">
-                                  <input id="duracion'.$action.'" name="duracion'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
+                                  <input readonly="readonly" id="duracion'.$action.'" name="duracion'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
                                   <span class="input-group-addon"><i class="pg-clock"></i></span>
                               </div>
                             </div>                            
@@ -71,7 +64,7 @@ class MostrarTipoSesion{
                             <div class="p-r-5 p-l-5 m-b-20">
                               <label style="font-weight: bold;">Tiempo de espera</label>
                               <div class="input-group bootstrap-timepicker">
-                                  <input id="tiempoEspera'.$action.'" name="tiempoEspera'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
+                                  <input readonly="readonly" id="tiempoEspera'.$action.'" name="tiempoEspera'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
                                   <span class="input-group-addon"><i class="pg-clock"></i></span>
                               </div>
                             </div>
@@ -80,7 +73,7 @@ class MostrarTipoSesion{
                             <div class="p-r-5 p-l-5 m-b-20">
                               <label style="font-weight: bold;">Tiempo entre sesión</label>
                               <div class="input-group bootstrap-timepicker">
-                                  <input id="tiempEntreSesion'.$action.'" name="tiempEntreSesion'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
+                                  <input readonly="readonly" id="tiempEntreSesion'.$action.'" name="tiempEntreSesion'.$action.'" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
                                   <span class="input-group-addon"><i class="pg-clock"></i></span>
                               </div>
                             </div>

@@ -133,7 +133,6 @@ function getRecursos(id) {
             $.each(obj, function( key, value ) {
                 html+= "<tr id='recursoId"+value.recursoId+"'>";
                 html+= "<td>"+value.nombre+"</td>";
-                html+= "<td>"+value.cantidad+"</td>";
                 html+="<td>";
                 html+=   '<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#formEditarRecurso"  onclick="editarRecurso('+value.recursoId+')">';
                 html+=    '<span class="glyphicon glyphicon-pencil capa"></span>';
@@ -288,7 +287,7 @@ $('#formRecursoNew').validate({
                     botonEliminar+=   '<button style="background:gray;" type="button" class="btn btn-default btn-sm" onclick="eliminarRecurso('+value.recursoId+')">';
                     botonEliminar+=        '<span class="glyphicon glyphicon-trash capa" style="color:white"></span>';
                     botonEliminar+=    '</button>';
-                    data=value.nombre+"%"+value.cantidad+"%"+botonEditar+"%"+botonEliminar;
+                    data=value.nombre+"%"+botonEditar+"%"+botonEliminar;
                     getData=data.split("%");
                     $("#tablaRecurso").DataTable().row.add(getData).draw().node().id="recursoId"+value.recursoId;
                 } else {
@@ -312,7 +311,6 @@ $('#formRecursoEdit').validate({
                 var obj = JSON.parse(response);
                 if (response!='0') {
                     $('#tablaRecurso').DataTable().cell(("#recursoId" +obj.recursoId),0).data(obj.nombre);
-                    $('#tablaRecurso').DataTable().cell(("#recursoId" +obj.recursoId),1).data(obj.cantidad);
                     Swal.fire("\u00A1En hora buena!", "El recurso ha sido editado correctamente", "success");
                     $('.modalrecurso').modal('hide');
                 }else{
@@ -339,7 +337,6 @@ function editarRecurso(id) {
             var diasAExtr = JSON.parse(obj.diasAsuetoExtra);
             $('#recursoIdEdit').val(obj.recursoId);
             $('#recursoNombreEdit').val(obj.nombre);
-            $('#recursoCantidadEdit').val(obj.cantidad);
             $('#diasAsuetoExtraEdit').val(diasAExtr).trigger('change');  
             if(obj.diasAsuetoOficiales=='1')
                 $('input').lcs_on();

@@ -139,7 +139,6 @@ try {
                 $jsondiasAsuetoExtraEdit=json_encode($diasAsuetoExtraEdit);
                 $editarDatosElement="UPDATE recursos set 
                         nombre='".$recursoNombreEdit."',
-                        cantidad='".$recursoCantidadEdit."',
                         diasAsuetoOficiales='".$diasAsuetoOficialesEdit."',
                         diasAsuetoExtra='".$jsondiasAsuetoExtraEdit."'
                             where recursoId=?";
@@ -166,17 +165,15 @@ try {
                 $newElement=array();
                 $newElement[0]=$establecimientoIdNew;
                 $newElement[1]=$recursoNombreNew;
-                $newElement[2]=$recursoCantidadNew;
-                $newElement[4]=$diasAsuetoOficialesNew;
-                $newElement[5]=json_encode($diasAsuetoExtraNew);
+                $newElement[2]=$diasAsuetoOficialesNew;
+                $newElement[3]=json_encode($diasAsuetoExtraNew);
                 $registrarElement=$database->insertRow("INSERT into recursos(
-                                                establecimientoId,
+                                                establecimientoId, 
                                                 nombre,
-                                                cantidad,
                                                 diasAsuetoOficiales,
                                                 diasAsuetoExtra
                                                 ) 
-                                                values(?,?,?,?,?)",$newElement);
+                                                values(?,?,?,?)",$newElement);
                 if($registrarElement==true){
                     $getElementLastId=$database->lastIdDB();
                     $ConsultarGetElement="SELECT  *

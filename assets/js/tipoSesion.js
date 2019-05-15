@@ -1,8 +1,11 @@
 $(document).ready(function() {
     getTiposSesiones($('#establecimientoIdNew').val());
     $('[data-toggle="tooltip"]').tooltip();
+    var step= $('#establecimientoSteppingNew').val();
     $(".timepicker").datetimepicker({
-        format: 'HH:mm'
+        format: 'HH:mm',
+        stepping: step,
+        ignoreReadonly: true
     });
     $(".datepicker").datetimepicker({
         format:'YYYY-MM-DD'
@@ -42,7 +45,6 @@ function getTiposSesiones(id) {
             $.each(obj, function( key, value ) {
                 html+= "<tr id='tsesId"+value.tipoSesionId+"'>";
                 html+= "<td>"+value.nombre+"</td>";
-                html+= "<td>"+value.clientesPorSesion+"</td>";
                 html+= "<td>"+value.costo+"</td>";
                 html+= "<td>"+value.duracion+"</td>";
                 html+="<td>";
@@ -83,7 +85,7 @@ function referenceTable(tabla) {
         },
         "retrieve": true,
         "columnDefs": [{
-                "targets": [4,5],
+                "targets": [3,4],
                 "orderable": false
             }
         ],
@@ -135,7 +137,7 @@ $('#formTipoSesionNew').validate({
                     botonEliminar+=   '<button style="background:gray;" type="button" class="btn btn-default btn-sm" onclick="eliminartipoSesion('+value.tipoSesionId+')">';
                     botonEliminar+=        '<span class="glyphicon glyphicon-trash capa" style="color:white"></span>';
                     botonEliminar+=    '</button>';
-                    data=value.nombre+"%"+value.clientesPorSesion+"%"+value.costo+"%"+value.duracion+"%"+botonEditar+"%"+botonEliminar;
+                    data=value.nombre+"%"+value.costo+"%"+value.duracion+"%"+botonEditar+"%"+botonEliminar;
                     getData=data.split("%");
                     $("#tablaTipoSesion").DataTable().row.add(getData).draw().node().id="tsesId"+value.tipoSesionId;
                 } else {
@@ -160,9 +162,8 @@ $('#formTipoSesionEdit').validate({
                 var obj = JSON.parse(response);
                 if (response!='0') {
                     $('#tablaTipoSesion').DataTable().cell(("#tsesId" +obj.tipoSesionId),0).data(obj.nombre);
-                    $('#tablaTipoSesion').DataTable().cell(("#tsesId" +obj.tipoSesionId),1).data(obj.clientesPorSesion);
-                    $('#tablaTipoSesion').DataTable().cell(("#tsesId" +obj.tipoSesionId),2).data(obj.costo);
-                    $('#tablaTipoSesion').DataTable().cell(("#tsesId" +obj.tipoSesionId),3).data(obj.duracion);
+                    $('#tablaTipoSesion').DataTable().cell(("#tsesId" +obj.tipoSesionId),1).data(obj.costo);
+                    $('#tablaTipoSesion').DataTable().cell(("#tsesId" +obj.tipoSesionId),2).data(obj.duracion);
                     Swal.fire("\u00A1En hora buena!", "La categoría ha sido editada correctamente", "success");
                     $('.modalsesion').modal('hide');
                 }else{
@@ -189,7 +190,6 @@ function editartipoSesion(id) {
            //console.log(obj)
            $('#tipoSesionIdEdit').val(obj.tipoSesionId);
            $('#SesionNombreEdit').val(obj.nombre);
-           $('#clientesSesionEdit').val(obj.clientesPorSesion);
            $('#costoSesionEdit').val(obj.costo);
            $('#duracionEdit').val(obj.duracion);
            $('#tiempoEsperaEdit').val(obj.tiempoEspera);

@@ -48,16 +48,14 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                             <th colspan="3"  style="color: black;">Recursos</th>                                                                 
                                         </tr>
                                     <tr id="trRecurso">
-                                        <th>Nombre</th>
-                                        <th>Cantidad</th>   
+                                        <th>Nombre</th>  
                                         <th></th>
                                         <th></th>                                                                 
                                     </tr>
                                     </thead>
                                     <tfoot>
                                     <tr>
-                                        <th>Nombre</th>
-                                        <th>Cantidad</th>    
+                                        <th>Nombre</th>   
                                         <th></th>
                                         <th></th>
                                     </tr>

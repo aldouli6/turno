@@ -168,8 +168,8 @@ date_default_timezone_set('America/Mexico_City');
 				// SQL - Referencia de la consulta para extraer el password y compararlo según la variable del POST $password
 				$database = new db();
 				
-				$getrow = $database->getRow("SELECT u.usuarioId, u.estatus,u.tipoUsuarioId,u.username,u.nombre,u.apellidos,u.password,u.email,u.telefono,u.fecha_registro,
-				e.establecimientoId, e.nombre as estabNombre FROM 	usuarios as u LEFT JOIN establecimientos as e on u.establecimientoId = e.establecimientoId WHERE u.username  = ? ", array($usuario));
+				$getrow = $database->getRow("SELECT  u.usuarioId, u.estatus,u.tipoUsuarioId,u.username,u.nombre,u.apellidos,u.password,u.email,u.telefono,u.fecha_registro,
+				e.establecimientoId, e.stepping, e.nombre as estabNombre FROM 	usuarios as u LEFT JOIN establecimientos as e on u.establecimientoId = e.establecimientoId WHERE u.username  = ? ", array($usuario));
 
 				if($getrow != false)
 				{
@@ -184,6 +184,7 @@ date_default_timezone_set('America/Mexico_City');
                             $_SESSION["UsuarioEmail"] = $getrow['email'];
                             $_SESSION["EstablecimientoID"]=$getrow['establecimientoId'];
                             $_SESSION["EstablecimientoNombre"]=$getrow['estabNombre'];
+                            $_SESSION["EstablecimientoStepping"]=$getrow['stepping'];
                             Sessions::loadvarsesion($getrow['tipoUsuarioId']);
                             
                             echo $getrow['tipoUsuarioId'];

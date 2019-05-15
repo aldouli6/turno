@@ -36,7 +36,6 @@ try {
                 $costoSesionEdit=($costoSesionEdit==='')?'0':$costoSesionEdit;
                 $editarDatosElement="UPDATE tiposSesiones set 
                         nombre='".$SesionNombreEdit."',
-                        clientesPorSesion='".$clientesSesionEdit."',
                         costo='".$costoSesionEdit."',
                         duracion='".$duracionEdit."',
                         fechaFin='".$fechaFinSesionEdit."',
@@ -72,23 +71,21 @@ try {
                 $newElement=array();
                 $newElement[0]=$establecimientoIdNew;
                 $newElement[1]=$SesionNombreNew;
-                $newElement[2]=$clientesSesionNew;
-                $newElement[3]=($costoNew=='')?'0':$costoNew;
-                $newElement[4]=$duracionNew;
-                $newElement[5]=$tiempoEsperaNew;
-                $newElement[6]=$tiempEntreSesionNew;
-                $newElement[7]=$maximoAgendarDiasNew;
-                $newElement[8]=$maximoAgendarHorasNew;
-                $newElement[9]=$maximoAgendarMinsNew;
-                $newElement[10]=$limiteAntesAgendarDiasNew;
-                $newElement[11]=$limiteAntesAgendarHorasNew;
-                $newElement[12]=$limiteAntesAgendarMinsNew;
-                $newElement[13]=($fechaFinSesionNew=='')?null:$fechaFinSesionNew;
+                $newElement[2]=($costoNew=='')?'0':$costoNew;
+                $newElement[3]=$duracionNew;
+                $newElement[4]=$tiempoEsperaNew;
+                $newElement[5]=$tiempEntreSesionNew;
+                $newElement[6]=$maximoAgendarDiasNew;
+                $newElement[7]=$maximoAgendarHorasNew;
+                $newElement[8]=$maximoAgendarMinsNew;
+                $newElement[9]=$limiteAntesAgendarDiasNew;
+                $newElement[10]=$limiteAntesAgendarHorasNew;
+                $newElement[11]=$limiteAntesAgendarMinsNew;
+                $newElement[12]=($fechaFinSesionNew=='')?null:$fechaFinSesionNew;
                 //print_r($newElement);
                 $registrarElement=$database->insertRow("INSERT into tiposSesiones(
                                                 establecimientoId,
                                                 nombre,
-                                                clientesPorSesion,
                                                 costo,
                                                 duracion,
                                                 tiempoEspera,
@@ -101,7 +98,7 @@ try {
                                                 limiteAntesAgendarMins,
                                                 fechaFin
                                                 ) 
-                                                values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",$newElement);
+                                                values(?,?,?,?,?,?,?,?,?,?,?,?,?)",$newElement);
                 if($registrarElement==true){
                     $getElementLastId=$database->lastIdDB();
                     $ConsultarGetElement="SELECT  *

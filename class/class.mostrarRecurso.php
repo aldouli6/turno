@@ -33,18 +33,15 @@ class MostrarRecursop{
                       <p>Datos principales</p>
                       <div class="form-group-attached">
                         <div class="row clearfix">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                                     <label >Nombre</label>
-                                    <input type="text" class="form-control" name="recursoNombre'.$action.'" id="recursoNombre'.$action.'" required="" aria-required="true">
+                                    <input type="text" class="form-control" name="recursoNombre'.$action.'" id="recursoNombre'.$action.'" required="" aria-required="true" style="
+                                    height: 38px;
+                                ">
                                 </div>
                             </div>
-                          <div class="col-sm-6">
-                            <div class="form-group form-group-default required disabled" aria-required="true">
-                              <label>Cantidad</label>
-                              <input type="number" class="form-control" value="1" readonly name="recursoCantidad'.$action.'" id="recursoCantidad'.$action.'" required="" aria-required="true">
-                            </div>
-                          </div>
+                          
                         </div>
                       </div>
                       <br>

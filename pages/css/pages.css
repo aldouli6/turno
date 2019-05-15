@@ -13060,3 +13060,8 @@ Main components
   -o-transform: rotate(-90deg);
   transform: rotate(-90deg);
 }
+.timepicker{
+  background: white !important;
+  color: black !important;
+  cursor: pointer !important;
+}
