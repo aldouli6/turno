@@ -158,7 +158,7 @@ $('#formTipoSesionEdit').validate({
             type: "POST",
             data: formulario,
             success: function (response) {
-                //console.log(response);
+                console.log(response);
                 var obj = JSON.parse(response);
                 if (response!='0') {
                     $('#tablaTipoSesion').DataTable().cell(("#tsesId" +obj.tipoSesionId),0).data(obj.nombre);
@@ -241,3 +241,4 @@ function eliminartipoSesion(id) {
         }
     });
 }
+

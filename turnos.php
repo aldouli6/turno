@@ -71,6 +71,12 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                                     </select>
                                                 </div>
                                                 <br>
+                                                <div id="botonclean" class="hide" >
+                                                        <button class="btn btn-primary btn-lg  fullavalible" type=button>
+                                                            <span class="glyphicon glyphicon-trash"></span> Limpiar
+                                                        </button>
+                                                </div>
+                                                <br>
                                                 <div class="row pull-down">
                                                     <div class="col-sm-6  m-t-10 sm-m-t-10">
                                                     <div class="pull-left">
@@ -111,7 +117,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                             MostrarPerfilUsuario::MostrarPerfil();
                         ?>
                         <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?= $_SESSION['EstablecimientoID']?>">
-                        
+                        <input type="hidden" name="establecimientoStepping" id="establecimientoStepping" value="<?= $_SESSION['EstablecimientoStepping']?>">
                         <div class="" style="padding: 15px;background: #ffffff;margin-left: 10px;margin-right: 10px;border: 1px solid #e7e7e7;">
                             
                             <div id="prueba" class=" m-t-15" style="min-height:500px;">
@@ -143,7 +149,10 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     </body>
 </html>
 <style>
-.hora{
+.nopermitido{
+    background: #f76b68 !important;
+}
+.momentoenabled{
     height: 6vh;
     background: #f0f0f0;
     color: #21242d;
@@ -151,8 +160,15 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     border-radius: 1vh;
     font-size: 2vh;
 }
-.hora>.col-sm-3{
-    padding: 2vh 0;
+.momentodisabled{
+    background: #868484;
+    color: #2c2c2c;
+    cursor: not-allowed;
+    margin: 0 0.5vh 0.2vh 0.5vh !important;
+    border-radius: .5vh;
+}
+.momentoenabled>.col-sm-3{
+    padding: 1vh 0;
     text-align: center;
 }
 #horasDia{
@@ -223,16 +239,37 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     border-radius: 1vh;
     font-size: 1.5vw;
 }
-.enmes:hover{
+.mayorhoy:hover{
     background: #005194;
     height: 10vh;
     color: #fff;
     cursor: pointer;
 }
-.noenmes{
+.momentoduracionhover{
+    background-color: #005194;
+    color: #fff
+}
+.momentoanteshover{
+    background-color: #019498;
+    color: #fff
+}
+.momentodespueshover{
+    background-color: #253056;
+    color: #fff
+}
+.momentoselected{
+    margin-bottom:0px !important;
+}
+
+.menorhoy{
     background: #868484;
     color: #2c2c2c;
     cursor: not-allowed;
+}
+.noenmes{
+    background: #fff;
+    color: #fff;
+    cursor: auto;
 }
 .titulos{
     background: #253056;

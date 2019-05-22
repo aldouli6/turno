@@ -13065,3 +13065,6 @@ Main components
   color: black !important;
   cursor: pointer !important;
 }
+.fullavalible{
+  width:-webkit-fill-available;
+}

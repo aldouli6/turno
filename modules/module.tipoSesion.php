@@ -32,13 +32,12 @@ try {
                 echo $jsonTipoSesion;
             break;
             case "tipoSesionEditar":
-                $fechaFinSesionEdit=(!isset($fechaFinSesionEdit))?'NULL':$fechaFinSesionEdit;
+                $fechaFinSesionEdit=($fechaFinSesionEdit=='')?',fechaFin=NULL':', fechaFin='.$fechaFinSesionEdit;
                 $costoSesionEdit=($costoSesionEdit==='')?'0':$costoSesionEdit;
                 $editarDatosElement="UPDATE tiposSesiones set 
                         nombre='".$SesionNombreEdit."',
                         costo='".$costoSesionEdit."',
-                        duracion='".$duracionEdit."',
-                        fechaFin='".$fechaFinSesionEdit."',
+                        duracion='".$duracionEdit."' ".$fechaFinSesionEdit.",
                         limiteAntesAgendarDias='".$limiteAntesAgendarDiasEdit."',
                         limiteAntesAgendarHoras='".$limiteAntesAgendarHorasEdit."', 
                         limiteAntesAgendarMins='".$limiteAntesAgendarMinsEdit."',
@@ -48,9 +47,9 @@ try {
                         tiempoEntreSesion='".$tiempEntreSesionEdit."',
                         tiempoEspera='".$tiempoEsperaEdit."'
                             where tipoSesionId=?";
-                
+                //echo($editarDatosElement);
                 $editElementData=$database->updateRow($editarDatosElement,array($tipoSesionIdEdit));
-                //print_r($tipoSesionIdEdit);
+                
                 if($editElementData==true){
                     $ConsultarGetElement="SELECT  *
                         FROM tiposSesiones                                            

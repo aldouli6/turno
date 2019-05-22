@@ -5,7 +5,6 @@ $(document).ready(function() {
     $('.timepicker').each(function () {
         $(this).datetimepicker({
             format: "HH:mm",
-            disabledTimeIntervals: [[moment({ h: 3 }), moment({ h: 8 })], [moment({ h: 18 }), moment({ h: 24 })]],
             //sideBySide: true,
             ignoreReadonly:true
         });
