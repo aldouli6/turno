@@ -55,6 +55,7 @@ function listerners(){
 }
 function cargarModal(dia,mes,year, establecimiento) {
     var fecha=new Date(year, mes-1, dia);
+    $('#fecha').val(year+'-'+mes+'-'+dia);
     $('#eldia').text(fechaNombre(fecha));
     getTipoSesiones(establecimiento, '0');
     getRecursosHoy(fecha,dia,mes,year, establecimiento, 0);
@@ -87,17 +88,17 @@ function getDatosTipoSesion(tiposesion) {
             var anteshoras = obj.tiempoEspera.substring(0,2);
             var antesminutos = obj.tiempoEspera.substring(3,5);
             antesminutos = parseInt(antesminutos)+(parseInt(anteshoras)*60);
-            var despueshoras = obj.tiempoEspera.substring(0,2);
-            var despuesminutos = obj.tiempoEspera.substring(3,5);
+            var despueshoras = obj.tiempoEntreSesion.substring(0,2);
+            var despuesminutos = obj.tiempoEntreSesion.substring(3,5);
             despuesminutos = parseInt(despuesminutos)+(parseInt(despueshoras)*60);
-            momentoenabledhover();
+           
             $(".momentoenabled").hover(
                 function(){
                     var antes=$(this);
                     var flag=true;
                     var temp=$(this);
                     tiempoTotal=antesminutos+duracionminutos+despuesminutos;
-                    console.log(tiempoTotal);
+                    console.log(despuesminutos);
                     for (let x = 0; x < tiempoTotal; x+=parseInt(steps)) {
                         if(!temp.hasClass('momentoenabled')){
                             flag=false;
@@ -160,14 +161,18 @@ function getDatosTipoSesion(tiposesion) {
                     if(!$('.momentoenabled').hasClass('nopermitido')){
                         $('.momentoenabled').unbind('mouseenter').unbind('mouseleave')
                         var antes=$(this);
+                        var horaI = antes.first().text();
                         tiempoTotal=antesminutos+duracionminutos+despuesminutos;
                         for (let x = 0; x < tiempoTotal; x+=parseInt(steps)) {
                             antes.addClass('momentoselected');
                             antes= antes.next('.momentoenabled');
                         }
+                        var horaF = antes.first().text();
+                        $('#horaInicio').val(horaI);
+                        $('#horaFin').val(horaF);
+                        $('#estatusId').val(1);
                         $('.momentoenabled').unbind('click');
-                        $('#botonclean').removeClass('hide');
-                        //$('#botonclean').show();
+                        $('#datosocultos').removeClass('hide');
                     }else{
                         Swal.fire({
                             type: 'error',
@@ -181,13 +186,67 @@ function getDatosTipoSesion(tiposesion) {
         }
     });
 }
-function momentoenabledhover(){
-    
-}
-$( "#botonclean" ).click(function() {
-    getDatosTipoSesion($('#tipoSesionId').val());
-    $('.momentoselected').removeClass('momentoselected').removeClass('momentoanteshover').removeClass('momentoduracionhover').removeClass('momentodespueshover');
+$('#formaturno').validate({
+    submitHandler: function (form) {
+        var formulario = $(form).serialize();
+        console.log(formulario);
+        $.ajax({
+            url: "modules/module.turno.php",
+            type: "POST",
+            data: formulario,
+            success: function (response) {
+                console.log(response);
+                $('#formturno').modal('hide');
+            }
+        });
+    }
 });
+$("#formturno").on('hide.bs.modal', function(){
+    limpiar();
+  });
+function limpiar() {
+    getDatosTipoSesion($('#tipoSesionId').val());
+    $('#datosocultos').addClass('hide');
+    $('.momentoselected').removeClass('momentoselected').removeClass('momentoanteshover').removeClass('momentoduracionhover').removeClass('momentodespueshover');
+    $('#recursoId').select2("val",'0');
+    $('#tipoSesionId').select2("val",'0');
+    $('#usuarioId').select2("val",'0');
+    $('#datosocultos').addClass('hide');
+    $('#horaInicio').val('');
+    $('#horaFin').val('');
+    $('#fecha').val('');
+    $('#estatusId').val('');
+}
+$( ".busquedapor" ).click(function() {
+    var elvalor=$(this).text();
+    var elid=$(this).attr('id');
+    $('#labelselect').text('Busqueda por '+elvalor);
+    console.log(elid.substring(3));
+    cargaselectbusquedapor(elid.substring(3));
+    });
+function cargaselectbusquedapor(tipo) {
+    var url_request = "modules/module.usuarios.php";
+    var method = "POST";
+    $.ajax({
+        async: true,
+        url: url_request,
+        type: method,
+        data: {
+            cmd: "getclientes",
+            busqueda:tipo,
+            usuarioId:0
+        },
+        success: function (response) {
+            console.log(response);
+            var obj = JSON.parse(response);
+            var html='<option ></option>';
+            $.each(obj, function( key, value ) {
+                html+= '<option value="'+value.id+'">'+value.busqueda+'</option>';
+            });
+            $("#usuarioId").html(html);
+        }
+    });
+}
 function cargaHorariosRecursoHoy(fecha,dia,mes,year,establecimiento, recurso) {
     var url_request = "modules/module.recurso.php";
     var method = "POST";

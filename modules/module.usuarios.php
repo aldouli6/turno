@@ -18,6 +18,14 @@ if(!empty($_POST)){
    
     extract($_REQUEST);
         switch($cmd){
+            case 'getclientes':
+                
+                $sql="SELECT  usuarioId as id, ".$busqueda." as busqueda FROM usuarios where tipoUsuarioId = 4 and ";
+                $sql.=($usuarioId!='0')?" usuarioId=? ":" usuarioId<>? "; 
+                $getDatos = $database->getRows($sql, array($usuarioId));
+                $jsonDatos=json_encode($getDatos);
+                echo $jsonDatos;
+                break;
             case "dataTableUsuario":
                 $extra="";
                 $consultaDatosUsuario="SELECT  u.usuarioId, u.nombre, u.apellidos, u.email, t.nombre as descripcion, u.estatus

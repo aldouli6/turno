@@ -39,10 +39,10 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                             </div>
                             <div class="modal-body">
                                 <!-- START PANEL -->
-                                    <form role="form" class="formturno" id="formturno" autocomplete="off" novalidate="novalidate">
+                                    <form role="form" class="formturno" id="formaturno" autocomplete="off" novalidate="novalidate">
                                     <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?=$_SESSION['EstablecimientoID']?>">
-                                    <input type="hidden" name="cmd" value="turno'.$name.'">
-                                    <input type="hidden" name="turnoId" id="turnoId">
+                                    <input type="hidden" name="cmd" value="registrarTurno">
+                                    <!-- <input type="hidden" name="turnoId" id="turnoId"> -->
                                     <div class="form-group-attached">
                                         <!-- <div class="row clearfix">
                                             <div class="col-sm-6">
@@ -71,11 +71,29 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                                     </select>
                                                 </div>
                                                 <br>
-                                                <div id="botonclean" class="hide" >
-                                                        <button class="btn btn-primary btn-lg  fullavalible" type=button>
-                                                            <span class="glyphicon glyphicon-trash"></span> Limpiar
-                                                        </button>
+                                                <div id="datosocultos" class="hide">
+                                                    <label>Buscar usuario por:</label>
+                                                    <div class="btn-group btn-group-xs">
+                                                        <button type="button" id="porusername" class="busquedapor btn btn-primary">Usuario</button>
+                                                        <button type="button" id="pornombre" class="busquedapor btn btn-primary">Nombre</button>
+                                                        <button type="button" id="portelefono" class="busquedapor btn btn-primary">Teléfono</button>
+                                                        <button type="button" id="poremail" class="busquedapor btn btn-primary">Email</button>
+                                                    </div>
+                                                    <br>
+                                                    <div id="selectdeltipo" >
+                                                        <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                                        <label id="labelselect" ></label>
+                                                            <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="usuarioId" id="usuarioId" required>
+                                                                <option></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                
+                                                <input type="hidden" name="horaInicio" id="horaInicio">
+                                                <input type="hidden" name="horaFin" id="horaFin">
+                                                <input type="hidden" name="fecha" id="fecha">
+                                                <input type="hidden" name="estatusId" id="estatusId">
                                                 <br>
                                                 <div class="row pull-down">
                                                     <div class="col-sm-6  m-t-10 sm-m-t-10">
@@ -149,6 +167,9 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     </body>
 </html>
 <style>
+#selectdeltipo > div{
+    margin: 1vh 0px;
+}
 .nopermitido{
     background: #f76b68 !important;
 }
