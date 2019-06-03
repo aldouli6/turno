@@ -36,7 +36,7 @@ try {
                     and !JSON_CONTAINS(r.diasAsuetoExtra, \'["'.$date.'"]\') -- para filtrar los dias de asueto extra
                    -- 
                  ) as interna  WHERE !JSON_CONTAINS(oficiales, \'["'.$date.'"]\') order by horaInicio -- para filtrar los dias de asueto oficiales';
-
+                //  echo $sql;
                 $getElements = $database->getRows($sql);
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;

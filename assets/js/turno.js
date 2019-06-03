@@ -63,12 +63,68 @@ function cargarModal(dia,mes,year, establecimiento) {
     $( "#recursoId" ).change(function() {
         getTipoSesiones(establecimiento, $(this).val());
         cargaHorariosRecursoHoy(fecha,dia,mes,year,establecimiento, $(this).val());
+        cargaTurnos(fecha,dia,mes,year,establecimiento, $(this).val());
     });
     $( "#tipoSesionId" ).change(function() {
-        getDatosTipoSesion($(this).val());
+        getDatosTipoSesion($(this).val(), fecha,dia,mes,year,establecimiento);
     });
 }
-function getDatosTipoSesion(tiposesion) {
+function cargaTurnos(fecha,dia,mes,year,establecimiento, recurso) {
+    var url_request = "modules/module.turno.php";
+    var method = "POST";
+    console.log(establecimiento);
+    $.ajax({
+        async: true,
+        url: url_request,
+        type: method,
+        data: {
+            cmd: "getTurnosHoy",
+            establecimiento:establecimiento,
+            recurso:recurso,
+            date: year+'-'+mes+'-'+dia
+        },
+        success: function (response) {
+            var obj = JSON.parse(response);
+            $.each(obj, function( key, value ) {
+                var horaInicio = value.horaInicio.substring(0,2);
+                var horaFin = value.horaFin.substring(0,2);
+                var minInicio = value.horaInicio.substring(3,5);
+                var minFin = value.horaFin.substring(3,5);
+                var timeInicio= new Date(fecha);
+                timeInicio.setHours(horaInicio);
+                timeInicio.setMinutes(minInicio);
+                var timeFin= new Date(fecha);
+                timeFin.setHours(horaFin);
+                timeFin.setMinutes(minFin);
+                var tempfin=new Date(timeFin);
+                tempfin.setMinutes(tempfin.getMinutes()- parseInt(steps));
+                horaFin=tempfin.getHours();
+                horaFin=(horaFin<10)?'0'+horaFin:horaFin;
+                minFin=tempfin.getMinutes();
+                minFin=(minFin<10)?'0'+minFin:minFin;
+                while ( timeInicio<timeFin ) {
+                    var hora=timeInicio.getHours();
+                    var hora=(hora<10)?'0'+hora:hora;
+                    var mins=timeInicio.getMinutes();
+                    var mins=(mins<10)?'0'+mins:mins;
+                    if(horaInicio == hora && minInicio ==mins){
+                        $('#momento'+horaInicio+'_'+minInicio).addClass('minicio');
+                    }
+                    $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
+                    $('#momento'+hora+'_'+mins).addClass('momento'+value.estatus);
+                    $('#momento'+hora+'_'+mins+' .col-sm-9').text(value.descripcion);
+                    if (timeInicio.getTime()===tempfin.getTime()) {
+                        $('#momento'+horaFin+'_'+minFin).addClass('mfin');
+                    }
+                    timeInicio.setMinutes(timeInicio.getMinutes()+ parseInt(steps));
+                    
+                }
+                  
+            });
+        }
+    });
+}
+function getDatosTipoSesion(tiposesion, fecha,dia,mes,year,establecimiento) {
     var url_request = "modules/module.tipoSesion.php";
     var method = "POST";
     $.ajax({
@@ -82,6 +138,26 @@ function getDatosTipoSesion(tiposesion) {
         success: function (response) {
             var obj = JSON.parse(response);
             console.log(response);
+            //llama 
+            $.ajax({
+                async: true,
+                url: "modules/module.recurso.php",
+                type: method,
+                data: {
+                    cmd: "getRecursosFromTipoSesion",
+                    establecimiento:establecimiento,
+                    tipoSesion: obj.tipoSesionId,
+                },
+                success: function (response) {
+                    var obj = JSON.parse(response);
+                    
+                    $.each(obj, function( key, value ) {
+                        console.log(value.recursoId);
+                        cargaHorariosRecursoHoy(fecha,dia,mes,year,establecimiento, value.recursoId);
+                    });
+                }
+            });
+            
             var duracionhoras = obj.duracion.substring(0,2);
             var duracionminutos = obj.duracion.substring(3,5);
             duracionminutos = parseInt(duracionminutos)+(parseInt(duracionhoras)*60);
@@ -282,7 +358,7 @@ function cargaHorariosRecursoHoy(fecha,dia,mes,year,establecimiento, recurso) {
                     var mins=timeInicio.getMinutes();
                     var mins=(mins<10)?'0'+mins:mins;
 
-                    console.log(hora, mins);
+                    //console.log(hora, mins);
                     $('#momento'+hora+'_'+mins).removeClass('momentodisabled');
                     $('#momento'+hora+'_'+mins).addClass('momentoenabled');
 
@@ -424,7 +500,7 @@ function creaCalendario(hoy) {
             $('#nombreDiasSemana').append(html);
     }
     var fecha = firstDayOfWeek;
-    for (let j = 0; j < 5; j++) {
+    for (let j = 0; j < 6; j++) {
          var week=fecha.getWeek();
         var html='<div id="semana'+week+'" style="display:flex" class=" justify-content-md-center"></div>';
         $('#fechas').append(html);    

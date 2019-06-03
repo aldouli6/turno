@@ -18,6 +18,16 @@ if(!empty($_POST)){
    
     extract($_REQUEST);
         switch($cmd){
+            case 'getTurnosHoy':
+                $sql="SELECT t.turnoId, t.establecimientoId, t.usuarioId,concat(u.nombre, ' | ',s.nombre ) as descripcion,  t.recursoId, t.tipoSesionId, t.fecha, t.horaInicio, t.horaFin, e.nombre as estatus
+                FROM turnos as t 
+                INNER JOIN usuarios as u on u.usuarioId=t.usuarioId
+                INNER JOIN tiposSesiones as s on s.tipoSesionId=t.tipoSesionId
+                INNER JOIN estatus as e on e.idestatus= t.estatusId where t.establecimientoId = ".$establecimiento." and t.fecha = ? and t.recursoId = ?";
+                $getElements = $database->getRows($sql, array( $date, $recurso));
+                $jsonElements=json_encode($getElements);
+                echo $jsonElements;
+            break;
             case 'registrarTurno':
                 $database->beginTransactionDB();
                 $newElement=array();

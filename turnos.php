@@ -177,15 +177,27 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     height: 6vh;
     background: #f0f0f0;
     color: #21242d;
-    margin: 0 0.5vh 1vh 0.5vh !important;
+    margin: 0.5vh !important;
     border-radius: 1vh;
     font-size: 2vh;
+}
+.momentoagendado{
+    background: #55be6e;
+    color: #2c2c2c;
+    margin: 0px 0.5vh  !important;
+}
+.minicio{
+    border-radius: 1vh 1vh 0px 0px;
+    margin-top: 0.5vh !important;
+}
+.mfin{
+    border-radius: 0px 0px 1vh 1vh ;
+    margin-bottom: 0.5vh !important;
 }
 .momentodisabled{
     background: #868484;
     color: #2c2c2c;
     cursor: not-allowed;
-    margin: 0 0.5vh 0.2vh 0.5vh !important;
     border-radius: .5vh;
 }
 .momentoenabled>.col-sm-3{
