@@ -136,7 +136,7 @@ function getDatosTipoSesion(tiposesion, fecha,dia,mes,year,establecimiento) {
             tipoSesion:tiposesion
         },
         success: function (response) {
-            var obj = JSON.parse(response);
+            //var obj = JSON.parse(response);
             console.log(response);
             //llama 
             $.ajax({
@@ -429,6 +429,7 @@ function getRecursosHoy(fecha,dia,mes,year, establecimiento, recurso) {
             date: year+'-'+mes+'-'+dia
         },
         success: function (response) {
+            console.log(response);
             var obj = JSON.parse(response);
             var html='<option ></option>';
             var unicos=[];

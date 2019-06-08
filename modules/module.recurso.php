@@ -21,10 +21,8 @@ try {
                 $claves=["D","L","M","X","J","V","S"];
                 $clave=$claves[$dia];
                 $sql='SELECT DISTINCT recursoId, nombre, horaInicio, horaFin FROM (
-                    SELECT r.recursoId, r.nombre, r.diasAsuetoExtra, r.diasAsuetoOficiales, h.horaInicio, h.horaFin, h.diasLaborables,
-                    if( r.diasAsuetoOficiales  = \'0\' , \'[]\',
-                          (SELECT CONCAT(\'[\',  GROUP_CONCAT(JSON_ARRAy(dia)), \']\' )   FROM diasAsuetoOficiales ) ) as oficiales
-                
+                    SELECT r.recursoId, r.nombre,  h.horaInicio, h.horaFin, h.diasLaborables
+                   
                     FROM recursos r
                     INNER JOIN horariosRecursos as h
                     ON h.recursoId= r.recursoId
@@ -33,9 +31,8 @@ try {
                 $sql.=$recurso.' 
 
                     and JSON_CONTAINS(h.diasLaborables, \'["'.$clave.'"]\') -- para el filtrar por el día de hoy
-                    and !JSON_CONTAINS(r.diasAsuetoExtra, \'["'.$date.'"]\') -- para filtrar los dias de asueto extra
                    -- 
-                 ) as interna  WHERE !JSON_CONTAINS(oficiales, \'["'.$date.'"]\') order by horaInicio -- para filtrar los dias de asueto oficiales';
+                 ) as interna   order by horaInicio -- para filtrar los dias de asueto oficiales';
                 //  echo $sql;
                 $getElements = $database->getRows($sql);
                 $jsonElements=json_encode($getElements);
@@ -71,7 +68,7 @@ try {
                     echo "0";
                 }
             break;
-            case "eliminarRelRecSesion":         
+            case "eliminarRelRecSesion":    
                 if(SeguridadSistema::validarEntero(trim($relrecurso))==true){
                     $eliminarElementInfo="DELETE FROM relacionesRecursoTipoSesion where idRelacionesRecursoTipoSesion=?";
                     $eliminarElementData=$database->deleteRow($eliminarElementInfo,array($relrecurso));
@@ -113,7 +110,7 @@ try {
                 echo $jsonElements;
             break;
             case "getRelTipoSesiones":
-                $sql="SELECT DISTINCT t.tipoSesionId, t.nombre 
+                $sql="SELECT DISTINCT rt.idRelacionesRecursoTipoSesion as id, t.tipoSesionId, t.nombre 
                 FROM relacionesRecursoTipoSesion as rt
                 INNER JOIN recursos as r on r.recursoId = rt.recursoId 
                 INNER JOIN tiposSesiones as t on t.tipoSesionId = rt.tipoSesionId
@@ -136,11 +133,8 @@ try {
                 echo $jsonElement;
             break;
             case "recursoEditar":
-                $jsondiasAsuetoExtraEdit=json_encode($diasAsuetoExtraEdit);
                 $editarDatosElement="UPDATE recursos set 
-                        nombre='".$recursoNombreEdit."',
-                        diasAsuetoOficiales='".$diasAsuetoOficialesEdit."',
-                        diasAsuetoExtra='".$jsondiasAsuetoExtraEdit."'
+                        nombre='".$recursoNombreEdit."'
                             where recursoId=?";
                 
                 $editElementData=$database->updateRow($editarDatosElement,array($recursoIdEdit));
@@ -165,15 +159,11 @@ try {
                 $newElement=array();
                 $newElement[0]=$establecimientoIdNew;
                 $newElement[1]=$recursoNombreNew;
-                $newElement[2]=$diasAsuetoOficialesNew;
-                $newElement[3]=json_encode($diasAsuetoExtraNew);
                 $registrarElement=$database->insertRow("INSERT into recursos(
                                                 establecimientoId, 
-                                                nombre,
-                                                diasAsuetoOficiales,
-                                                diasAsuetoExtra
+                                                nombre
                                                 ) 
-                                                values(?,?,?,?)",$newElement);
+                                                values(?,?)",$newElement);
                 if($registrarElement==true){
                     $getElementLastId=$database->lastIdDB();
                     $ConsultarGetElement="SELECT  *
