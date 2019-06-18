@@ -125,6 +125,22 @@ try {
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;
             break;
+            case "getRelTipoSesionesSinID":
+                $sql="SELECT Distinct t.tipoSesionId, t.nombre 
+                FROM relacionesRecursoTipoSesion as rt
+                INNER JOIN recursos as r on r.recursoId = rt.recursoId 
+                INNER JOIN tiposSesiones as t on t.tipoSesionId = rt.tipoSesionId
+                WHERE 1
+                AND r.establecimientoId = ?
+                AND t.establecimientoId = ?
+                AND rt.recursoId ";
+                $sql.=($recurso!='0')?" = ":" <> ";
+                $sql.="? ORDER BY t.nombre"; 
+                $getElements = $database->getRows($sql, array($establecimiento, $establecimiento, $recurso));
+                // print_r($sql);
+                $jsonElements=json_encode($getElements);
+                echo $jsonElements;
+            break;
             case "getRecurso":
                 $sql="SELECT  * FROM recursos where recursoId=?"; 
                 $getElement = $database->getRow($sql, array($recurso));
@@ -134,7 +150,9 @@ try {
             break;
             case "recursoEditar":
                 $editarDatosElement="UPDATE recursos set 
-                        nombre='".$recursoNombreEdit."'
+                        nombre='".$recursoNombreEdit."',
+                        seleccionable='".$seleccionableEdit."',
+                        orden_alfa='".$orden_alfaEdit."'
                             where recursoId=?";
                 
                 $editElementData=$database->updateRow($editarDatosElement,array($recursoIdEdit));
@@ -159,11 +177,15 @@ try {
                 $newElement=array();
                 $newElement[0]=$establecimientoIdNew;
                 $newElement[1]=$recursoNombreNew;
+                $newElement[2]=$seleccionableNew;
+                $newElement[3]=$orden_alfaNew;
                 $registrarElement=$database->insertRow("INSERT into recursos(
                                                 establecimientoId, 
-                                                nombre
+                                                nombre,
+                                                seleccionable,
+                                                orden_alfa
                                                 ) 
-                                                values(?,?)",$newElement);
+                                                values(?,?,?,?)",$newElement);
                 if($registrarElement==true){
                     $getElementLastId=$database->lastIdDB();
                     $ConsultarGetElement="SELECT  *

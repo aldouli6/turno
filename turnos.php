@@ -27,51 +27,43 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                 <div class="content full-height">
                     <?php Mostrargeneral::mostrarTituloPage($_SESSION['permissions'][$varUbicacion]['label']); ?>
                     <div class="container-fluid full-height no-padding">
-                    <div class="modal fade slide-up disable-scroll modalturno" id="formturno" tabindex="-1" role="dialog" aria-hidden="false">
-                        <div class="modal-dialog ">
-                        <div class="modal-content-wrapper">
-                            <div class="modal-content">
-                            <div class="modal-header clearfix text-left">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i>
-                                </button>
-                                <h5 >Turnos del día</h5>
-                                <p id="eldia" class="p-b-10"></p>
-                            </div>
-                            <div class="modal-body">
-                                <!-- START PANEL -->
+                        <div class="modal fade slide-up disable-scroll modalturno" id="formturno" tabindex="-1" role="dialog" aria-hidden="false">
+                            <div class="modal-dialog ">
+                                <div class="modal-content-wrapper">
+                                    <div class="modal-content">
                                     <form role="form" class="formturno" id="formaturno" autocomplete="off" novalidate="novalidate">
-                                    <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?=$_SESSION['EstablecimientoID']?>">
-                                    <input type="hidden" name="cmd" value="registrarTurno">
-                                    <!-- <input type="hidden" name="turnoId" id="turnoId"> -->
-                                    <div class="form-group-attached">
-                                        <!-- <div class="row clearfix">
-                                            <div class="col-sm-6">
-                                                        <div class="p-r-5 p-l-5 m-b-20">
-                                                            <label style="font-weight: bold;">Hora </label>
-                                                    <div class="input-group bootstrap-timepicker">
-                                                        <input id="hora" name="hora" class="form-control timepicker" value="00:00" aria-invalid="false" type="text">
-                                                        <span class="input-group-addon"><i class="pg-clock"></i></span>
+                                        <div class="modal-header clearfix text-left">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h5 >Turnos del día</h5>
+                                                    <p id="eldia" class="p-b-10"></p>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                                        <label >Tipo de Sesión</label>
+                                                        <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="tipoSesionId" id="tipoSesionId" required>
+                                                            <option></option>
+                                                        </select>
                                                     </div>
-                                                </div>                            
+                                                </div>
                                             </div>
-                                        </div> -->
-                                        <div class="row clearfix">
-                                            <div class="col-sm-5">
-                                                <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
-                                                    <label >Recurso</label>
-                                                    <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="recursoId" id="recursoId" required>
-                                                        <option></option>
-                                                    </select>
-                                                </div>
-                                                <br>
-                                                <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
-                                                    <label >Tipo de Sesión</label>
-                                                    <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="tipoSesionId" id="tipoSesionId" required>
-                                                        <option></option>
-                                                    </select>
-                                                </div>
-                                                <br>
-                                                <div id="datosocultos" class="hide">
+                                        </div>
+                                    <div class="modal-body">
+                                        <!-- START PANEL -->
+                                        
+                                            <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?=$_SESSION['EstablecimientoID']?>">
+                                            <input type="hidden" name="cmd" value="registrarTurno">
+                                        <!-- <input type="hidden" name="turnoId" id="turnoId"> -->
+                                            <div class="form-group-attached">
+                                                <div id="horasDia" class="cuerpo" ></div>
+                                            </div>
+                                        
+                                    </div>
+                                    <div id="mensajeGuardadoUsuario"></div>
+                                    <div class="modal-footer" style="text-align:left !important;">
+                                        <div id="datosocultos" class="hide">
+                                            <div class="row  pull-down">
+                                                <div class="col-sm-6">
                                                     <label>Buscar usuario por:</label>
                                                     <div class="btn-group btn-group-xs">
                                                         <button type="button" id="porusername" class="busquedapor btn btn-primary">Usuario</button>
@@ -82,55 +74,50 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                                     <br>
                                                     <div id="selectdeltipo" >
                                                         <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
-                                                        <label id="labelselect" ></label>
+                                                            <label id="labelselect" ></label>
                                                             <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="usuarioId" id="usuarioId" required>
                                                                 <option></option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
-                                                <input type="hidden" name="horaInicio" id="horaInicio">
-                                                <input type="hidden" name="horaFin" id="horaFin">
-                                                <input type="hidden" name="fecha" id="fecha">
-                                                <input type="hidden" name="estatusId" id="estatusId">
-                                                <br>
-                                                <div class="row pull-down">
-                                                    <div class="col-sm-6  m-t-10 sm-m-t-10">
-                                                    <div class="pull-left">
-                                                        <button class="btn p-l-20 p-r-20  btn-primary btn-lg" type="submit">
-                                                        <span class="glyphicon glyphicon-floppy-save"></span> Guardar
-                                                        </button>
+                                                <div class="col-sm-6" style="top: 56px;">
+                                                    <div class="form-group form-group-default required" id='divrecursoId' aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                                        <label >Recurso</label>
+                                                        <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="recursoId" id="recursoId" required>
+                                                            <!-- <option></option> -->
+                                                        </select>
                                                     </div>
-                                                    </div>
-                                                    <div class="col-sm-6 m-t-10 sm-m-t-10">
-                                                    <div class="pull-right">
-                                                        <button type="button" class="btn p-l-20 p-r-20 btn-primary btn-lg" data-dismiss="modal">
-                                                        <span class="glyphicon glyphicon-remove-sign"></span> Cerrar
-                                                        </button>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div id="horasDia" class="cuerpo" ></div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        
-                                    </div>
-                                    <br>
-                                    
-                                    <br>
-                                    <div id="mensajeGuardadoUsuario"></div>
+                                        <input type="hidden" name="horaInicio" id="horaInicio">
+                                        <input type="hidden" name="horaFin" id="horaFin">
+                                        <input type="hidden" name="fecha" id="fecha">
+                                        <input type="hidden" name="estatusId" id="estatusId">
+                                        <div class="row pull-down">
+                                            <div class="col-sm-6  m-t-10 sm-m-t-10">
+                                                <div class="pull-left">
+                                                    <button id="submitBtn" class="btn p-l-20 p-r-20  btn-primary btn-lg" type="submit">
+                                                    <span class="glyphicon glyphicon-floppy-save"></span> Guardar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 m-t-10 sm-m-t-10">
+                                                <div class="pull-right">
+                                                    <button type="button" class="btn p-l-20 p-r-20 btn-primary btn-lg" data-dismiss="modal">
+                                                    <span class="glyphicon glyphicon-remove-sign"></span> Cerrar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </form>
+                                    </div>
                                 </div>
-                                </div>
+                            </div>
                         </div>
-                        <!-- /.end modal-content -->
-                        </div>
-                    </div>       
+                    </div>
+                </div>       
                         <?php
                             MostrarPerfilUsuario::MostrarPerfil();
                         ?>
@@ -170,6 +157,29 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
 #selectdeltipo > div{
     margin: 1vh 0px;
 }
+::-webkit-scrollbar {
+    display: none;
+}
+.recdisponible{
+    background: #868484;
+    color: #ccc;
+    border-radius: .5vh;  
+    font-size: 1.3vw;
+    margin: .5vh !important;
+    min-width: fit-content;
+    padding: 0 .3vh !important
+}
+.rec{
+    border-radius: .5vh;  
+    font-size: 1.3vw;
+    margin: .5vh !important;
+    min-width: fit-content;
+    padding: 0 .3vh !important
+}
+.contenido{
+    display: flex;
+    overflow-x: scroll;
+}
 .nopermitido{
     background: #f76b68 !important;
 }
@@ -181,11 +191,24 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     border-radius: 1vh;
     font-size: 2vh;
 }
-.momentoagendado{
+
+.momentodisabled{
+    background: #868484;
+    color: #2c2c2c;
+    cursor: not-allowed;
+    border-radius: .5vh;
+}
+.recagendado{
     background: #55be6e;
     color: #2c2c2c;
-    margin: 0px 0.5vh  !important;
+    cursor: pointer;
+    
 }
+/* .recagendado:hover{
+    -webkit-box-shadow: 0px 0px 10px 0px rgb(83, 234, 119);
+    -moz-box-shadow: 0px 0px 10px 0px rgb(83, 234, 119);
+    box-shadow: 0px 0px 10px 0px rgb(83, 234, 119);
+} */
 .minicio{
     border-radius: 1vh 1vh 0px 0px;
     margin-top: 0.5vh !important;
@@ -194,19 +217,12 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     border-radius: 0px 0px 1vh 1vh ;
     margin-bottom: 0.5vh !important;
 }
-.momentodisabled{
-    background: #868484;
-    color: #2c2c2c;
-    cursor: not-allowed;
-    border-radius: .5vh;
-}
 .momentoenabled>.col-sm-3{
     padding: 1vh 0;
     text-align: center;
 }
 #horasDia{
-    height: 72vh;
-    margin: 0 1vw;
+    height: 50vh;
     overflow-y: scroll;
 }
 .box {
@@ -291,7 +307,9 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     color: #fff
 }
 .momentoselected{
-    margin-bottom:0px !important;
+    -webkit-box-shadow: inset 0px 0px 14px 6px rgba(0,0,0,0.49);
+    -moz-box-shadow: inset 0px 0px 14px 6px rgba(0,0,0,0.49);
+    box-shadow: inset 0px 0px 14px 6px rgba(0,0,0,0.49);
 }
 
 .menorhoy{

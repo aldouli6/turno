@@ -33,15 +33,41 @@ class MostrarRecursop{
                       <p>Datos principales</p>
                       <div class="form-group-attached">
                         <div class="row clearfix">
-                            <div class="col-sm-12">
-                                <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
-                                    <label >Nombre</label>
-                                    <input type="text" class="form-control" name="recursoNombre'.$action.'" id="recursoNombre'.$action.'" required="" aria-required="true" style="
-                                    height: 38px;
-                                ">
-                                </div>
-                            </div>
-                          
+                          <div class="col-sm-12">
+                              <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                  <label >Nombre</label>
+                                  <input type="text" class="form-control" name="recursoNombre'.$action.'" id="recursoNombre'.$action.'" required="" aria-required="true" style="
+                                  height: 38px;
+                              ">
+                              </div>
+                          </div>
+                        </div>
+                        <div class="row clearfix">
+                          <div class="col-sm-6">
+                              <div class="form-group p-b-10 p-t-10 form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                <div id="divstatus1'.$action.'" style="display: block;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="estatusSeleccionable1" name="estatusSeleccionable1">Seleccionable</label></div>
+                                <div id="divstatus2'.$action.'" style="display: none;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="estatusSeleccionale2" name="estatusSeleccionale2">No Seleccionable</label></div>
+                                <span class="input-group-addon bg-transparent">
+                                  <div class="lcs_wrap">
+                                    <input name="seleccionables'.$action.'" id="seleccionables'.$action.'" class="lcs_check'.$action.'" type="checkbox">
+                                    <div class="lcs_switch  lcs_checkbox_switch lcs_on">
+                                      <div class="lcs_cursor"></div>
+                                    </div>
+                                  </div>
+                                </span>
+                                <input type="hidden" name="seleccionable'.$action.'" id="seleccionable'.$action.'"/>
+                              </div>
+                          </div>
+                          <div class="col-sm-6">
+                              <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                  <label >Orden Alfabético</label>
+                                  <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="orden_alfa'.$action.'" id="orden_alfa'.$action.'" required>
+                                    <option></option>  
+                                    <option value="asc">Ascendente (A-Z)</option>
+                                    <option value="desc">Descendente (Z-A)</option>
+                                  </select>
+                              </div>
+                          </div>
                         </div>
                       </div>
                       <br>

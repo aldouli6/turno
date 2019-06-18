@@ -96,7 +96,7 @@ class MostrarUsuario{
                         <div id="divstatus2" style="display: none;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="StatusUsuario2" name="StatusUsuario2">Deshabilitado</label></div>
                         <span class="input-group-addon bg-transparent">
                           <div class="lcs_wrap">
-                            <input name="StatusUsuario" id="StatusUsuario" class="lcs_check" type="checkbox">
+                            <input name="StatusUsuario" id="StatusUsuario" class="lcs_check'.$action.'" type="checkbox">
                             <div class="lcs_switch  lcs_checkbox_switch lcs_on">
                               <div class="lcs_cursor"></div>
                             </div>
