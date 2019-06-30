@@ -18,12 +18,49 @@ if(!empty($_POST)){
    
     extract($_REQUEST);
         switch($cmd){
+            case 'cambiarEstatusTurno':
+                $editarDatosElement="UPDATE turnos set 
+                estatusId='".$estatus."'
+                    where turnoId=?";
+        
+                $editElementData=$database->updateRow($editarDatosElement,array($turnoId));
+                //print_r($recursoIdEdit);
+                if($editElementData==true){
+                    $ConsultarGetElement="SELECT  *
+                        FROM turnos                                            
+                        where turnoId=?";
+                    $GetElement=$database->getRow($ConsultarGetElement,array($turnoId));
+                    if($GetElement==true){
+                        $jsonElement=json_encode($GetElement);
+                        echo $jsonElement;
+                    }else{
+                        echo "0";
+                    }
+                }else{
+                    echo "0";
+                }
+                break;
+            case 'getDataTurno':
+                $sql="SELECT t.turnoId, t.usuarioId, t.recursoId, t.tipoSesionId, t.estatusId, t.fecha, t.horaInicio, t.horaFin,
+                        u.nombre, u.apellidos, u.usuarioId,
+                        r.nombre as rNombre, ts.nombre as tsNombre, e.nombre as eNombre
+                        FROM turnos as t
+                        INNER JOIN usuarios as u on u.usuarioId=t.usuarioId
+                        INNER JOIN recursos as r on r.recursoId=t.recursoId
+                        INNER JOIN tiposSesiones as ts on ts.tipoSesionId=t.tipoSesionId
+                        INNER JOIN estatus as e on e.idestatus= t.estatusId
+                        WHERE 1
+                        and t.turnoId=?";
+                $getElements = $database->getRow($sql, array( $turno));
+                $jsonElements=json_encode($getElements);
+                echo $jsonElements;
+            break;
             case 'getTurnosHoy':
                 $sql="SELECT t.turnoId, t.establecimientoId, t.usuarioId,concat(u.nombre, ' | ',s.nombre ) as descripcion,  t.recursoId, t.tipoSesionId, t.fecha, t.horaInicio, t.horaFin, e.nombre as estatus
                 FROM turnos as t 
                 INNER JOIN usuarios as u on u.usuarioId=t.usuarioId
                 INNER JOIN tiposSesiones as s on s.tipoSesionId=t.tipoSesionId
-                INNER JOIN estatus as e on e.idestatus= t.estatusId where t.establecimientoId = ".$establecimiento." and t.fecha = ? and t.recursoId = ?";
+                INNER JOIN estatus as e on e.idestatus= t.estatusId where t.estatusId <> '4' and t.establecimientoId = ".$establecimiento." and t.fecha = ? and t.recursoId = ?";
                 $getElements = $database->getRows($sql, array( $date, $recurso));
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;

@@ -5,6 +5,11 @@ Date.prototype.getWeek = function(){
     var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
     return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
   };
+  function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
   Date.prototype.semanasmes = function() {
     var year= this.getFullYear();
     var mes = this.getMonth();
@@ -19,7 +24,12 @@ Date.prototype.getWeek = function(){
     var dd  = this.getDate().toString();  
     return yyyy + '' + (mm[1]?mm:"0"+mm[0]) + '' + (dd[1]?dd:"0"+dd[0]);
 };
-  
+$.fn.removeClassStartingWith = function (filter) {
+    $(this).removeClass(function (index, className) {
+        return (className.match(new RegExp("\\S*" + filter + "\\S*", 'g')) || []).join(' ')
+    });
+    return this;
+}; 
 function funfirstDayOfWeek(dateObject, firstDayOfWeekIndex) {
 
     const dayOfWeek = dateObject.getDay(),
@@ -34,10 +44,13 @@ function funfirstDayOfWeek(dateObject, firstDayOfWeekIndex) {
     return firstDayOfWeek
 }
 var steps=0;
-$(document).ready(function() {
+
+//$(window).load(function() {
+ $(document).ready(function() {
     creaCalendario(new Date());
-    $("#submitBtn").click(function(){        
-        $("#formaturno").submit(); // Submit the form
+    console.log(new Date());
+    $("#submitBtn").on( "click", function(){        
+        $("#formaturno").submit(); 
     });
     steps=$('#establecimientoStepping').val();
     var aidi;
@@ -46,28 +59,33 @@ $(document).ready(function() {
     var dia;
     var establecimiento= $('#establecimientoId').val();
     var fecha;
-    
-    $( ".icon" ).click(function() {
+    $('body').on('click','.icon',function() {
         var target= $(this).attr('target');
         console.log(target);
         creaCalendario(new Date(target))
     });
-    //  hay que revisar que los listeners se crean varias veces
-    $( ".enmes.mayorhoy" ).click(function() {
+    $('body').on('click','.iconmod', function() {
+        var target= $(this).attr('target');
+        target= new Date(target);
+        cargarModal(target.getDate(),target.getMonth()+1,target.getFullYear(),establecimiento);
+    });
+    $('body').on('click',".enmes.mayorhoy", function() {
         aidi = $(this).attr('id').substring(3);
         year=aidi.substring(0,4);
         mes=aidi.substring(4,6);
         dia=aidi.substring(6,8);
-        console.log('cargarModal');
         fecha =new Date(year, mes-1, dia);
+        console.log(dia,mes,year,establecimiento);
         cargarModal(dia,mes,year,establecimiento);
     });
+    $('body').on('hide.bs.modal',"#formturno", function(){
+        limpiar();
+      });
     $('#divrecursoId').hide();
-    $('#usuarioId').change(function() {
+    $('body').on('change',"#usuarioId",function() {
         $('#divrecursoId').show();
-        
     });
-    $( "#tipoSesionId" ).change(function() {
+    $('body').on('change',"#tipoSesionId",function() {
         var sesionid=$(this).val();
 
         $('#datosocultos').addClass('hide');
@@ -101,11 +119,23 @@ $(document).ready(function() {
 });
 
 function cargarModal(dia,mes,year, establecimiento) {
+    
     var fecha=new Date(year, mes-1, dia);
+    var prevday = addDays(fecha, -1);
+    var nextday = addDays(fecha, 1);
+    var hoy=new Date()
+    var hoy2 =  new Date(hoy.getFullYear(),hoy.getMonth(), hoy.getDate() )
+    if(prevday>=hoy2){
+        $('#prevday').show();
+        $('#prevday').attr('target',prevday);
+    }else{
+        $('#prevday').hide();
+    }
+    $('#nextday').attr('target',nextday);
     $('#fecha').val(year+'-'+mes+'-'+dia);
     $('#eldia').text(fechaNombre(fecha));
     getTipoSesiones(establecimiento, '0');
-     getRecursosHoy(fecha,dia,mes,year, establecimiento, 0);
+    getRecursosHoy(fecha,dia,mes,year, establecimiento, 0);
     cargaHorasDia(fecha);
     
 }
@@ -149,30 +179,143 @@ function cargaTurnos(fecha,dia,mes,year,establecimiento, recurso) {
                     var mins=timeInicio.getMinutes();
                     var mins=(mins<10)?'0'+mins:mins;
                     var elrec= $('#momento'+hora+'_'+mins).find("#recdisp"+value.recursoId);
-                    elrec.addClass('rec'+value.estatus);
+
+                    elrec.removeClassStartingWith('rec-');
+                    console.log('rec'+value.estatus);
+                    elrec.addClass('rec-'+value.estatus);
                     elrec.attr('turnid',value.turnoId);
-                    elrec.removeClass('recdisponible');
-                    var disponible= $('#momento'+hora+'_'+mins).find(".recdisponible");
+                    var disponible= $('#momento'+hora+'_'+mins).find(".rec-disponible");
                     if (disponible.length==0) {
                         $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
                         $('#momento'+hora+'_'+mins).addClass('momentodisabled');
                     }
                     timeInicio.setMinutes(timeInicio.getMinutes()+ parseInt(steps));
-                    
                 }
                   
             });
-            $(".recagendado").click(function() {
-                Swal.fire({
-                    title: $(this).text(),
-                    text: $(this).attr('turnid'),
-                    type: 'question',
-                    confirmButtonText: 'OK!'
-                  }).then((result) => {
-                    $('.momentoselected').removeClass('momentoselected').removeClass('momentoanteshover').removeClass('momentoduracionhover').removeClass('momentodespueshover');
+            $(".rec-agendado , .rec-atendiendo").click(function(e) {
+                var url_request = "modules/module.turno.php";
+                var method = "POST";
+                var elturno =$(this).attr('turnid');
+                var elrec =$(this).attr('recid');
+                var eluser;
+                var nuevoestatus;
+                var estatusletra;
+                var textoconfirm;
+                $.ajax({
+                    async: true,
+                    url: url_request,
+                    type: method,
+                    data: {
+                        cmd: "getDataTurno",
+                        turno:elturno,
+                    },
+                    success: function (response) {
+                        var obj = JSON.parse(response)
+                        console.log(obj);
+                        eluser=obj.usuarioId;
+                        switch (obj.estatusId) {
+                            case '1':
+                                textoconfirm='Atender Turno!'
+                                nuevoestatus='3'
+                                estatusletra= 'En atención!'
+                                break;
+                            case '3':
+                                textoconfirm='Turno Atendido!'
+                                nuevoestatus='2'
+                                estatusletra= 'Atendido'
+                                break;
+                            default:
+                                break;
+                        }
+                        Swal.fire({
+                            type: 'info',
+                            title: 'Turno número: '+obj.turnoId,
+                            html:   '<div style="margin:0 20%">' +
+                                    '<b class="pull-left">Usuario:</b> <span class="pull-right">'+obj.nombre+' '+obj.apellidos+'</span><br>' +
+                                    '<b class="pull-left">Recurso:</b> <span class="pull-right">'+obj.rNombre+'</span><br>' +
+                                    '<b class="pull-left">Tipo de Sesión:</b> <span class="pull-right">'+obj.tsNombre+'</span><br>' +
+                                    '<b class="pull-left">Fecha:</b> <span class="pull-right">'+obj.fecha+'</span><br>' +
+                                    '<b class="pull-left">Hora de Inicio:</b> <span class="pull-right">'+obj.horaInicio+'</span><br>' +
+                                    '<b class="pull-left">Hora de Fin:</b> <span class="pull-right">'+obj.horaFin+'</span><br>' +
+                                    '<b class="pull-left">Estatus:</b> <span class="pull-right">'+obj.eNombre+'</span></div>', 
+                            
+                            showCloseButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: textoconfirm,
+                            cancelButtonText: 'Cancelar Turno!',
+                        }).then((result) => {
+                            if (result.value) {
+                                //Atender
+                                $.ajax({
+                                    async: true,
+                                    url: url_request,
+                                    type: method,
+                                    data: {
+                                        cmd: "cambiarEstatusTurno",
+                                        turnoId:elturno,
+                                        estatus:nuevoestatus,
+                                    },
+                                    success: function (response) {
+                                        var obj = JSON.parse(response)
+                                        console.log(obj);
+                                        $('#tipoSesionId').val($('#tipoSesionId').val()).trigger('change');
+                                        Swal.fire(
+                                            estatusletra,
+                                            'El turno '+obj.turnoId+' está '+estatusletra,
+                                            'success'
+                                          );
+                                    } 
+                                });
+                              
+                            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                Swal.fire({
+                                    title: 'Confimación!',
+                                    text: "Estas seguro de canelar el turno",
+                                    type: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Si! cancelarlo',
+                                    cancelButtonText: 'No',
+                                  }).then((result) => {
+                                    if (result.value) {
+                                        $.ajax({
+                                            async: true,
+                                            url: url_request,
+                                            type: method,
+                                            data: {
+                                                cmd: "cambiarEstatusTurno",
+                                                turnoId:elturno,
+                                                estatus:'4',
+                                            },
+                                            success: function (response) {
+                                                var obj = JSON.parse(response)
+                                                console.log(obj);
+                                                $('#tipoSesionId').val($('#tipoSesionId').val()).trigger('change');
+                                                Swal.fire(
+                                                    'Cancelado',
+                                                    'El turno '+obj.turnoId+' está cancelado!',
+                                                    'success'
+                                                );
+                                            } 
+                                        });
+                                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                    //   Swal.fire(
+                                    //     'Cancelled',
+                                    //     'Your imaginary file is safe :)',
+                                    //     'error'
+                                    //   )
+                                    }
+                                  })
+                                
+                            }
+                          })
+                        
+                    }
+                });
+
                 
-                  });
-            });
+
+        });
         }
     });
 }
@@ -271,7 +414,7 @@ function getDatosTipoSesion(tiposesion) {
                         var html='';
                         $("#recursoId").empty();
                         var elids=0;
-                        antes.children('.contenido').children('.recdisponible').each(function( index ) {
+                        antes.children('.contenido').children('.rec-disponible').each(function( index ) {
                             if (elids==0) {
                                 elids= $( this ).attr('recid')
                             }
@@ -307,41 +450,41 @@ function getDatosTipoSesion(tiposesion) {
 $('#formaturno').validate({
     submitHandler: function (form) {
         var formulario = $(form).serialize();
-        console.log(formulario);
-        $.ajax({
-            url: "modules/module.turno.php",
-            type: "POST",
-            data: formulario,
-            success: function (response) {
-                console.log(response);
-                if (response!='0') {
-                    $('#formturno').modal('hide');
-                    Swal.fire({
-                        type: 'success',
-                        title: "\u00A1En hora buena!",
-                        text: 'El turno ha sido agendado correctamente',
-                      })
-                }else{
-                    Swal.fire({
-                        type: 'error',
-                        title: 'No se puede asignar un turno a esa hora',
-                        showConfirmButton: false,
-                        timer: 1500
-                      })
+        if (form.turnoId.value=='0') {
+            $.ajax({
+                url: "modules/module.turno.php",
+                type: "POST",
+                data: formulario,
+                success: function (response) {
+                    console.log(response);
+                    if (response!='0') {
+                        $('#formturno').modal('hide');
+                        Swal.fire({
+                            type: 'success',
+                            title: "\u00A1En hora buena!",
+                            text: 'El turno ha sido agendado correctamente',
+                          })
+                    }else{
+                        Swal.fire({
+                            type: 'error',
+                            title: 'No se puede asignar un turno a esa hora',
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
+                    }
                 }
+            });
+        } else {
                 
-            }
-        });
+        }
     }
 });
-$("#formturno").on('hide.bs.modal', function(){
-    limpiar();
-  });
+
 function limpiar() {
     getDatosTipoSesion($('#tipoSesionId').val());
-    $('#datosocultos').addClass('hide');
     $('.momentoselected').removeClass('momentoselected').removeClass('momentoanteshover').removeClass('momentoduracionhover').removeClass('momentodespueshover');
     $('#divrecursoId').hide();
+    $('#datosocultos').addClass('hide');
     $('#tipoSesionId').select2("val",'0');
     $('#usuarioId').select2("val",'0');
     $('#datosocultos').addClass('hide');
@@ -351,6 +494,7 @@ function limpiar() {
     $('#estatusId').val('');
     $('.contenido').empty();
     $("#recursoId").empty();
+    $("#turnoId").val('0');
 }
 $( ".busquedapor" ).click(function() {
     var elvalor=$(this).text();
@@ -359,7 +503,7 @@ $( ".busquedapor" ).click(function() {
     console.log(elid.substring(3));
     cargaselectbusquedapor(elid.substring(3));
     });
-function cargaselectbusquedapor(tipo) {
+function cargaselectbusquedapor(tipo, preselct=0) {
     var url_request = "modules/module.usuarios.php";
     var method = "POST";
     $.ajax({
@@ -379,6 +523,9 @@ function cargaselectbusquedapor(tipo) {
                 html+= '<option value="'+value.id+'">'+value.busqueda+'</option>';
             });
             $("#usuarioId").html(html);
+            if(preselct!=0){
+                $('#usuarioId').select2("val",preselct).trigger('change')
+            }
         }
     });
 }
@@ -418,9 +565,12 @@ function cargaHorariosRecursoHoy(fecha,dia,mes,year,establecimiento, recurso) {
                     var hora=(hora<10)?'0'+hora:hora;
                     var mins=timeInicio.getMinutes();
                     var mins=(mins<10)?'0'+mins:mins;
+                    if( !$('#momento'+hora+'_'+mins).hasClass('bloqueado')){
+                        $('#momento'+hora+'_'+mins).addClass('momentoenabled');
+                    }
+
                     $('#momento'+hora+'_'+mins).removeClass('momentodisabled');
-                    $('#momento'+hora+'_'+mins).addClass('momentoenabled');
-                    var eldiv='<div id="recdisp'+value.recursoId+'" class="recdisponible  rec col-sm-3" recid="'+value.recursoId+'">'+value.nombre+'</div>'
+                    var eldiv='<div id="recdisp'+value.recursoId+'" class="rec-disponible  rec col-sm-3" recid="'+value.recursoId+'">'+value.nombre+'</div>'
                     $('#contenido'+hora+'_'+mins).append(eldiv);
                     timeInicio.setMinutes(timeInicio.getMinutes()+ parseInt(steps));
                 }
@@ -444,29 +594,30 @@ function cargaHorasDia(fecha) {
     console.log(i, new Date());
     $("#horasDia").empty();
     while ( i.getDate() < manana.getDate() ) {
-        if(band){
-            if(i>ahora){
-                var hora=i.getHours();
-                var hora=(hora<10)?'0'+hora:hora;
-                var mins=i.getMinutes();
-                var mins=(mins<10)?'0'+mins:mins;
-                var html='';
-                html+='<div class="row momentodisabled" id="momento'+hora+'_'+mins+'">';
-                html+='<div class="col-sm-3">'+hora+':'+mins+'</div>';
-                html+='<div class="col-sm-9 contenido" id="contenido'+hora+'_'+mins+'"></div>';
-                html+='</div>';
-            }
-        }else{
+        // if(band){
+        //     if(i>ahora){
+        //         var hora=i.getHours();
+        //         var hora=(hora<10)?'0'+hora:hora;
+        //         var mins=i.getMinutes();
+        //         var mins=(mins<10)?'0'+mins:mins;
+        //         var html='';
+        //         html+='<div class="row momentodisabled" id="momento'+hora+'_'+mins+'">';
+        //         html+='<div class="col-sm-3">'+hora+':'+mins+'</div>';
+        //         html+='<div class="col-sm-9 contenido" id="contenido'+hora+'_'+mins+'"></div>';
+        //         html+='</div>';
+        //     }
+        // }else{
+            var nopermitido = (i<=ahora)?' bloqueado ':'';
             var hora=i.getHours();
             var hora=(hora<10)?'0'+hora:hora;
             var mins=i.getMinutes();
             var mins=(mins<10)?'0'+mins:mins;
             var html='';
-            html+='<div class="row momentodisabled" id="momento'+hora+'_'+mins+'">';
+            html+='<div class="row momentodisabled '+nopermitido+'" id="momento'+hora+'_'+mins+'">';
             html+='<div class="col-sm-3">'+hora+':'+mins+'</div>';
             html+='<div class="col-sm-9 contenido row" id="contenido'+hora+'_'+mins+'"></div>';
             html+='</div>';
-        }
+        // }
         
         $("#horasDia").append(html);
         i.setMinutes(i.getMinutes()+ parseInt(steps));
@@ -519,6 +670,11 @@ function getTipoSesiones(establecimiento, recurso) {
         success: function (response) {
             var obj = JSON.parse(response);
             console.log(obj);
+            // var ahora=new Date();
+            // console.log(ahora);
+            // var limiteAntes= ahora;
+            // limiteAntes.setDate(ahora.getDate()+parseInt(obj.maximoAgendarDias));
+            // console.log(limiteAntes);
             var html='<option ></option>';
             $.each(obj, function( key, value ) {
                 html+= '<option value="'+value.tipoSesionId+'">'+value.nombre+'</option>';
@@ -533,7 +689,7 @@ function fechaNombre(fechaS) {
     return dias[fechaS.getDay()] +', '+ fechaS.getDate()+' de '+ meses[fechaS.getMonth()]+' del '+ fechaS.getFullYear();
 }
 function creaCalendario(hoy) {
-    
+    console.log(hoy);
     var mes = hoy.getMonth(); 
     var dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
     var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -573,8 +729,8 @@ function creaCalendario(hoy) {
             var html='';
 
             var enmes=(fecha.getMonth()==mes)?'enmes':'noenmes';
-            enmes+=(fecha>today)?' mayorhoy ':' menorhoy ';
-            var modal=(fecha>today)?'data-toggle="modal" data-target="#formturno"':'';
+            enmes+=(fecha>today && fecha.getMonth()==mes)?' mayorhoy ':' menorhoy ';
+            var modal=(fecha>today && fecha.getMonth()==mes)?'data-toggle="modal" data-target="#formturno"':'';
             html+='<div   class="box ratio16_9"><div id="dia'+fecha.yyyymmdd()+'" '+modal+' class="'+enmes+' celda dia"><div class="numero" >'+fecha.getDate()+'</div> </div> ';
             $('#semana'+week).append(html); 
             fecha.setDate(fecha.getDate() + 1);

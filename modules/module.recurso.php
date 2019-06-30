@@ -126,7 +126,7 @@ try {
                 echo $jsonElements;
             break;
             case "getRelTipoSesionesSinID":
-                $sql="SELECT Distinct t.tipoSesionId, t.nombre 
+                $sql="SELECT Distinct t.tipoSesionId, t.nombre,t.maximoAgendarDias, t.maximoAgendarHoras, t.maximoAgendarMins, t.limiteAntesAgendarDias, t.limiteAntesAgendarHoras, t.limiteAntesAgendarMins, t.fechaFin
                 FROM relacionesRecursoTipoSesion as rt
                 INNER JOIN recursos as r on r.recursoId = rt.recursoId 
                 INNER JOIN tiposSesiones as t on t.tipoSesionId = rt.tipoSesionId

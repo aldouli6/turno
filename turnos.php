@@ -34,17 +34,23 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                     <form role="form" class="formturno" id="formaturno" autocomplete="off" novalidate="novalidate">
                                         <div class="modal-header clearfix text-left">
                                             <div class="row">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-1">
+                                                <i target="" id="prevday" class="iconmod fa fa-chevron-left" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="col-sm-5">
                                                     <h5 >Turnos del día</h5>
                                                     <p id="eldia" class="p-b-10"></p>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-5">
                                                     <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                                                         <label >Tipo de Sesión</label>
                                                         <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="tipoSesionId" id="tipoSesionId" required>
                                                             <option></option>
                                                         </select>
                                                     </div>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                <i target="" id="nextday" class="iconmod fa fa-chevron-right" aria-hidden="true"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -53,7 +59,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                         
                                             <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?=$_SESSION['EstablecimientoID']?>">
                                             <input type="hidden" name="cmd" value="registrarTurno">
-                                        <!-- <input type="hidden" name="turnoId" id="turnoId"> -->
+                                            <input type="hidden" name="turnoId" id="turnoId" value="0">
                                             <div class="form-group-attached">
                                                 <div id="horasDia" class="cuerpo" ></div>
                                             </div>
@@ -65,7 +71,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                             <div class="row  pull-down">
                                                 <div class="col-sm-6">
                                                     <label>Buscar usuario por:</label>
-                                                    <div class="btn-group btn-group-xs">
+                                                    <div  id= "buttongroup" class="btn-group btn-group-xs">
                                                         <button type="button" id="porusername" class="busquedapor btn btn-primary">Usuario</button>
                                                         <button type="button" id="pornombre" class="busquedapor btn btn-primary">Nombre</button>
                                                         <button type="button" id="portelefono" class="busquedapor btn btn-primary">Teléfono</button>
@@ -160,7 +166,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
 ::-webkit-scrollbar {
     display: none;
 }
-.recdisponible{
+.rec-disponible{
     background: #868484;
     color: #ccc;
     border-radius: .5vh;  
@@ -183,6 +189,12 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
 .nopermitido{
     background: #f76b68 !important;
 }
+.bloqueado{;
+    background: #f76b68 ;
+    color: #2c2c2c;
+    cursor: not-allowed;
+    border-radius: .5vh;
+}
 .momentoenabled{
     height: 6vh;
     background: #f0f0f0;
@@ -198,11 +210,20 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     cursor: not-allowed;
     border-radius: .5vh;
 }
-.recagendado{
+.rec-agendado{
     background: #55be6e;
     color: #2c2c2c;
     cursor: pointer;
-    
+}
+.rec-atendiendo{
+    background: #dac73d;
+    color: #2c2c2c;
+    cursor: pointer;
+}
+.rec-atendido{
+    background: #005194;
+    color: #ffffff;
+    cursor: pointer;
 }
 /* .recagendado:hover{
     -webkit-box-shadow: 0px 0px 10px 0px rgb(83, 234, 119);
@@ -267,6 +288,14 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     background: #01868a;
 }
 .icon{
+    font-size: 3vh;;
+    cursor: pointer;
+    padding:5px
+}
+.iconmod:hover{
+    zoom:1.3;
+}
+.iconmod{
     font-size: 3vh;;
     cursor: pointer;
     padding:5px
