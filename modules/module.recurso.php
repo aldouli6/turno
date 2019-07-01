@@ -33,7 +33,7 @@ try {
                     and JSON_CONTAINS(h.diasLaborables, \'["'.$clave.'"]\') -- para el filtrar por el día de hoy
                    -- 
                  ) as interna   order by horaInicio -- para filtrar los dias de asueto oficiales';
-                //  echo $sql;
+                 //echo $sql;
                 $getElements = $database->getRows($sql);
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;
@@ -134,10 +134,10 @@ try {
                 AND r.establecimientoId = ?
                 AND t.establecimientoId = ?
                 AND rt.recursoId ";
-                $sql.=($recurso!='0')?" = ":" <> ";
-                $sql.="? ORDER BY t.nombre"; 
+                $sql.=($recurso!='0')?" in ":" not in ";
+                $sql.="(?) ORDER BY t.nombre"; 
                 $getElements = $database->getRows($sql, array($establecimiento, $establecimiento, $recurso));
-                // print_r($sql);
+                //print_r($sql);
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;
             break;

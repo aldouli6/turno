@@ -45,9 +45,10 @@ function funfirstDayOfWeek(dateObject, firstDayOfWeekIndex) {
 }
 var steps=0;
 
+var fechaglobal;
 //$(window).load(function() {
  $(document).ready(function() {
-    creaCalendario(new Date());
+    creaCalendario(new Date(2019,6,1));
     console.log(new Date());
     $("#submitBtn").on( "click", function(){        
         $("#formaturno").submit(); 
@@ -58,7 +59,6 @@ var steps=0;
     var mes;
     var dia;
     var establecimiento= $('#establecimientoId').val();
-    var fecha;
     $('body').on('click','.icon',function() {
         var target= $(this).attr('target');
         console.log(target);
@@ -74,8 +74,8 @@ var steps=0;
         year=aidi.substring(0,4);
         mes=aidi.substring(4,6);
         dia=aidi.substring(6,8);
-        fecha =new Date(year, mes-1, dia);
-        console.log(dia,mes,year,establecimiento);
+        fechaglobal =new Date(year, mes-1, dia);
+        //console.log(dia,mes,year,establecimiento);
         cargarModal(dia,mes,year,establecimiento);
     });
     $('body').on('hide.bs.modal',"#formturno", function(){
@@ -103,21 +103,61 @@ var steps=0;
             success: function (response) {
                 var obj = JSON.parse(response);
                 $.each(obj, function( key, value ) {
-                    console.log( '---------cargaHorariosRecursoHoy',fecha,dia,mes,year,establecimiento, value.recursoId)
-                    cargaHorariosRecursoHoy(fecha,dia,mes,year,establecimiento, value.recursoId);
+                    //console.log( '---------cargaHorariosRecursoHoy',fechaglobal,dia,mes,year,establecimiento, value.recursoId)
+                    cargaHorariosRecursoHoy(fechaglobal,dia,mes,year,establecimiento, value.recursoId);
                 });
                 $.each(obj, function( key, value ) {
-                    console.log( '+++++++++cargaTurnos',fecha,dia,mes,year,establecimiento, value.recursoId)
-                    cargaTurnos(fecha,dia,mes,year,establecimiento, value.recursoId);
+                    //console.log( '+++++++++cargaTurnos',fechaglobal,dia,mes,year,establecimiento, value.recursoId)
+                    cargaTurnos(fechaglobal,dia,mes,year,establecimiento, value.recursoId);
                 });
                 getDatosTipoSesion(sesionid);
-                
+                bloqueaLimites(fechaglobal,establecimiento, sesionid);
             }
         });
         
     });
 });
-
+function bloqueaLimites(fecha,establecimiento, tipoSesionId) {
+    var url_request = "modules/module.tipoSesion.php";
+    var method = "POST";
+    $.ajax({
+        async: true,
+        url: url_request,
+        type: method,
+        data: {
+            cmd: "getTipoSesion",
+            tipoSesion:tipoSesionId
+        },
+        success: function (response) {
+            var obj = JSON.parse(response);
+            console.log(obj);
+            var ahora=new Date();
+            console.log(ahora);
+            console.log(obj.limiteAntesAgendarDias);
+            var limiteAntes= ahora;
+            limiteAntes.setDate(ahora.getDate()+parseInt(obj.limiteAntesAgendarDias));
+            console.log(limiteAntes);
+            limiteAntes.setHours(limiteAntes.getHours()+parseInt(obj.limiteAntesAgendarHoras));
+            console.log(limiteAntes);
+            limiteAntes.setMinutes(limiteAntes.getMinutes()+parseInt(obj.limiteAntesAgendarMins));
+            console.log(limiteAntes);
+            console.log(fecha);
+            while (limiteAntes>fecha) {
+                var hora=fecha.getHours();
+                var hora=(hora<10)?'0'+hora:hora;
+                var mins=fecha.getMinutes();
+                var mins=(mins<10)?'0'+mins:mins; 
+                console.log(hora+'_'+mins);
+                if( $('#momento'+hora+'_'+mins).hasClass('momentoenabled') ){
+                    $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
+                    $('#momento'+hora+'_'+mins).addClass('bloqueado');
+                    $('#momento'+hora+'_'+mins).unbind('click');
+                }
+                fecha.setMinutes(fecha.getMinutes()+ parseInt(steps));
+            }
+        }
+    });
+}
 function cargarModal(dia,mes,year, establecimiento) {
     
     var fecha=new Date(year, mes-1, dia);
@@ -134,8 +174,9 @@ function cargarModal(dia,mes,year, establecimiento) {
     $('#nextday').attr('target',nextday);
     $('#fecha').val(year+'-'+mes+'-'+dia);
     $('#eldia').text(fechaNombre(fecha));
-    getTipoSesiones(establecimiento, '0');
+    fechaglobal=fecha;
     getRecursosHoy(fecha,dia,mes,year, establecimiento, 0);
+    
     cargaHorasDia(fecha);
     
 }
@@ -332,6 +373,7 @@ function getDatosTipoSesion(tiposesion) {
         },
         success: function (response) {
             var obj = JSON.parse(response);
+            console.log(obj);
             var duracionhoras = obj.duracion.substring(0,2);
             var duracionminutos = obj.duracion.substring(3,5);
             duracionminutos = parseInt(duracionminutos)+(parseInt(duracionhoras)*60);
@@ -594,31 +636,16 @@ function cargaHorasDia(fecha) {
     console.log(i, new Date());
     $("#horasDia").empty();
     while ( i.getDate() < manana.getDate() ) {
-        // if(band){
-        //     if(i>ahora){
-        //         var hora=i.getHours();
-        //         var hora=(hora<10)?'0'+hora:hora;
-        //         var mins=i.getMinutes();
-        //         var mins=(mins<10)?'0'+mins:mins;
-        //         var html='';
-        //         html+='<div class="row momentodisabled" id="momento'+hora+'_'+mins+'">';
-        //         html+='<div class="col-sm-3">'+hora+':'+mins+'</div>';
-        //         html+='<div class="col-sm-9 contenido" id="contenido'+hora+'_'+mins+'"></div>';
-        //         html+='</div>';
-        //     }
-        // }else{
-            var nopermitido = (i<=ahora)?' bloqueado ':'';
-            var hora=i.getHours();
-            var hora=(hora<10)?'0'+hora:hora;
-            var mins=i.getMinutes();
-            var mins=(mins<10)?'0'+mins:mins;
-            var html='';
-            html+='<div class="row momentodisabled '+nopermitido+'" id="momento'+hora+'_'+mins+'">';
-            html+='<div class="col-sm-3">'+hora+':'+mins+'</div>';
-            html+='<div class="col-sm-9 contenido row" id="contenido'+hora+'_'+mins+'"></div>';
-            html+='</div>';
-        // }
-        
+        var nopermitido = (i<=ahora)?' bloqueado ':'';
+        var hora=i.getHours();
+        var hora=(hora<10)?'0'+hora:hora;
+        var mins=i.getMinutes();
+        var mins=(mins<10)?'0'+mins:mins;
+        var html='';
+        html+='<div class="row momentodisabled '+nopermitido+'" id="momento'+hora+'_'+mins+'">';
+        html+='<div class="col-sm-3">'+hora+':'+mins+'</div>';
+        html+='<div class="col-sm-9 contenido row" id="contenido'+hora+'_'+mins+'"></div>';
+        html+='</div>';
         $("#horasDia").append(html);
         i.setMinutes(i.getMinutes()+ parseInt(steps));
     }
@@ -628,6 +655,7 @@ function getRecursosHoy(fecha,dia,mes,year, establecimiento, recurso) {
     var method = "POST";
     $('#recursoId').select2("val", 0);
     $("#recursoId").empty();
+    console.log('getRecursosHoy');
     $.ajax({
         async: true,
         url: url_request,
@@ -650,10 +678,12 @@ function getRecursosHoy(fecha,dia,mes,year, establecimiento, recurso) {
                 unicos[key]=value.recursoId;
             });
             $("#recursoId").html(html);
+            getTipoSesiones(establecimiento, unicos.join(','));
         }
     });
 }
-function getTipoSesiones(establecimiento, recurso) {
+function getTipoSesiones(establecimiento, recursos) {
+    console.log(recursos);
     var url_request = "modules/module.recurso.php";
     var method = "POST";
     $('#tipoSesionId').select2("val", 0);
@@ -665,16 +695,12 @@ function getTipoSesiones(establecimiento, recurso) {
         data: {
             cmd: "getRelTipoSesionesSinID",
             establecimiento:establecimiento,
-            recurso: recurso
+            recurso: recursos
         },
         success: function (response) {
+            console.log(response);
             var obj = JSON.parse(response);
             console.log(obj);
-            // var ahora=new Date();
-            // console.log(ahora);
-            // var limiteAntes= ahora;
-            // limiteAntes.setDate(ahora.getDate()+parseInt(obj.maximoAgendarDias));
-            // console.log(limiteAntes);
             var html='<option ></option>';
             $.each(obj, function( key, value ) {
                 html+= '<option value="'+value.tipoSesionId+'">'+value.nombre+'</option>';
