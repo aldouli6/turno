@@ -133,11 +133,14 @@ try {
                 WHERE 1
                 AND r.establecimientoId = ?
                 AND t.establecimientoId = ?
+                AND (t.fechaFin IS NULL or t.fechaFin >='".$fecha."') 
                 AND rt.recursoId ";
                 $sql.=($recurso!='0')?" in ":" not in ";
                 $sql.="(?) ORDER BY t.nombre"; 
+                // print_r($sql);
+                // print_r($fecha);
                 $getElements = $database->getRows($sql, array($establecimiento, $establecimiento, $recurso));
-                //print_r($sql);
+                
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;
             break;

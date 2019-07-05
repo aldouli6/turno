@@ -32,7 +32,7 @@ try {
                 echo $jsonTipoSesion;
             break;
             case "tipoSesionEditar":
-                $fechaFinSesionEdit=($fechaFinSesionEdit=='')?',fechaFin=NULL':', fechaFin='.$fechaFinSesionEdit;
+                $fechaFinSesionEdit=($fechaFinSesionEdit=='')?',fechaFin=NULL':', fechaFin="'.$fechaFinSesionEdit.'"';
                 $costoSesionEdit=($costoSesionEdit==='')?'0':$costoSesionEdit;
                 $editarDatosElement="UPDATE tiposSesiones set 
                         nombre='".$SesionNombreEdit."',
@@ -47,7 +47,7 @@ try {
                         tiempoEntreSesion='".$tiempEntreSesionEdit."',
                         tiempoEspera='".$tiempoEsperaEdit."'
                             where tipoSesionId=?";
-                //echo($editarDatosElement);
+                // echo($editarDatosElement);
                 $editElementData=$database->updateRow($editarDatosElement,array($tipoSesionIdEdit));
                 
                 if($editElementData==true){

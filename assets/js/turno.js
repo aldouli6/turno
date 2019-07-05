@@ -130,24 +130,21 @@ function bloqueaLimites(fecha,establecimiento, tipoSesionId) {
         },
         success: function (response) {
             var obj = JSON.parse(response);
-            console.log(obj);
             var ahora=new Date();
-            console.log(ahora);
-            console.log(obj.limiteAntesAgendarDias);
             var limiteAntes= ahora;
             limiteAntes.setDate(ahora.getDate()+parseInt(obj.limiteAntesAgendarDias));
-            console.log(limiteAntes);
             limiteAntes.setHours(limiteAntes.getHours()+parseInt(obj.limiteAntesAgendarHoras));
-            console.log(limiteAntes);
             limiteAntes.setMinutes(limiteAntes.getMinutes()+parseInt(obj.limiteAntesAgendarMins));
-            console.log(limiteAntes);
-            console.log(fecha);
-            while (limiteAntes>fecha) {
+            var ahora2=new Date();
+            var limiteDespues= ahora2;
+            limiteDespues.setDate(ahora2.getDate()+parseInt(obj.maximoAgendarDias));
+            limiteDespues.setHours(limiteDespues.getHours()+parseInt(obj.maximoAgendarHoras));
+            limiteDespues.setMinutes(limiteDespues.getMinutes()+parseInt(obj.maximoAgendarMins));
+            while (limiteAntes>fecha ) {
                 var hora=fecha.getHours();
                 var hora=(hora<10)?'0'+hora:hora;
                 var mins=fecha.getMinutes();
                 var mins=(mins<10)?'0'+mins:mins; 
-                console.log(hora+'_'+mins);
                 if( $('#momento'+hora+'_'+mins).hasClass('momentoenabled') ){
                     $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
                     $('#momento'+hora+'_'+mins).addClass('bloqueado');
@@ -155,6 +152,41 @@ function bloqueaLimites(fecha,establecimiento, tipoSesionId) {
                 }
                 fecha.setMinutes(fecha.getMinutes()+ parseInt(steps));
             }
+            if(fecha.getDate() <=limiteDespues.getDate()){
+                var mana=new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+                mana.setDate(mana.getDate()+1);
+                while (fecha <mana) {
+                    if (fecha>limiteDespues) {
+                        var hora=fecha.getHours();
+                        var hora=(hora<10)?'0'+hora:hora;
+                        var mins=fecha.getMinutes();
+                        var mins=(mins<10)?'0'+mins:mins; 
+                        if( $('#momento'+hora+'_'+mins).hasClass('momentoenabled') ){
+                            $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
+                            $('#momento'+hora+'_'+mins).addClass('bloqueado');
+                            $('#momento'+hora+'_'+mins).unbind('click');
+                        }
+                    }
+                    fecha.setMinutes(fecha.getMinutes()+ parseInt(steps));
+                    
+                }
+            }else{
+                var mana=new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+                mana.setDate(mana.getDate()+1);
+                while (fecha <mana) {
+                    var hora=fecha.getHours();
+                    var hora=(hora<10)?'0'+hora:hora;
+                    var mins=fecha.getMinutes();
+                    var mins=(mins<10)?'0'+mins:mins; 
+                    if( $('#momento'+hora+'_'+mins).hasClass('momentoenabled') ){
+                        $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
+                        $('#momento'+hora+'_'+mins).addClass('bloqueado');
+                        $('#momento'+hora+'_'+mins).unbind('click');
+                    }
+                    fecha.setMinutes(fecha.getMinutes()+ parseInt(steps));
+                }
+            }
+            
         }
     });
 }
@@ -361,133 +393,136 @@ function cargaTurnos(fecha,dia,mes,year,establecimiento, recurso) {
     });
 }
 function getDatosTipoSesion(tiposesion) {
-    var url_request = "modules/module.tipoSesion.php";
-    var method = "POST";
-    $.ajax({
-        async: true,
-        url: url_request,
-        type: method,
-        data: {
-            cmd: "getTipoSesion",
-            tipoSesion:tiposesion
-        },
-        success: function (response) {
-            var obj = JSON.parse(response);
-            console.log(obj);
-            var duracionhoras = obj.duracion.substring(0,2);
-            var duracionminutos = obj.duracion.substring(3,5);
-            duracionminutos = parseInt(duracionminutos)+(parseInt(duracionhoras)*60);
-            var anteshoras = obj.tiempoEspera.substring(0,2);
-            var antesminutos = obj.tiempoEspera.substring(3,5);
-            antesminutos = parseInt(antesminutos)+(parseInt(anteshoras)*60);
-            var despueshoras = obj.tiempoEntreSesion.substring(0,2);
-            var despuesminutos = obj.tiempoEntreSesion.substring(3,5);
-            despuesminutos = parseInt(despuesminutos)+(parseInt(despueshoras)*60);
-            $(".momentoenabled").hover(
-                function(){
-                    var antes=$(this);
-                    var flag=true;
-                    var temp=$(this);
-                    tiempoTotal=antesminutos+duracionminutos+despuesminutos;
-                    for (let x = 0; x < tiempoTotal; x+=parseInt(steps)) {
-                        if(!temp.hasClass('momentoenabled')){
-                            flag=false;
-                        }
-                        temp= temp.next('.momentoenabled');
-                    }
-                    if(flag){
-                        for (let x = 0; x < antesminutos; x+=parseInt(steps)) {
-                            
-                            antes.addClass('momentoanteshover');
-                            antes= antes.next('.momentoenabled');
-                        }
-                        var duracion=antes;
-                        for (let x = 0; x < duracionminutos; x+=parseInt(steps)) {
-                            duracion.addClass('momentoduracionhover');
-                            duracion= duracion.next('.momentoenabled');
-                        }
-                        var despues=duracion;
-                        for (let x = 0; x < despuesminutos; x+=parseInt(steps)) {
-                            despues.addClass('momentodespueshover');
-                            despues= despues.next('.momentoenabled');
-                        }
-                    }else{
-                        for (let x = 0; x < antesminutos; x+=parseInt(steps)) {
-                            
-                            antes.addClass('nopermitido');
-                            antes= antes.next('.momentoenabled');
-                        }
-                        var duracion=antes;
-                        for (let x = 0; x < duracionminutos; x+=parseInt(steps)) {
-                            duracion.addClass('nopermitido');
-                            duracion= duracion.next('.momentoenabled');
-                        }
-                        var despues=duracion;
-                        for (let x = 0; x < despuesminutos; x+=parseInt(steps)) {
-                            despues.addClass('nopermitido');
-                            despues= despues.next('.momentoenabled');
-                        }
-                    }
-                }, function(){
-                    var antes=$(this);
-                    for (let x = 0; x < antesminutos; x+=parseInt(steps)) {
-                        antes.removeClass('momentoanteshover').removeClass('nopermitido');
-                        antes= antes.next('.momentoenabled');
-                    }
-                    var duracion=antes;
-                    for (let x = 0; x < duracionminutos; x+=parseInt(steps)) {
-                        duracion.removeClass('momentoduracionhover').removeClass('nopermitido');
-                        duracion= duracion.next('.momentoenabled');
-                    }
-                    var despues=duracion;
-                    for (let x = 0; x < despuesminutos; x+=parseInt(steps)) {
-                        despues.removeClass('momentodespueshover').removeClass('nopermitido');
-                        despues= despues.next('.momentoenabled');
-                    }
-              });
-              
-              $(".momentoenabled").click(
-                  
-                function(){
-                    if(!$('.momentoenabled').hasClass('nopermitido')){
-                        $('.momentoenabled').unbind('mouseenter').unbind('mouseleave')
+    if(tiposesion){
+        var url_request = "modules/module.tipoSesion.php";
+        var method = "POST";
+        $.ajax({
+            async: true,
+            url: url_request,
+            type: method,
+            data: {
+                cmd: "getTipoSesion",
+                tipoSesion:tiposesion
+            },
+            success: function (response) {
+                var obj = JSON.parse(response);
+                console.log(obj);
+
+                var duracionhoras = obj.duracion.substring(0,2);
+                var duracionminutos = obj.duracion.substring(3,5);
+                duracionminutos = parseInt(duracionminutos)+(parseInt(duracionhoras)*60);
+                var anteshoras = obj.tiempoEspera.substring(0,2);
+                var antesminutos = obj.tiempoEspera.substring(3,5);
+                antesminutos = parseInt(antesminutos)+(parseInt(anteshoras)*60);
+                var despueshoras = obj.tiempoEntreSesion.substring(0,2);
+                var despuesminutos = obj.tiempoEntreSesion.substring(3,5);
+                despuesminutos = parseInt(despuesminutos)+(parseInt(despueshoras)*60);
+                $(".momentoenabled").hover(
+                    function(){
                         var antes=$(this);
-                        var horaI = antes.children('.col-sm-3').text();
-                        var html='';
-                        $("#recursoId").empty();
-                        var elids=0;
-                        antes.children('.contenido').children('.rec-disponible').each(function( index ) {
-                            if (elids==0) {
-                                elids= $( this ).attr('recid')
-                            }
-                            html+= '<option value="'+$( this ).attr('recid')+'">'+$( this ).text()+'</option>';
-                          });
-                        $("#recursoId").html(html);
-                        $("#recursoId").select2("val",elids);
+                        var flag=true;
+                        var temp=$(this);
                         tiempoTotal=antesminutos+duracionminutos+despuesminutos;
                         for (let x = 0; x < tiempoTotal; x+=parseInt(steps)) {
-                            antes.addClass('momentoselected');
+                            if(!temp.hasClass('momentoenabled')){
+                                flag=false;
+                            }
+                            temp= temp.next('.momentoenabled');
+                        }
+                        if(flag){
+                            for (let x = 0; x < antesminutos; x+=parseInt(steps)) {
+                                
+                                antes.addClass('momentoanteshover');
+                                antes= antes.next('.momentoenabled');
+                            }
+                            var duracion=antes;
+                            for (let x = 0; x < duracionminutos; x+=parseInt(steps)) {
+                                duracion.addClass('momentoduracionhover');
+                                duracion= duracion.next('.momentoenabled');
+                            }
+                            var despues=duracion;
+                            for (let x = 0; x < despuesminutos; x+=parseInt(steps)) {
+                                despues.addClass('momentodespueshover');
+                                despues= despues.next('.momentoenabled');
+                            }
+                        }else{
+                            for (let x = 0; x < antesminutos; x+=parseInt(steps)) {
+                                
+                                antes.addClass('nopermitido');
+                                antes= antes.next('.momentoenabled');
+                            }
+                            var duracion=antes;
+                            for (let x = 0; x < duracionminutos; x+=parseInt(steps)) {
+                                duracion.addClass('nopermitido');
+                                duracion= duracion.next('.momentoenabled');
+                            }
+                            var despues=duracion;
+                            for (let x = 0; x < despuesminutos; x+=parseInt(steps)) {
+                                despues.addClass('nopermitido');
+                                despues= despues.next('.momentoenabled');
+                            }
+                        }
+                    }, function(){
+                        var antes=$(this);
+                        for (let x = 0; x < antesminutos; x+=parseInt(steps)) {
+                            antes.removeClass('momentoanteshover').removeClass('nopermitido');
                             antes= antes.next('.momentoenabled');
                         }
-                        var horaF = antes.children('.col-sm-3').text();
-                        $('#horaInicio').val(horaI);
-                        $('#horaFin').val(horaF);
-                        $('#estatusId').val(1);
-                        $('.momentoenabled').unbind('click');
-                        $('#datosocultos').removeClass('hide');
-                    }else{
-                        Swal.fire({
-                            type: 'error',
-                            title: 'No se puede asignar un turno a esa hora',
-                            showConfirmButton: false,
-                            timer: 1500
-                          })
-                    }
+                        var duracion=antes;
+                        for (let x = 0; x < duracionminutos; x+=parseInt(steps)) {
+                            duracion.removeClass('momentoduracionhover').removeClass('nopermitido');
+                            duracion= duracion.next('.momentoenabled');
+                        }
+                        var despues=duracion;
+                        for (let x = 0; x < despuesminutos; x+=parseInt(steps)) {
+                            despues.removeClass('momentodespueshover').removeClass('nopermitido');
+                            despues= despues.next('.momentoenabled');
+                        }
                 });
                 
-            
-        }
-    });
+                $(".momentoenabled").click(
+                    
+                    function(){
+                        if(!$('.momentoenabled').hasClass('nopermitido')){
+                            $('.momentoenabled').unbind('mouseenter').unbind('mouseleave')
+                            var antes=$(this);
+                            var horaI = antes.children('.col-sm-3').text();
+                            var html='';
+                            $("#recursoId").empty();
+                            var elids=0;
+                            antes.children('.contenido').children('.rec-disponible').each(function( index ) {
+                                if (elids==0) {
+                                    elids= $( this ).attr('recid')
+                                }
+                                html+= '<option value="'+$( this ).attr('recid')+'">'+$( this ).text()+'</option>';
+                            });
+                            $("#recursoId").html(html);
+                            $("#recursoId").select2("val",elids);
+                            tiempoTotal=antesminutos+duracionminutos+despuesminutos;
+                            for (let x = 0; x < tiempoTotal; x+=parseInt(steps)) {
+                                antes.addClass('momentoselected');
+                                antes= antes.next('.momentoenabled');
+                            }
+                            var horaF = antes.children('.col-sm-3').text();
+                            $('#horaInicio').val(horaI);
+                            $('#horaFin').val(horaF);
+                            $('#estatusId').val(1);
+                            $('.momentoenabled').unbind('click');
+                            $('#datosocultos').removeClass('hide');
+                        }else{
+                            Swal.fire({
+                                type: 'error',
+                                title: 'No se puede asignar un turno a esa hora',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }
+                    });
+                    
+                
+            }
+        });
+    }
 }
 $('#formaturno').validate({
     submitHandler: function (form) {
@@ -678,11 +713,11 @@ function getRecursosHoy(fecha,dia,mes,year, establecimiento, recurso) {
                 unicos[key]=value.recursoId;
             });
             $("#recursoId").html(html);
-            getTipoSesiones(establecimiento, unicos.join(','));
+            getTipoSesiones(establecimiento, unicos.join(','),year+'-'+mes+'-'+dia );
         }
     });
 }
-function getTipoSesiones(establecimiento, recursos) {
+function getTipoSesiones(establecimiento, recursos, fecha) {
     console.log(recursos);
     var url_request = "modules/module.recurso.php";
     var method = "POST";
@@ -695,7 +730,8 @@ function getTipoSesiones(establecimiento, recursos) {
         data: {
             cmd: "getRelTipoSesionesSinID",
             establecimiento:establecimiento,
-            recurso: recursos
+            recurso: recursos,
+            fecha: fecha
         },
         success: function (response) {
             console.log(response);
