@@ -81,6 +81,7 @@ class Sessions{
 					"tipoSesiones" =>  array("where" => "all","icon" =>"fa fa-bookmark","label" =>"Tipos de Sesiones" ),
 					"recursos" =>  array("where" => "all","icon" =>"fa fa-wrench","label" =>"Recursos" ),
 					"horarios" =>  array("where" => "all","icon" =>"fa fa-clock-o","label" =>"Horarios" ),
+					"configuraciones" =>  array("where" => "all","icon" =>"fa fa-cog","label" =>"Configuraciones" ),
 				);
 			break;
 

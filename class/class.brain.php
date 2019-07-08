@@ -47,6 +47,10 @@ switch ($varUbicacion) {
       include_once("./class/class.mostrarwizard.php");
       include_once("./class/class.mostrarPerfilUsuario.php");
       break;
+    case "configuraciones":
+        include_once("./class/class.mostrarplugins.php");
+        include_once("./class/class.mostrarPerfilUsuario.php");
+        break;
     case "tipoSesiones":
       include_once("./class/class.mostrarplugins.php");
       include_once("./class/class.mostrarPerfilUsuario.php");

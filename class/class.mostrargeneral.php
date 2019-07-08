@@ -52,6 +52,9 @@ class Mostrargeneral
           case 'turnos':
               $metadatos .= '<title>TURNO - Turnos</title>';
           break;
+          case 'wizard':
+              $metadatos .= '<title>TURNO - Configuración</title>';
+          break;
           default:
             $metadatos .= '<title>TURNO</title>';
         }
@@ -195,6 +198,11 @@ class Mostrargeneral
               $javascript .= '<script src="assets/js/turno.js"></script>
               <script src="assets/js/datejs/build/date.js"></script>
               <script src="assets/js/recurso.js"></script>
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
+              break;
+            case 'configuraciones':
+              $javascript .= '<script src="assets/js/configuracion.js"></script>
+              <script src="assets/js/datejs/build/date.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
               break;
             default:

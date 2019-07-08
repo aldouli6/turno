@@ -116,11 +116,7 @@ function traeCategorias(cat){
             $("#regEstabSubcategoria").select2("val", 0);
         }else{
             $("#regEstabCategoria").html(cathtml);
-        }          
-        
-        
-
-      
+        }        
     }
   });
 }

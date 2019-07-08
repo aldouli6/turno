@@ -17,6 +17,41 @@ try {
     if(!empty($_POST)){            
         extract($_REQUEST);
         switch($cmd){
+            case 'getEstablecimiento':
+                $sql="SELECT *
+                FROM establecimientos 
+                WHERE 1
+                AND establecimientoId=?"; 
+                $getElements = $database->getRow($sql, array($establecimiento));
+                $jsonElements=json_encode($getElements);
+                echo $jsonElements;
+            break;
+            case 'editnombrecontacto':
+                $editarDatosElement="UPDATE establecimientos set 
+                        nombre='".$nombre."',
+                        emailEstablecimiento='".$emailEstablecimiento."',
+                        telefonoEstablecimiento='".$telefonoEstablecimiento."',
+                        categoriaId='".$categoria."',
+                        subcategoriaId='".$subcategoria."'
+                            where establecimientoId=?";
+                // print_r($editarDatosElement);
+                $editElementData=$database->updateRow($editarDatosElement,array($establecimientoId));
+                
+                if($editElementData==true){
+                    $ConsultarGetElement="SELECT *
+                                            FROM establecimientos                                             
+                                            where establecimientoId=?";
+                    $GetElement=$database->getRow($ConsultarGetElement,array($establecimientoId));
+                    if($GetElement==true){
+                        $jsonElement=json_encode($GetElement);
+                        echo $jsonElement;
+                    }else{
+                        echo "0";
+                    }
+                }else{
+                    echo "0";
+                }
+            break;
             case "registrarEstablecimiento":
                 try {
                     $database->beginTransactionDB();
