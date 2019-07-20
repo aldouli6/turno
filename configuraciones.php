@@ -35,14 +35,14 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                         
                         <div class="row" style="padding: 35px;background: #ffffff;margin-left: 5px;margin-right: 10px;border: 1px solid #e7e7e7;">
                             <ul class="nav nav-tabs">
-                                <li ><a data-toggle="tab" href="#nombrecontacto">Nombre y Contacto</a></li>
-                                <li class="active" ><a data-toggle="tab" href="#ubicacion">Ubicación</a></li>
+                                <li class="active" ><a data-toggle="tab" href="#nombrecontacto">Nombre y Contacto</a></li>
+                                <li  ><a data-toggle="tab" href="#ubicacion">Ubicación</a></li>
                                 <li ><a data-toggle="tab" href="#generales">Generales</a></li>
                                 <li><a data-toggle="tab" href="#notificaciones">Notificaciones</a></li>
                             </ul>
 
                             <div class="tab-content">
-                                <div id="nombrecontacto" class="tab-pane fade">
+                                <div id="nombrecontacto" class="tab-pane fade in active">
                                 <div class="row">
                                     <div class="col-sm-1">
                                             <h3 class="">
@@ -117,14 +117,14 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <div id="elmapa" class="col-sm-6" ></div>
+                                                    
                                                 </div>
                                             </div>
                                        
                                     </form>
                                       
                                 </div>
-                                <div id="ubicacion" class="tab-pane fade in active">
+                                <div id="ubicacion" class="tab-pane fade ">
                                     <div class="row">
                                         <div class="col-sm-1">
                                                 <h3 class="">
@@ -233,40 +233,47 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                             </form>  
                                         </div>
                             
-                                        <div id="elmapa" class="col-sm-6" style="
-                                                height: 312px;
-                                            ">
+                                        <div class="col-sm-6">
                                         
+                                            <div id="elmapa" class="col-sm-12" style="
+                                                height: 60vh;
+                                                background: gainsboro;
+                                            "></div>
                                         </div>
                                         
                                     </div>
                                 </div>
-                                <div id="generales" class="tab-pane fade">
+                                <div id="generales" class="tab-pane fade ">
                                     
                                     <div class="row">
                                         <div class="col-sm-1">
-                                                <!-- <div id="divstatus1" style="display: block;"><label class="inline"  id="siAsuetoOficial" name="siAsuetoOficial"></label></div>
-                                                <div id="divstatus2" style="display: none;"><label class="inline"  id="noAsuetoOficial" name="noAsuetoOficial"> </label></div> -->
                                                 <h3 class="">
-                                                <div class="lcs_wrap">
-                                                    <input name="asuetoOficial" id="asuetoOficial" class="lcs_check" type="checkbox">
-                                                    <div class="lcs_switch  lcs_checkbox_switch lcs_on">
-                                                    <div class="lcs_cursor"></div>
+                                                    <div id="switch_generales" class="lcs_wrap">
+                                                        <input name="generales_switch" id="generales_switch" class="lcs_check" type="checkbox">
+                                                        <div class="lcs_switch  lcs_checkbox_switch lcs_on">
+                                                            <div class="lcs_cursor"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
                                                 </h3>
                                         </div>
                                         <div class="col-sm-6"><h3>Generales</h3></div>
                                     </div>
-                                    <form role="form" class="formubicacion" id="formubicacion" autocomplete="off" novalidate="novalidate">
+                                    <form role="form" class="formgenerales" id="formgenerales" autocomplete="off" novalidate="novalidate">
+                                    <input type="hidden" name="cmd" id="cmd" value="editgenerales">
                                         <div class="row ">
                                             <div class="col-sm-6">
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="form-group form-group-default required">
                                                             <label>Cada cuantos minutos</label>
-                                                            <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Select Country" data-init-plugin="select2" name="stepping" id="stepping" required>
-                                                                <option value="0">Selecciona una opcion</option>
+                                                            <select title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona una opción" data-init-plugin="select2" name="stepping" id="stepping" required>
+                                                                <option></option>
+                                                                <option value="5">5 minutos</option>
+                                                                <option value="10">10 minutos</option>
+                                                                <option value="15">15 minutos</option>
+                                                                <option value="20">20 minutos</option>
+                                                                <option value="30">30 minutos</option>
+                                                                <option value="60">60 minutos</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -274,9 +281,9 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
 
                                                 <div class="row">
                                                     <div class="col-sm-12">
-                                                        <div class="form-group form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
+                                                        <div class="form-group form-group-default "  data-toggle="tooltip" data-placement="top" title="Este es el nombre">
                                                             <label >Días Feriados extra</label>
-                                                            <select multiple="multiple" title="" tabindex="-1" class="diasLaborables multiselect full-width select2-offscreen" data-placeholder="Selecciona un día" data-init-plugin="select2" name="diasFeriadosExtra[]" id="diasFeriadosExtra" required>
+                                                            <select multiple="multiple" title="" tabindex="-1" class="full-width select2-offscreen" data-placeholder="Selecciona un día" data-init-plugin="select2" name="diasFeriadosExtra[]" id="diasFeriadosExtra" >
                                                                 
                                                             </select>
                                                         </div>
@@ -286,34 +293,44 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                                 <div class="row">
                                                     <div class="col-sm-12" disabled>
                                                         <div class="form-group p-b-10 p-t-10 form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
-                                                            <div id="divstatus1" style="display: block;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="siAsuetoOficial" name="siAsuetoOficial">Si</label></div>
-                                                            <div id="divstatus2" style="display: none;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="noAsuetoOficial" name="noAsuetoOficial">No </label></div>
-                                                            <span class="input-group-addon bg-transparent">
-                                                            <div class="lcs_wrap">
-                                                                <input name="asuetoOficial" id="asuetoOficial" class="lcs_check" type="checkbox">
-                                                                <div class="lcs_switch  lcs_checkbox_switch lcs_on">
-                                                                <div class="lcs_cursor"></div>
+                                                            <div class="row">
+                                                                <div class="col-sm-9">
+                                                                    <div id="divasueto1" style="display: block;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="siAsuetoOficial" name="siAsuetoOficial">Días asueto oficial habilitados</label></div>
+                                                                    <div id="divasueto2" style="display: none;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="noAsuetoOficial" name="noAsuetoOficial">Días asueto oficial deshabilitados </label></div>
+                                                                 </div>
+                                                                <div class="col-sm-3">
+                                                                    <div class="lcs_wrap">
+                                                                        <input name="asuetoOficial" id="asuetoOficial" class="lcs_checkasueto" type="checkbox">
+                                                                        <div class="lcs_switch  lcs_checkbox_switch lcs_on" id="asuetoOficialcheck">
+                                                                        <div class="lcs_cursor"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="hidden" name="asuetoOficial1" id="asuetoOficial1"/>
                                                                 </div>
                                                             </div>
-                                                            </span>
-                                                            <input type="hidden" name="asuetoOficial1" id="asuetoOficial1"/>
+                                                            
                                                         </div> 
                                                     </div>
                                                 </div>
                                                 <div class="row ">
                                                     <div class="col-sm-12" disabled>
                                                         <div class="form-group p-b-10 p-t-10 form-group-default required" aria-required="true" data-toggle="tooltip" data-placement="top" title="Este es el nombre">
-                                                            <div id="divstatus1" style="display: block;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="siAsuetoOficial" name="siAsuetoOficial">Tooltips ayuda</label></div>
-                                                            <div id="divstatus2" style="display: none;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="noAsuetoOficial" name="noAsuetoOficial">No </label></div>
-                                                            <span class="input-group-addon bg-transparent">
-                                                            <div class="lcs_wrap">
-                                                                <input name="asuetoOficial" id="asuetoOficial" class="lcs_check" type="checkbox">
-                                                                <div class="lcs_switch  lcs_checkbox_switch lcs_on">
-                                                                <div class="lcs_cursor"></div>
+                                                            <div class="row">
+                                                                <div class="col-sm-9">
+                                                                    <div id="divtooltip1" style="display: block;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="tooltipsi" name="tooltipsi">Tooltips ayuda habilitados</label></div>
+                                                                    <div id="divtooltip2" style="display: none;"><label class="inline" style="margin-top: 15px; margin-left: 12px" id="tooltipno" name="tooltipno">Tooltips ayuda deshabilitados </label></div>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <div class="lcs_wrap">
+                                                                        <input name="tooltipayuda" id="tooltipayuda" class="lcs_checktool" type="checkbox">
+                                                                        <div class="lcs_switch  lcs_checkbox_switch lcs_on" id="tooltipayudacheck">
+                                                                        <div class="lcs_cursor"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="hidden" name="tooltipayuda1" id="tooltipayuda1"/>
                                                                 </div>
                                                             </div>
-                                                            </span>
-                                                            <input type="hidden" name="asuetoOficial1" id="asuetoOficial1"/>
+                                                            
                                                         </div> 
                                                     </div>
                                                 </div>
@@ -321,17 +338,11 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                                     <div class="col-sm-6  m-t-10 sm-m-t-10">
                                                         <div class="pull-left">
                                                             <button class="btn btn-primary btn-lg" type="submit">
-                                                            <span class="glyphicon glyphicon-floppy-save"></span> Guardar
-                                                            </button>
-                                                        </div>
-                                                        </div>
-                                                        <div class="col-sm-6 m-t-10 sm-m-t-10">
-                                                        <div class="pull-right">
-                                                            <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">
-                                                            <span class="glyphicon glyphicon-remove-sign"></span> Cancelar
+                                                                <span class="glyphicon glyphicon-floppy-save"></span> Guardar
                                                             </button>
                                                         </div>
                                                     </div>
+                                                    
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
@@ -341,7 +352,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                 </div>
                                 <div id="notificaciones" class="tab-pane fade">
                                 <h3>Notificaciones</h3>
-                                <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                                    <p>Tiempo previo para enviar recordatorio</p>
                                 </div>
                             </div>
                         </div>
@@ -354,6 +365,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     
 
         <?php Mostrargeneral::mostrarjs($varUbicacion);?>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeXcEX2bq122bXJibs7C0Al_18PLyAXCY&callback=getLocation"></script>
         
     </body>
 </html>

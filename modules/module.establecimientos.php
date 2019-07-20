@@ -52,6 +52,61 @@ try {
                     echo "0";
                 }
             break;
+            case 'editubicacion':
+                $editarDatosElement="UPDATE establecimientos set 
+                        calle='".$calle."',
+                        numeroExt='".$numeroExt."',
+                        numeroInt='".$numeroInt."',
+                        colonia='".$colonia."',
+                        estado='".$estado."',
+                        ciudad='".$ciudad."',
+                        latitud='".$latitud."',
+                        longitud='".$longitud."'
+                            where establecimientoId=?";
+                // print_r($editarDatosElement);
+                $editElementData=$database->updateRow($editarDatosElement,array($establecimientoId));
+                
+                if($editElementData==true){
+                    $ConsultarGetElement="SELECT *
+                                            FROM establecimientos                                             
+                                            where establecimientoId=?";
+                    $GetElement=$database->getRow($ConsultarGetElement,array($establecimientoId));
+                    if($GetElement==true){
+                        $jsonElement=json_encode($GetElement);
+                        echo $jsonElement;
+                    }else{
+                        echo "0";
+                    }
+                }else{
+                    echo "0";
+                }
+            break;
+            case 'editgenerales':
+                $diasFeriadosExtra=json_encode($diasFeriadosExtra);
+                $editarDatosElement="UPDATE establecimientos set 
+                        stepping='".$stepping."',
+                        diasAsuetoExtra='".$diasFeriadosExtra."',
+                        diasAsuetoOficiales='".$asuetoOficial1."',
+                        tooltipayuda='".$tooltipayuda1."'
+                            where establecimientoId=?";
+                 //print_r($editarDatosElement);
+                $editElementData=$database->updateRow($editarDatosElement,array($establecimientoId));
+                
+                if($editElementData==true){
+                    $ConsultarGetElement="SELECT *
+                                            FROM establecimientos                                             
+                                            where establecimientoId=?";
+                    $GetElement=$database->getRow($ConsultarGetElement,array($establecimientoId));
+                    if($GetElement==true){
+                        $jsonElement=json_encode($GetElement);
+                        echo $jsonElement;
+                    }else{
+                        echo "0";
+                    }
+                }else{
+                    echo "0";
+                }
+            break;
             case "registrarEstablecimiento":
                 try {
                     $database->beginTransactionDB();

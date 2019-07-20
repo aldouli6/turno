@@ -1,11 +1,131 @@
+var map;
+var marker;
+var geocoder;
+var cp;
+var colonia;
+var ciudad;
+var estado;
+var pais;
+function initMap(lati,long) {
+  var mapProp = {
+      center: {lat: lati, lng: long},
+      scrollwheel: false,
+      zoom: 14,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      streetViewControl: false,
+      mapTypeControl:false,
+  };
+  map = new google.maps.Map(document.getElementById('elmapa'), mapProp);
+    var LatLng = {lat: parseFloat($('#latitud').val()), lng: parseFloat($('#longitud').val())};
+    placeMarker(LatLng);
+  google.maps.event.addListener(map, 'click', function(event) {
+    placeMarker(event.latLng);
+    getaddrees(event);
+  });
+  geocoder = new google.maps.Geocoder();
+  function getaddrees(event){
+
+    $('#latitud').val(event.latLng.lat());
+    $('#longitud').val(event.latLng.lng());
+    
+    geocoder.geocode({
+      'latLng': event.latLng
+    }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[0]) {
+          if(results[0].address_components.length == 7){
+            cp=results[0].address_components[6].long_name;
+            colonia=results[0].address_components[2].long_name;
+            ciudad = results[0].address_components[3].long_name;
+            estado= results[0].address_components[4].long_name;
+            pais= results[0].address_components[5].long_name;
+          }else{
+            cp=results[0].address_components[7].long_name;
+            pais= results[0].address_components[6].long_name;
+            estado= results[0].address_components[5].long_name;
+            ciudad = results[0].address_components[3].long_name;
+            colonia=results[0].address_components[2].long_name;
+          }          
+          $('#calle').val(results[0].address_components[1].long_name);
+          $('#numeroExt').val(results[0].address_components[0].long_name);
+          $('#estado').val(estado).trigger('change');
+          $('#codigoPostal').val(cp).trigger('change');
+          
+        }
+      }
+    });
+  }
+  function placeMarker(location) {
+    console.log(marker)
+    if ( typeof marker !== 'undefined' ) {
+      marker.setPosition(location);
+    } else {
+        marker = new google.maps.Marker({
+        position: location, 
+        map: map,
+        animation: google.maps.Animation.DROP,
+        draggable:true,
+      });
+    }
+    google.maps.event.addListener(marker, 'dragend', function (event) {
+      getaddrees(event);
+  
+    });
+  }
+}
+
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(setPosition);
+  } else {
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+function setPosition(position) {
+  initMap(position.coords.latitude, position.coords.longitude);
+}
 $(document).ready(function() {
     traeCategorias('0', null);
     cargaDatos($('#establecimientoId').val(), 'nombrecontacto');
+    cargaSelectAsuetoExtra();
     $('input').lc_switch("", "");
     switchs_tabs('nombrecontacto');
     switchs_tabs('ubicacion');
-    alert('askhvb');
+    switchs_tabs('generales');
+    $('#ubicacion_switch').lcs_off(); 
+    var asuetoOficial = 1;
+    $("#asuetoOficial1").val(asuetoOficial);
+    $('body').delegate('.lcs_checkasueto', 'lcs-on', function () {
+      console.log('asueto On');
+        document.getElementById('divasueto2').style.display = 'none';
+        document.getElementById('divasueto1').style.display = 'block';
+        asuetoOficial = 1;
+        $("#asuetoOficial1").val(asuetoOficial);
+    });
+    $('body').delegate('.lcs_checkasueto', 'lcs-off', function () {
+      console.log('asueto Off');
+        document.getElementById('divasueto2').style.display = 'block';
+        document.getElementById('divasueto1').style.display = 'none';
+        asuetoOficial = 0;
+        $("#asuetoOficial1").val(asuetoOficial);
+    });
+    var tooltipayuda = 1;
+    $("#tooltipayuda1").val(tooltipayuda);
+    $('body').delegate('.lcs_checktool', 'lcs-on', function () {
+        document.getElementById('divtooltip2').style.display = 'none';
+        document.getElementById('divtooltip1').style.display = 'block';
+        tooltipayuda = 1;
+        $("#tooltipayuda1").val(tooltipayuda);
+    });
+    $('body').delegate('.lcs_checktool', 'lcs-off', function () {
+        document.getElementById('divtooltip2').style.display = 'block';
+        document.getElementById('divtooltip1').style.display = 'none';
+        tooltipayuda = 0;
+        $("#tooltipayuda1").val(tooltipayuda);
+    });
 });
+
 $('#formnombrecontacto').validate({
     submitHandler: function (form) {
         
@@ -29,16 +149,86 @@ $('#formnombrecontacto').validate({
         });
     }
 });
+$('#formubicacion').validate({
+  submitHandler: function (form) {
+      
+      var formulario = $(form).serialize();
+      formulario+='&establecimientoId='+$('#establecimientoId').val();
+      console.log(formulario);
+      $.ajax({
+          url: "modules/module.establecimientos.php",
+          type: "POST",
+          data: formulario,
+          success: function (response) {
+              console.log(response);
+              var obj = JSON.parse(response);
+              $('#ubicacion_switch').lcs_off(); 
+              if (response!='0') {
+                  Swal.fire("\u00A1En hora buena!", "Los datos han sido guardado correctamente", "success");
+              }else{
+                  Swal.fire("Error", "Los datos no han podido ser guardos.", "error");
+              }
+          }
+      });
+  }
+});
+$('#formgenerales').validate({
+  submitHandler: function (form) {
+      
+      var formulario = $(form).serialize();
+      formulario+='&establecimientoId='+$('#establecimientoId').val();
+      console.log(formulario);
+      $.ajax({
+          url: "modules/module.establecimientos.php",
+          type: "POST",
+          data: formulario,
+          success: function (response) {
+              console.log(response);
+              //var obj = JSON.parse(response);
+              $('#generales_switch').lcs_off(); 
+              if (response!='0') {
+                  Swal.fire("\u00A1En hora buena!", "Los datos han sido guardado correctamente", "success");
+              }else{
+                  Swal.fire("Error", "Los datos no han podido ser guardos.", "error");
+              }
+          }
+      });
+  }
+});
+function cargaSelectAsuetoExtra() {
+  var d = new Date();
+  var months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oc", "Nov", "Dic"];
+  var html='';
+  for (let i = 0; i < 730; i++) {
+    d.setDate(d.getDate() + 1);
+    fechaString=("0" + d.getDate()).slice(-2)+' '+months[d.getMonth()]+' '+d.getFullYear();
+    fechaValue=d.getFullYear()+'-'+("0" + (d.getMonth()+1)).slice(-2)+'-'+("0" + d.getDate()).slice(-2)
+    html+= '<option value="'+fechaValue+'">'+fechaString+'</option>';
+  }
+  $("#diasFeriadosExtra").html(html); 
+}
 function switchs_tabs(tab) {
     $('body').delegate('#switch_'+tab, 'lcs-on', function () {
-        console.log(1);
         $('#form'+tab).find('*').removeClass('disabled');
         $('#form'+tab).find('*').removeAttr('disabled');
+        if (tab=='ubicacion') {
+          $('#elmapa').show();
+        }
+        if (tab=='generales') {
+          $('#asuetoOficialcheck').show();
+          $('#tooltipayudacheck').show();
+        }
     });
     $('body').delegate('#switch_'+tab, 'lcs-off', function () {
-        console.log(0);
         $('#form'+tab).find('*').addClass('disabled')
         $('#form'+tab).find('*').attr('disabled',true)
+        if (tab=='ubicacion') {
+          $('#elmapa').hide();
+        }
+        if (tab=='generales') {
+          $('#asuetoOficialcheck').hide();
+          $('#tooltipayudacheck').hide();
+        }
     });
 }
 function cargaDatos(establecimiento) {
@@ -51,7 +241,6 @@ function cargaDatos(establecimiento) {
           establecimiento:establecimiento
         },
         success: function(response){
-            console.log(response);
             var obj = JSON.parse(response);
             $('#nombre').val(obj.nombre);  
             $('#emailEstablecimiento').val(obj.emailEstablecimiento); 
@@ -70,12 +259,18 @@ function cargaDatos(establecimiento) {
               $('#estado').select2("val",obj.estado); 
               changeEstado( ()=>{
                 $('#ciudad').select2("val",obj.ciudad);
-                // $('#ubicacion_switch').lcs_off(); 
+                 $('#ubicacion_switch').lcs_off(); 
+                getLocation();
               });   
             });
             $('#longitud').val(obj.longitud);
             $('#latitud').val(obj.latitud);
-
+            var diasExtra = JSON.parse(obj.diasAsuetoExtra);
+            $('#diasFeriadosExtra').val(diasExtra).trigger('change'); 
+            $('#stepping').val(obj.stepping).trigger('change'); 
+            (obj.diasAsuetoOficiales =='1')?$('#asuetoOficial').lcs_on():$('#asuetoOficial').lcs_off();
+            (obj.tooltipayuda =='1')?$('#tooltipayuda').lcs_on():$('#tooltipayuda').lcs_off();
+            $('#generales_switch').lcs_off(); 
         }
       });
 }
