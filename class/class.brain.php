@@ -17,10 +17,12 @@ $nombreEmpresaCorto = 'TURNO';
 $nombreEmpresaAcronimo = 'TRN';
 $nombreEmpresaLegal = 'TURNO APP S.A. de C.V.';
 //------------ END Variables locales ------------
-include_once("./class/class.sesiones.php");
-include_once("./class/class.mostrargeneral.php");
-include_once("../class/class.conexion.php");
-include_once("class/class.menu.php");
+if ($varUbicacion!='webservice') {
+  include_once("./class/class.sesiones.php");
+  include_once("./class/class.mostrargeneral.php");
+  include_once("./class/class.conexion.php");
+  include_once("class/class.menu.php");
+}
 switch ($varUbicacion) {
 	//Views
     case "login":
@@ -36,6 +38,15 @@ switch ($varUbicacion) {
       include_once("class/class.mostrarplugins.php");
       include_once("class/class.seguridad.php");
       include_once("class/class.mostrarPerfilUsuario.php");
+      break;
+    case "webservice":
+      include_once("../class/class.sesiones.php");
+      include_once("../class/class.mostrargeneral.php");
+      include_once("../class/class.conexion.php");
+      include_once("../lib/nusoap/nusoap.php");
+      include_once("../class/class.seguridad.php");
+
+
       break;
     case "categorias":
       include_once("class/class.mostrarplugins.php");
