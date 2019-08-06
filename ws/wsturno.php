@@ -154,43 +154,57 @@ $wsReply = ''; //This variable stores different replies in different cases.
               }
 
         break;
-
-
-
-        
-//End operador webservice
-    
-            case "listaSubfraccionamientos":
-                      $consultaListaSubfraccionamientos="SELECT SubfraccionamientoId, SubfraccionamientoNombre FROM subfraccionamiento";
-                      $getListaSubfraccionamientos=$database->getRows($consultaListaSubfraccionamientos);
-                      $result = json_encode($getListaSubfraccionamientos);
-                      $wsReply = $result;
+                case "getRecursosDisponibles":
+                  $jsonGet = json_decode($value);
+                  $consulta='
+                  SELECT  e.stepping, rrt.tipoSesionId,
+                    r.recursoId, r.nombre as rnombre,  h.diasLaborables,
+                    h.horaInicio, h.horaFin,
+                    t.nombre snombre, t.duracion, t.tiempoEspera, t.tiempoEntreSesion, t.costo
+                    FROM establecimientos as e 
+                    INNER JOIN recursos as r on r.establecimientoId=e.establecimientoId
+                    INNER JOIN horariosRecursos as h on h.recursoId=r.recursoId
+                    INNER JOIN relacionesRecursoTipoSesion as rrt on rrt.recursoId=r.recursoId
+                    INNER JOIN tiposSesiones as t on t.tipoSesionId=rrt.tipoSesionId
+                    WHERE 1 
+                    and e.establecimientoId = '.$jsonGet->{'estab'}.'
+                    and t.tipoSesionId='.$jsonGet->{'tiposesion'}.'
+                    AND JSON_CONTAINS(h.diasLaborables, \'["'.$jsonGet->{'dayofweek'}.'"]\')
+                    ORDER BY r.nombre';
+                  $get=$database->getRows($consulta);
+                  $result = json_encode($get);
+                  $wsReply = $result;
                 break;
-                case "getPolygon":
-                    $jsonGetPolygon = json_decode($value);
-                    $getGetPolygonInfo = array();
-                    $getGetPolygonInfo[0] = $jsonGetPolygon ->{
-                      'SubfraccionamientoId'
-                    };
-                    
-                    $consultaGetCoordenadas = "SELECT SubfraccionamientoCoordenadas as sidcord FROM subfraccionamiento WHERE SubfraccionamientoId=?";
-                    $getCoordenadas = $database->getRow($consultaGetCoordenadas, $getGetPolygonInfo);
-                    $sub =substr($getCoordenadas['sidcord'], 2, -2);
-                    $rest =explode('],[',$sub );
-
-                    //print_r($rest);
-                    $salida;
-                    foreach ($rest as $clave => $valor) {
-                      //echo $valor;
-                        $value=explode(',',$valor);
-                        $salida[$clave]['lng']=$value[0];
-                        $salida[$clave]['lat']=$value[1];
-                    }
-                    $result = json_encode($salida);
-                    //echo $result;
-                    $wsReply = $result;
-                  break;
-
+                case "getSesionesDia":
+                  $jsonGetTipoSesion = json_decode($value);
+                  
+                  $consultaTipoSesion='
+                  SELECT rrt.recursoId, t.tipoSesionId, t.nombre, t.fechaFin,h.diasLaborables, h.horaInicio, h.horaFin,
+                  DATE_ADD( DATE_ADD( DATE_ADD(now(), INTERVAL t.limiteAntesAgendarDias DAY), INTERVAL t.limiteAntesAgendarHoras HOUR), INTERVAL t.limiteAntesAgendarMins MINUTE ) as limiteAntesAgendarFull, DATE_ADD(CURRENT_DATE(), INTERVAL t.limiteAntesAgendarDias DAY ) as limiteAntesAgendar,
+                  DATE_ADD( DATE_ADD( DATE_ADD(now(), INTERVAL t.maximoAgendarDias DAY), INTERVAL t.maximoAgendarHoras HOUR), INTERVAL t.maximoAgendarMins MINUTE ) as maximoAgendarFull, DATE_ADD(CURRENT_DATE(), INTERVAL t.maximoAgendarDias DAY ) as maximoAgendar
+                  FROM tiposSesiones as t
+                  INNER JOIN relacionesRecursoTipoSesion as rrt on rrt.tipoSesionId=t.tipoSesionId
+                  INNER JOIN horariosRecursos as h on rrt.recursoId = h.recursoId
+                  WHERE 1 
+                  AND t.establecimientoId = '.$jsonGetTipoSesion->{'estab'}.'
+                  AND (t.fechaFin >="'.$jsonGetTipoSesion->{'dia'}.'" OR t.fechaFin is null)
+                  AND JSON_CONTAINS(h.diasLaborables, \'["'.$jsonGetTipoSesion->{'dayofweek'}.'"]\') 
+                  HAVING 1 
+                  AND limiteAntesAgendar <= "'.$jsonGetTipoSesion->{'dia'}.'"
+                  AND (maximoAgendar=CURRENT_DATE() or maximoAgendar >="'.$jsonGetTipoSesion->{'dia'}.'")';
+                  $getTipoSesion=$database->getRows($consultaTipoSesion);
+                  $result = json_encode($getTipoSesion);
+                  $wsReply = $result;
+                break;
+                case "getEstablecimiento":
+                  $jsonGetEstab = json_decode($value);
+            	    $getEstab = array();
+            	    $getEstab[0] = $jsonGetEstab->{'id'};
+                  $consultaEstablecimiento="SELECT * FROM establecimientos where establecimientoId = ?";
+                  $getEstablecimiento=$database->getRow($consultaEstablecimiento, $getEstab);
+                  $result = json_encode($getEstablecimiento);
+                  $wsReply = $result;
+                break;
                 case "getEstablecimientos":
                   $jsonGetEstab = json_decode($value);
             	    $getEstab = array();

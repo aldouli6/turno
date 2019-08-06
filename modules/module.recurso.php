@@ -38,7 +38,7 @@ try {
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;
             break;
-            case "addRelRecSesion":
+            case "addRelRecSesion": 
                 $database->beginTransactionDB();
                 $newElement=array();
                 $newElement[0]=$recursoId;

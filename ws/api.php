@@ -27,14 +27,18 @@
 			$stockprice = $c->call('wsmethod',array('case'=>'GetSubfracId','value'=>json_encode($values)));
 		break;
 
-		case 'GetFraccPadre'://gardeapp.com/ws/p.php?task=GetFraccPadre&id=24
-			$values = array( "SubfraccionamientoId" => $_GET['id']);
-			$stockprice = $c->call('wsmethod',array('case'=>'GetFraccPadre','value'=>json_encode($values)));
+		case 'getRecursosDisponibles'://http://192.168.0.8:8888/turno/ws/api.php?task=getRecursosDisponibles&id=1
+			$values = array( 	"tiposesion" => $_GET['tiposesion'],
+								"estab" => $_GET['estab'],
+								"dayofweek" => $_GET['dayofweek']);
+			$stockprice = $c->call('wsmethod',array('case'=>'getRecursosDisponibles','value'=>json_encode($values)));
 		break;
 		
-		case 'GetCalleId'://ndi.mx/prueba.php?task=GetCalleId&nombre=Grenada
-			$values = array( "calleNombre" => $_GET['nombre']);
-			$stockprice = $c->call('wsmethod',array('case'=>'GetCalleId','value'=>json_encode($values)));
+		case 'getSesionesDia'://http://192.168.0.8:8888/turno/ws/api.php?task=getSesionesDia&id=1
+			$values = array( 	"dia" => $_GET['dia'],
+								"estab" => $_GET['estab'],
+								"dayofweek" => $_GET['dayofweek']);
+			$stockprice = $c->call('wsmethod',array('case'=>'getSesionesDia','value'=>json_encode($values)));
 		break;
 
 		case 'resetEmail'://ndi.mx/prueba.php?task=resetEmail&em=jguzman@nextdata.com.mx
@@ -42,8 +46,9 @@
 			$stockprice = $c->call('wsmethod',array('case'=>'resetEmail','value'=>json_encode($values)));
 		break;
 		
-		case 'listaSubfraccionamientos'://ndi.mx/prueba.php?task=listaSubfraccionamientos
-			$stockprice = $c->call('wsmethod',array('case'=>'listaSubfraccionamientos','value'=>''));
+		case 'getEstablecimiento'://http://192.168.0.8:8888/turno/ws/api.php?task=getEstablecimiento&id=1
+			$values = array( "id" => $_GET['id']);
+			$stockprice = $c->call('wsmethod',array('case'=>'getEstablecimiento','value'=>json_encode($values)));
 		break;
 		case 'getEstablecimientos'://http://192.168.0.8:8888/turno/ws/api.php?task=getEstablecimientos&id=1
 			$values = array( "categoria" => $_GET['id']);

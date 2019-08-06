@@ -48,7 +48,7 @@ var steps=0;
 var fechaglobal;
 //$(window).load(function() {
  $(document).ready(function() {
-    creaCalendario(new Date(2019,6,1));
+    creaCalendario(new Date());
     console.log(new Date());
     $("#submitBtn").on( "click", function(){        
         $("#formaturno").submit(); 
@@ -130,6 +130,8 @@ function bloqueaLimites(fecha,establecimiento, tipoSesionId) {
         },
         success: function (response) {
             var obj = JSON.parse(response);
+
+            console.log(obj);
             var ahora=new Date();
             var limiteAntes= ahora;
             limiteAntes.setDate(ahora.getDate()+parseInt(obj.limiteAntesAgendarDias));
@@ -140,6 +142,8 @@ function bloqueaLimites(fecha,establecimiento, tipoSesionId) {
             limiteDespues.setDate(ahora2.getDate()+parseInt(obj.maximoAgendarDias));
             limiteDespues.setHours(limiteDespues.getHours()+parseInt(obj.maximoAgendarHoras));
             limiteDespues.setMinutes(limiteDespues.getMinutes()+parseInt(obj.maximoAgendarMins));
+            
+            var fecha2=fecha;
             while (limiteAntes>fecha ) {
                 var hora=fecha.getHours();
                 var hora=(hora<10)?'0'+hora:hora;
@@ -152,39 +156,42 @@ function bloqueaLimites(fecha,establecimiento, tipoSesionId) {
                 }
                 fecha.setMinutes(fecha.getMinutes()+ parseInt(steps));
             }
-            if(fecha.getDate() <=limiteDespues.getDate()){
-                var mana=new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
-                mana.setDate(mana.getDate()+1);
-                while (fecha <mana) {
-                    if (fecha>limiteDespues) {
-                        var hora=fecha.getHours();
+            if(limiteDespues>new Date()){
+               
+                if(fecha2.getDate() <=limiteDespues.getDate()){
+                    var mana=new Date(fecha2.getFullYear(), fecha2.getMonth(), fecha2.getDate());
+                    mana.setDate(mana.getDate()+1);
+                    while (fecha2 <mana) {
+                        if (fecha2>limiteDespues) {
+                            var hora=fecha2.getHours();
+                            var hora=(hora<10)?'0'+hora:hora;
+                            var mins=fecha2.getMinutes();
+                            var mins=(mins<10)?'0'+mins:mins; 
+                            if( $('#momento'+hora+'_'+mins).hasClass('momentoenabled') ){
+                                $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
+                                $('#momento'+hora+'_'+mins).addClass('bloqueado');
+                                $('#momento'+hora+'_'+mins).unbind('click');
+                            }
+                        }
+                        fecha2.setMinutes(fecha2.getMinutes()+ parseInt(steps));
+                        
+                    }
+                }else{
+                    var mana=new Date(fecha2.getFullYear(), fecha2.getMonth(), fecha2.getDate());
+                    mana.setDate(mana.getDate()+1);
+                    while (fecha2 <mana) {
+                        var hora=fecha2.getHours();
                         var hora=(hora<10)?'0'+hora:hora;
-                        var mins=fecha.getMinutes();
+                        var mins=fecha2.getMinutes();
                         var mins=(mins<10)?'0'+mins:mins; 
                         if( $('#momento'+hora+'_'+mins).hasClass('momentoenabled') ){
                             $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
                             $('#momento'+hora+'_'+mins).addClass('bloqueado');
                             $('#momento'+hora+'_'+mins).unbind('click');
                         }
+                        fecha2.setMinutes(fecha2.getMinutes()+ parseInt(steps));
                     }
-                    fecha.setMinutes(fecha.getMinutes()+ parseInt(steps));
-                    
-                }
-            }else{
-                var mana=new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
-                mana.setDate(mana.getDate()+1);
-                while (fecha <mana) {
-                    var hora=fecha.getHours();
-                    var hora=(hora<10)?'0'+hora:hora;
-                    var mins=fecha.getMinutes();
-                    var mins=(mins<10)?'0'+mins:mins; 
-                    if( $('#momento'+hora+'_'+mins).hasClass('momentoenabled') ){
-                        $('#momento'+hora+'_'+mins).removeClass('momentoenabled');
-                        $('#momento'+hora+'_'+mins).addClass('bloqueado');
-                        $('#momento'+hora+'_'+mins).unbind('click');
-                    }
-                    fecha.setMinutes(fecha.getMinutes()+ parseInt(steps));
-                }
+                } 
             }
             
         }
