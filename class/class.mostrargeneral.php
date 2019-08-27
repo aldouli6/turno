@@ -198,7 +198,8 @@ class Mostrargeneral
               $javascript .= '<script src="assets/js/turno.js"></script>
               <script src="assets/js/datejs/build/date.js"></script>
               <script src="assets/js/recurso.js"></script>
-              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>
+              <script src="assets/js/notificaciones.js" type="text/javascript"></script>';
               break;
             case 'configuraciones':
               $javascript .= '<script src="assets/js/configuracion.js"></script>
@@ -263,7 +264,24 @@ class Mostrargeneral
                 </div>
                 <div class=" pull-right">';
                      MostrarPlugins::mostrarConfigUser();         
-                echo'</div>
+                echo'
+                <div class="col-xs-2" id="notidiv" >
+                  <div id="notification_li">
+                    <a href="#" id="notificationLink">
+                      <div class="bellcontainer">
+                        <div class="bellnotification"></div>
+                      </div>
+                    </a>
+                    <div id="notificationContainer">
+                      <div id="notificationTitle">Notificaciones nuevas</div>
+                      <div id="notificationsBodynuevas" class="notifications"></div>
+                      <div id="notificationTitle">Notificaciones vistas</div>
+                      <div id="notificationsBodyvistas" class="notifications"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                </div>
             </div>';
     }
      //Muestra el ActionBar
@@ -296,16 +314,24 @@ class Mostrargeneral
      public static function mostrarTituloPage($titulo = '')
      {
        echo '<!-- START JUMBOTRON -->
-       <div class="jumbotron" data-pages="parallax">
-         <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
-           <div class="inner">
-           <ul class="breadcrumb">
-             <li><p>Inicio</p></li>
-             <li><a href="#" class="active">'.$titulo.'</a></li>
-           </ul>
-           </div>
+        <div class="jumbotron" data-pages="parallax">
+          <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
+            <div class="row">
+              <div class="col-xs-10">
+                <div class="inner">
+                  <ul class="breadcrumb">
+                    <li><p>Inicio</p></li>
+                    <li><a href="#" class="active">'.$titulo.'</a></li>
+                  </ul>
+                </div>
+              </div>
+              
+            </div>
+           
          </div>
-       </div>';
+       </div>
+       
+       ';
      }
      public static function mostrarPanelNotificaciones()
       {

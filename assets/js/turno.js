@@ -46,13 +46,10 @@ function funfirstDayOfWeek(dateObject, firstDayOfWeekIndex) {
 var steps=0;
 
 var fechaglobal;
+
 //$(window).load(function() {
  $(document).ready(function() {
     creaCalendario(new Date());
-    console.log(new Date());
-    $("#submitBtn").on( "click", function(){        
-        $("#formaturno").submit(); 
-    });
     steps=$('#establecimientoStepping').val();
     var aidi;
     var year;
@@ -311,7 +308,7 @@ function cargaTurnos(fecha,dia,mes,year,establecimiento, recurso) {
                         Swal.fire({
                             type: 'info',
                             title: 'Turno número: '+obj.turnoId,
-                            html:   '<div style="margin:0 20%">' +
+                            html:   '<div style="margin:0 10%">' +
                                     '<b class="pull-left">Usuario:</b> <span class="pull-right">'+obj.nombre+' '+obj.apellidos+'</span><br>' +
                                     '<b class="pull-left">Recurso:</b> <span class="pull-right">'+obj.rNombre+'</span><br>' +
                                     '<b class="pull-left">Tipo de Sesión:</b> <span class="pull-right">'+obj.tsNombre+'</span><br>' +

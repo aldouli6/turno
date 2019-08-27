@@ -66,6 +66,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                 </table>
                                 </div>
                             </div>
+                            
                             <div class="col-sm-6 hide" id="relRecursoTipoSesion">
                                 <div class="row " >
                                     <form role="form" id="formNewRelRecSes" role="form" autocomplete="off">

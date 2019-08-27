@@ -1,5 +1,15 @@
+### 1.25.0 (xx)
+
+  * Deprecated SlackbotHandler, use SlackWebhookHandler or SlackHandler instead
+  * Deprecated RavenHandler, use sentry/sentry 2.x and their Sentry\Monolog\Handler instead
+  * Deprecated HipChatHandler, migrate to Slack and use SlackWebhookHandler or SlackHandler instead
+  * Added support for RFC3164 (outdated BSD syslog protocol) to SyslogUdpHandler
+  * Fixed issue in GroupHandler and WhatFailureGroupHandler where setting multiple processors would duplicate records
+  * Fixed issue in SignalHandler restarting syscalls functionality
+
 ### 1.24.0 (2018-11-05)
 
+  * BC Notice: If you are extending any of the Monolog's Formatters' `normalize` method, make sure you add the new `$depth = 0` argument to your function signature to avoid strict PHP warnings.
   * Added a `ResettableInterface` in order to reset/reset/clear/flush handlers and processors
   * Added a `ProcessorInterface` as an optional way to label a class as being a processor (mostly useful for autowiring dependency containers)
   * Added a way to log signals being received using Monolog\SignalHandler

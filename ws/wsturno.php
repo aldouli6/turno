@@ -154,12 +154,40 @@ $wsReply = ''; //This variable stores different replies in different cases.
               }
 
         break;
+                case "getDataforTurno":
+                  $jsonGet = json_decode($value);
+                    $consulta="
+                    SELECT t.tipoSesionId, t.nombre, TIME_FORMAT( ADDTIME(ADDTIME( ADDTIME('".$jsonGet->{"horainicio"}."',  t.duracion) ,t.tiempoEntreSesion), t.tiempoEspera), '%H:%i') as horafin, e.nombre as enombre, e.stepping
+                    FROM tiposSesiones as t 
+                    INNER JOIN establecimientos as e on e.establecimientoId=t.establecimientoId
+                    WHERE 1
+                    AND t.tipoSesionId=".$jsonGet->{"sesion"}."";
+                    $get=$database->getRow($consulta);
+                    $result = json_encode($get);
+                    $wsReply = $result;
+                break;
+                case "getTurnosHoy":
+                  $jsonGet = json_decode($value);
+                    $consulta="
+                      SELECT * 
+                      FROM turnos
+                      WHERE 1
+                      AND estatusId<> 4
+                      AND fecha='".$jsonGet->{"fecha"}."'
+                      AND recursoId in (".$jsonGet->{"recursos"}.")
+                      AND establecimientoId=".$jsonGet->{"estab"}."";
+                  $get=$database->getRows($consulta);
+                  $result = json_encode($get);
+                  $wsReply = $result;
+                break;
                 case "getRecursosDisponibles":
                   $jsonGet = json_decode($value);
                   $consulta='
-                  SELECT  e.stepping, rrt.tipoSesionId,
+                  SELECT e.stepping, rrt.tipoSesionId,
                     r.recursoId, r.nombre as rnombre,  h.diasLaborables,
-                    h.horaInicio, h.horaFin,
+                    h.horaInicio, h.horaFin, 	
+                    ((HOUR(t.tiempoEspera)+HOUR(t.tiempoEntreSesion)+HOUR(t.duracion)) * 60) + 
+                    (MINUTE(t.tiempoEspera)+MINUTE(t.tiempoEntreSesion)+MINUTE(t.duracion))  as minutosTotales,
                     t.nombre snombre, t.duracion, t.tiempoEspera, t.tiempoEntreSesion, t.costo
                     FROM establecimientos as e 
                     INNER JOIN recursos as r on r.establecimientoId=e.establecimientoId
@@ -225,7 +253,69 @@ $wsReply = ''; //This variable stores different replies in different cases.
                   //echo $result;
                   $wsReply = $result;
                 break;
+                case "setTurno":
+                  $jsonSet = json_decode(utf8_encode($value));
+                  $dataInfo = array();
+                  
+                  $data = "";
+                  $datainfo = array();
+                  $datainfo[0] = $jsonSet->{'establecimientoId'};
+                  $datainfo[1] = $jsonSet->{'usuarioId'};
+                  $datainfo[2] = $jsonSet->{'recursoId'};
+                  $datainfo[3] = $jsonSet->{'tipoSesionId'};
+                  $datainfo[4] = $jsonSet->{'fecha'};
+                  $datainfo[5] = $jsonSet->{'horainicio'};
+                  $datainfo[6] = $jsonSet->{'horafin'};
+                  $datainfo[7] = '8';
 
+                  $consultaInserta = "INSERT INTO turnos (establecimientoId, usuarioId, 
+                    recursoId, tipoSesionId, fecha, horainicio, horafin, estatusId) VALUES (?,?,?,?,?,?,?,?)";
+                  $set = $database->insertRow($consultaInserta, $datainfo);
+                  if ($set == true){
+                    $getLastId = $database->lastIdDB();
+                    $consultaGetlastId = "SELECT *
+                                            FROM turnos
+                                            WHERE turnoId = ?";
+                    $getId = $database->getRow($consultaGetlastId, array($getLastId));
+                    if($getId == true){
+                        $notiinfo = array();
+                        $notiinfo[0] = $jsonSet->{'establecimientoId'};
+                        $notiinfo[1] = '5';
+                        $notiinfo[2] = date('Y-m-d h:i:s');
+                        $notiinfo[3] = $getLastId;
+                        $consultaInsertaNoti = "INSERT INTO notificaciones (establecimientoId, estatus, 
+                          fecha_hora, turnoId) VALUES (?,?,?,?)";
+                        $setnoti = $database->insertRow($consultaInsertaNoti, $notiinfo);
+                        if ($setnoti == true){
+                          $getLastIdNoti = $database->lastIdDB();
+                          $consultaGetlastIdnoti = "SELECT * FROM `notificaciones`
+                                                  WHERE notificacionId = ?";
+                          $getIdnoti = $database->getRow($consultaGetlastIdnoti, array($getLastIdNoti));
+                          
+                          if($getIdnoti == true){
+                            $data = array('turnoId' => $getLastId,
+                              'notiId' => $getLastIdNoti, 
+                              'ws_error' => '0');
+                          }else{
+                            $data = array('turnoId' => '0', 'ws_error' => '1','error' => 'no creo la notificacion');
+                            //$data=print_r($consultaGetlastIdnoti ,true);
+                          }
+
+                        }else{
+                          $data = array('turnoId' => '0', 'ws_error' => '2','error' => 'no creo el Id');
+                        }
+                        
+                    } else{
+                        $data = array('turnoId' => '0', 'ws_error' => '4');
+                    }
+                  } else {
+                    $data = array('turnoId' => '0', 'ws_error' => '3');
+                  }
+                  $result = json_encode($data);
+
+                  $wsReply = $result;
+
+                break;
                 case "registroCliente":
                   $jsonSetCliente = json_decode(utf8_encode($value));
                   $clienteInfo = array();

@@ -4,41 +4,29 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7
+class ComposerStaticInit540b0bb84de87bb8bf727d74f936b6e8
 {
     public static $files = array (
-        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
-        'cf97c57bfe0f23854afd2f3818abb7a0' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/create_uploaded_file.php',
-        '9bf37a3d0dad93e29cb4e1b1bfab04e9' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_headers_from_sapi.php',
-        'ce70dccb4bcc2efc6e94d2ee526e6972' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_method_from_sapi.php',
-        'f86420df471f14d568bfcb71e271b523' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_protocol_version_from_sapi.php',
-        'b87481e008a3700344428ae089e7f9e5' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/marshal_uri_from_sapi.php',
-        '0b0974a5566a1077e4f2e111341112c1' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/normalize_server.php',
-        '1ca3bc274755662169f9629d5412a1da' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/normalize_uploaded_files.php',
-        '40360c0b9b437e69bcbb7f1349ce029e' => __DIR__ . '/..' . '/zendframework/zend-diactoros/src/functions/parse_cookie_header.php',
         'f7c6080b46f9fe41a46a657439674576' => __DIR__ . '/..' . '/kreait/firebase-php/src/Firebase.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'p' => 
-        array (
-            'phpseclib\\' => 10,
-        ),
         'l' => 
         array (
             'libphonenumber\\' => 15,
         ),
-        'Z' => 
-        array (
-            'Zend\\Diactoros\\' => 15,
-        ),
         'S' => 
         array (
             'Superbalist\\Flysystem\\GoogleStorage\\' => 36,
+        ),
+        'R' => 
+        array (
+            'Riverline\\MultiPartParser\\' => 26,
         ),
         'P' => 
         array (
@@ -65,10 +53,6 @@ class ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7
         array (
             'JmesPath\\' => 9,
         ),
-        'I' => 
-        array (
-            'Ivory\\HttpAdapter\\' => 18,
-        ),
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
@@ -76,12 +60,12 @@ class ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7
             'GuzzleHttp\\' => 11,
             'Google\\Cloud\\Storage\\' => 21,
             'Google\\Cloud\\Core\\' => 18,
+            'Google\\CRC32\\' => 13,
             'Google\\Auth\\' => 12,
             'Giggsey\\Locale\\' => 15,
         ),
         'F' => 
         array (
-            'Firebase\\Token\\' => 15,
             'Firebase\\JWT\\' => 13,
             'Firebase\\Auth\\Token\\' => 20,
             'Fig\\Http\\Message\\' => 17,
@@ -89,21 +73,17 @@ class ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpseclib\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
-        ),
         'libphonenumber\\' => 
         array (
             0 => __DIR__ . '/..' . '/giggsey/libphonenumber-for-php/src',
         ),
-        'Zend\\Diactoros\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/zendframework/zend-diactoros/src',
-        ),
         'Superbalist\\Flysystem\\GoogleStorage\\' => 
         array (
             0 => __DIR__ . '/..' . '/superbalist/flysystem-google-storage/src',
+        ),
+        'Riverline\\MultiPartParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/riverline/multipart-parser/src/Riverline/MultiPartParser',
         ),
         'Psr\\SimpleCache\\' => 
         array (
@@ -145,10 +125,6 @@ class ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
         ),
-        'Ivory\\HttpAdapter\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/egeloen/http-adapter/src',
-        ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
@@ -169,6 +145,10 @@ class ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7
         array (
             0 => __DIR__ . '/..' . '/google/cloud-core/src',
         ),
+        'Google\\CRC32\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/google/crc32/src',
+        ),
         'Google\\Auth\\' => 
         array (
             0 => __DIR__ . '/..' . '/google/auth/src',
@@ -176,10 +156,6 @@ class ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7
         'Giggsey\\Locale\\' => 
         array (
             0 => __DIR__ . '/..' . '/giggsey/locale/src',
-        ),
-        'Firebase\\Token\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/firebase/token-generator/src',
         ),
         'Firebase\\JWT\\' => 
         array (
@@ -203,31 +179,14 @@ class ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7
                 0 => __DIR__ . '/..' . '/rize/uri-template/src',
             ),
         ),
-        'G' => 
-        array (
-            'Google_Service_' => 
-            array (
-                0 => __DIR__ . '/..' . '/google/apiclient-services/src',
-            ),
-            'Google_' => 
-            array (
-                0 => __DIR__ . '/..' . '/google/apiclient/src',
-            ),
-        ),
-    );
-
-    public static $classMap = array (
-        'Google_Service_Exception' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Exception.php',
-        'Google_Service_Resource' => __DIR__ . '/..' . '/google/apiclient/src/Google/Service/Resource.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitdc2764fa334a9c9cd2895acda96c16a7::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit540b0bb84de87bb8bf727d74f936b6e8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit540b0bb84de87bb8bf727d74f936b6e8::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit540b0bb84de87bb8bf727d74f936b6e8::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

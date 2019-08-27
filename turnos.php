@@ -132,6 +132,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                         <div class="" style="padding: 15px;background: #ffffff;margin-left: 10px;margin-right: 10px;border: 1px solid #e7e7e7;">
                             
                             <div id="prueba" class=" m-t-15" style="min-height:500px;">
+                            
                                 <div id="calendario" class="">
                                     <div id="nombreMes" class="">
                                     </div>

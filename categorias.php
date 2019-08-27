@@ -22,6 +22,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
         </div>
         <div class="page-container">
         <?php Mostrargeneral::header(); ?>
+        
             <div class="page-content-wrapper">
                 <div class="content full-height">
                     <?php Mostrargeneral::mostrarTituloPage($_SESSION['permissions'][$varUbicacion]['label']); ?>

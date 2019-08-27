@@ -2,11 +2,22 @@
 	header("Access-Control-Allow-Origin: *");
 	header('Content-Type: application/json');
 	include_once('../lib/nusoap/nusoap.php');
+	require __DIR__.'/vendor/autoload.php';
+	use Kreait\Firebase\Factory;
+	use Kreait\Firebase\ServiceAccount;
+    $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/secret/turno-1554146989867-17eb7d2a4084.json');
+	date_default_timezone_set('America/Mexico_City');
+	$firebase = (new Factory)
+		->withServiceAccount($serviceAccount)
+		->create();
+
+	$database = $firebase->getDatabase();    
 	$c = new nusoap_client('http://localhost:8888/turno/ws/wsturno.php');
 	$c->soap_defencoding = 'UTF-8';
 	$c->decode_utf8 = FALSE;
 	$error = $c->getError();
 	if ($error) {
+
 	    // echo "<h2>Constructor error</h2><pre>" . $error . "</pre>";
 	    echo "Constructor error " . $error . "";
 	}
@@ -22,11 +33,18 @@
 			$stockprice = $c->call('wsmethod',array('case'=>'listaCallesBySubFracc','value'=>json_encode($values)));
 		break;
 
-		case 'GetSubfracId'://ndi.mx/prueba.php?task=GetSubfracId&nombre=Carrizal
-			$values = array( "subfraccionamientoNombre" => $_GET['nombre']);
-			$stockprice = $c->call('wsmethod',array('case'=>'GetSubfracId','value'=>json_encode($values)));
+		
+		case 'getDataforTurno'://http://192.168.0.8:8888/turno/ws/api.php?task=getDataforTurno&horainicio=09:00&sesion=28
+			$values = array( 	"horainicio" => $_GET['horainicio'],
+								"sesion" => $_GET['sesion']);
+			$stockprice = $c->call('wsmethod',array('case'=>'getDataforTurno','value'=>json_encode($values)));
 		break;
-
+		case 'getTurnosHoy'://http://192.168.0.8:8888/turno/ws/api.php?task=getTurnosHoy&id=1
+			$values = array( 	"fecha" => $_GET['fecha'],
+								"estab" => $_GET['estab'],
+								"recursos" => $_GET['recursos']);
+			$stockprice = $c->call('wsmethod',array('case'=>'getTurnosHoy','value'=>json_encode($values)));
+		break;
 		case 'getRecursosDisponibles'://http://192.168.0.8:8888/turno/ws/api.php?task=getRecursosDisponibles&id=1
 			$values = array( 	"tiposesion" => $_GET['tiposesion'],
 								"estab" => $_GET['estab'],
@@ -59,7 +77,25 @@
 			$values = array( "categoria" => $_GET['id']);
 			$stockprice = $c->call('wsmethod',array('case'=>'getCategorias','value'=>json_encode($values)));
 		break;
-
+		case 'setTurno'://http://192.168.0.8:8888/turno/ws/api.php?task=setTurno&establecimientoId=23&usuarioId=19&recursoId=13&tipoSesionId=28&fecha=2019-08-27&horainicio=09:30:00&horafin=10:15:00
+			$values = array( 
+					"establecimientoId" => $_GET['establecimientoId'], 
+					"usuarioId" => $_GET['usuarioId'], 
+					"recursoId" => $_GET['recursoId'], 
+					"tipoSesionId" => $_GET['tipoSesionId'], 
+					"fecha" => $_GET['fecha'], 
+					"horainicio" => $_GET['horainicio'], 
+					"horafin" => $_GET['horafin']
+				);
+			$stockprice = $c->call('wsmethod',array('case'=>'setTurno','value'=>json_encode($values)));
+			$sp = json_decode($stockprice);
+			if($sp->ws_error=='0'){
+				$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionId')->set($sp->notiId);
+				$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionEstatus')->set('5');
+				$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionTurnoId')->set($sp->turnoId);
+				$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionTime')->set(date('Y-m-d h:i:s'));
+			}
+			break;
 		case 'registroCliente':
             $dev = $_GET['udev'] == '2' ? 0 : $_GET['udev'];
 			 $values = array( 

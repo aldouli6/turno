@@ -7,6 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Rize\\UriTemplate' => array($vendorDir . '/rize/uri-template/src'),
-    'Google_Service_' => array($vendorDir . '/google/apiclient-services/src'),
-    'Google_' => array($vendorDir . '/google/apiclient/src'),
 );
