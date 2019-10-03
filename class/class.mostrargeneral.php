@@ -154,7 +154,8 @@ class Mostrargeneral
 					  <script src="assets/js/dataTable.js" type="text/javascript"></script>
             <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
             <script src="assets/plugins/lc_switch/js/lc_switch.js" type="text/javascript"></script>
-            <script src="assets/js/jquery.timeago.js" type="text/javascript"></script>';
+            <script src="assets/js/jquery.timeago.js" type="text/javascript"></script>
+            <script src="assets/js/variables.js"></script>';
         switch ($varubicacion) {
             //Base - Ideal para lo más basico
             case 'login':

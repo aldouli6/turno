@@ -17,27 +17,52 @@ $(document).ready(function() {
     
     firebase.initializeApp(config);
     observaNotificacion();
+    
     $("#notificationLink").click(function(){
         $("#notificationContainer").fadeToggle(300);
         $("#notification_count").fadeOut("slow");
             return false;
         });
 
+       
         //Document Click hiding the popup 
         $(document).click(function(){
             $("#notificationContainer:visible").hide(onHideNotificatios);
         });
 
-        //Popup on click
-        $("#notificationContainer").click(function(){
-            console.log('clic dentro del container');
-            return false;
-        });
+        // //Popup on click
+        // $("#notificationContainer").click(function(){
+        //     console.log('clic dentro del container');
+        //     return false;
+        // });
     });
     function onHideNotificatios() { 
         console.log('onHideNotificatios');
+        notificacionesVistas();
     }
-function cargaNotificacion(noti) {
+    $('.bellcontainer').click(function(){
+        if(!$("#notificationContainer").is(":visible")){
+            //notificacionesVistas();
+            observaNotificacion(false);
+        }
+    });
+function notificacionesVistas() {
+    $.each($('.notinueva'), function (key, value) {
+        var notiId=$(this).attr('nid');
+        $.ajax({
+            async: true,
+            url: API_URL+'?task=notifiVistas&notificacionId='+notiId+"&estatus="+VISTA,
+            type: 'GET',
+            success: function (response) {
+                console.log(response);
+                $('.bellcontainer .bellnotification').removeClass('show-count').removeClass('notify').removeAttr('data-count') ;
+            }
+        });
+    
+    });
+   
+}
+function cargaNotificacion(noti, sonido) {
     var url_request = "modules/module.notificaciones.php";
     var method = "POST";
     $.ajax({
@@ -50,28 +75,34 @@ function cargaNotificacion(noti) {
             noti:noti.notificacionId
         },
         success: function (response) {
-            console.log(response);
             var obj = JSON.parse(response);
-            console.log(obj);
-                creaNotificacion(obj);
-                nuevanotificacion();
+            if(obj){
+                creaNotificacion(obj, sonido);
+            }
+                
         }
     });
 }
-function creaNotificacion(noti) {
-
-    fecha = new Date(noti.fecha);
+function creaNotificacion(noti, sonido) {
+    
+    fecha = new Date(
+        noti.fecha.substring(0,4),
+        parseInt(noti.fecha.substring(5,7))-1, 
+        noti.fecha.substring(8,10)
+         );
     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    console.log(
-        fecha= fecha.toLocaleDateString("es-ES", options)
-    );
-    fecha_hora = new Date(noti.fecha_hora);
+    fecha=fecha.toLocaleDateString("es-Es", options);
+    fecha_hora = new Date( 
+        noti.fecha_hora.substring(0,4),
+        parseInt(noti.fecha_hora.substring(5,7))-1, 
+        noti.fecha_hora.substring(8,10),
+        noti.fecha_hora.substring(11,13),
+        noti.fecha_hora.substring(14,16)
+        );
     var options = {  year: 'numeric', month: 'long', day: 'numeric', hour:'2-digit', minute:'2-digit' };
-    console.log(
-        fecha_hora= fecha_hora.toLocaleDateString("es-ES", options)
-    );
+    fecha_hora=fecha_hora.toLocaleDateString("es-Es", options);
     var html='';
-    html+='<div class="row fila">';
+    html+='<div class="row fila notificacion" id="noti'+noti.notificacionId+'" nid="'+noti.notificacionId+'" tid="'+noti.turnoId+'">';
         html+='<div class="col-xs-3">';
             html+='  <img style="max-width:67px" src="https://previews.123rf.com/images/yupiramos/yupiramos1705/yupiramos170514529/77978485-diseño-gráfico-del-ejemplo-del-vector-del-icono-del-perfil-del-hombre-joven.jpg" alt="">';
             html+=' <small>@'+noti.username+'</small>';
@@ -84,13 +115,24 @@ function creaNotificacion(noti) {
         html+='</div>';
         html+='<hr>';
     html+='</div>';
-    if(noti.estatusId_n==5){
+    
+    if(noti.hora_vista==null){
         $('#notificationsBodynuevas').append(html);
-        var snd = new Audio("assets/sounds/ding.mp3"); // buffers automatically when created
-        snd.play();
+        $('#noti'+noti.notificacionId).addClass('notinueva');
+        if(sonido){
+            notificacionNueva();
+
+            var snd = new Audio("assets/sounds/ding.mp3"); // buffers automatically when created
+            snd.play();
+        }
+       
+    }else{
+        $('#notificationsBodyvistas').append(html);
+        $('#noti'+noti.notificacionId).addClass('notivista');
+       
     }
 }
-function nuevanotificacion(){
+function notificacionNueva(){
     var el = document.querySelector('.bellnotification');
     var count = Number(el.getAttribute('data-count')) || 0;
     console.log(count);
@@ -104,17 +146,11 @@ function nuevanotificacion(){
     
 }
 
-if(cont == 0)
-{
-     $("#No_Notifications").css('display', 'block');
-     console.log('true');
-}
 
-
-
-
-function observaNotificacion(){
+function observaNotificacion(sonido=true){
     console.log('observaNotificacion') ;
+    $('#notificationsBodyvistas').empty();
+    $('#notificationsBodynuevas').empty();
     var database  = firebase.database();
     var notifRef  = database.ref(estabId + '-establecimiento/turno');
     notifRef.on('child_added', (snapshot) => {
@@ -123,152 +159,98 @@ function observaNotificacion(){
         console.log(noti);
         if(noti.notificacionId){
             console.log('user was added !!');
-             cargaNotificacion(noti);
+             cargaNotificacion(noti, sonido);
         }
         
-        // $.ajax({
-        //     url: "modules/module.alertas.php",
-        //     async: true,
-        //     type: "POST",
-        //     data: {
-        //         cmd: "getReporteInfo",
-        //         reporteId: new_alert.notificacionId
-        //     },
-        //     success: function(response) 
-        //     {            
-        //         contReport++;
-
-        //         // if(contReport == 1)
-        //         // {                                
-        //                 var obj = JSON.parse(response);                        
-                        
-        //                 if(obj.ReporteIsIn == 1)
-        //                 {
-        //                     console.log('Notificacion dentro del fraccionamiento');
-        					
-        
-        //                     var _latX = obj.ReporteLatitud;
-        //                     var _longY = obj.ReporteLongitud;
-                                                                
-        //                     if(obj.ReporteComentario === "" || obj.ReporteComentario === null)
-        //                     {
-        //                         $("#Comentario").text("Sin comentario");
-        //                         console.log('sin comentario');
-        //                     }
-        //                     else
-        //                     {
-        //                         $("#Comentario").text(obj.ReporteComentario);
-        //                         console.log('con comentario');
-        //                     }
-            
-        //                     $("#fechaHora").text(obj.ReporteRegistro);
-        //                     $("#direccion").text(obj.ReporteDireccionDetalle);
-        //                     $("#estatus").text(obj.EstatusDescripcion);
-            
-                            
-        //                     $("#No_NotificationsReport").css('display', 'none');
-            
-        //                     //code goes here that will be run every 5 seconds.
-        //                     var timeAgoReport = jQuery.timeago(obj.ReporteRegistro);
-                                    
-        //                     var calleClean = obj.ReporteDireccionDetalle;
-        //                     var newCalle = calleClean.replace(/\,/g, "");
-            
-        //                     firebase.database().ref(estabId + '-Subfraccionamiento/Reportes/' + obj.ReporteId).once('value').then(function(snapshot) 
-        //                     {
-        //                         var _statusReport = snapshot.val().notificacionStatus;
-            
-        //                         if(_statusReport == 2)
-        //                         {
-        //                             $("#iconNotificacion" + obj.ReporteId).css('color','#f8d053');
-        //                         }
-        //                     });
-            
-        //                     if(obj.EstatusDescripcion === "Atendiendo")
-        //                     {
-        //                         obj.EstatusDescripcion = 'Estas atendiendo este reporte';
-        //                     }
-            
-        //                     $("#NotificacionReporteLista").append("<li class='alert-list' id='liR" + obj.ReporteId + "'> <div class='row'> <div class='col-sm-10'>  <a href='alertas.php' class='p-t-10 p-b-10' data-navigate='view' data-view-port='#chat' data-view-animation='push-parrallax'> <p class='col-xs-height col-middle'> <span class='text-complete fs-10'> <img src='assets/img/notificationB.gif'" + " id='notiReportAtendiendo" + obj.ReporteId  + "' style='width: 25px;display:none;'> <img src='assets/img/notificactionA.gif'" + " id='notiReportEnEspera" + obj.ReporteId  + "' style='width: 25px;'></span> </p> <p class='p-l-10 col-xs-height col-middle col-xs-12 overflow-ellipsis fs-12'><span class='text-master link'>Nuevo reporte <span id='agoTime' class='text-master link' style='margin-left: calc(8%);float: right;'>" 
-        //                     + timeAgoReport + "</span> </span><br><span class='text-master'>Reporte: " + obj.TiporeporteDescripcion + "</span><br><span class='text-master'>Colono: " + obj.UsuarioNombreCompleto 
-        //                     + "</span></p> </a></div>    <div class='col-sm-2' style='background: white;height: 68px;padding: 0px;'> <button type='button' onclick='DialogToSendNotifications(" + estabId + "," + obj.ReporteId 
-        //                     + ",\"" + obj.TiporeporteDescripcion + "\"" +");' class='btn btn-default' style='border:solid 0px;margin-right: 20px;position: absolute;width: 100%;height: 68px;'> <i id='iconNotificacion" + obj.ReporteId +  "' class='fa fa-bell' aria-hidden='true'></i></button> </div>      </div></li>");                        
-                                                                     
-        //                     if(obj.EstatusDescripcion === "Estas atendiendo este reporte")
-        //                     {
-        //                         $('#notiReportEnEspera' + obj.ReporteId).css('display', 'none');
-        //                         $('#notiReportAtendiendo' + obj.ReporteId).css('display', 'initial');
-        //                     }
-            
-        //                     var snd = new Audio("assets/sounds/notificacionA.mp3"); // buffers automatically when created
-        //                     snd.play();
-        
-        
-        //                 }
-        //                 else if(obj.ReporteIsIn == 0)
-        //                 {
-        //                     console.log('Notificacion fuera del fraccionamiento');
-        
-        //                     var _latX = obj.ReporteLatitud;
-        //                     var _longY = obj.ReporteLongitud;
-                                                                
-        //                     if(obj.ReporteComentario === "" || obj.ReporteComentario === null)
-        //                     {
-        //                         $("#Comentario").text("Sin comentario");
-        //                         console.log('sin comentario');
-        //                     }
-        //                     else
-        //                     {
-        //                         $("#Comentario").text(obj.ReporteComentario);
-        //                         console.log('con comentario');
-        //                     }
-            
-        //                     $("#fechaHora").text(obj.ReporteRegistro);
-        //                     $("#direccion").text(obj.ReporteDireccionDetalle);
-        //                     $("#estatus").text(obj.EstatusDescripcion);
-                                        
-        //                     $("#No_NotificationsReportOut").css('display', 'none');
-            
-        //                     //code goes here that will be run every 5 seconds.
-        //                     var timeAgoReport = jQuery.timeago(obj.ReporteRegistro);
-                                    
-        //                     var calleClean = obj.ReporteDireccionDetalle;
-        //                     var newCalle = calleClean.replace(/\,/g, "");
-            
-        //                     firebase.database().ref(estabId + '-Subfraccionamiento/Reportes/' + obj.ReporteId).once('value').then(function(snapshot) 
-        //                     {
-        //                         var _statusReport = snapshot.val().notificacionStatus;
-            
-        //                         if(_statusReport == 2)
-        //                         {
-        //                             $("#iconNotificacion" + obj.ReporteId).css('color','#f8d053');
-        //                         }
-        //                     });
-            
-        //                     if(obj.EstatusDescripcion === "Atendiendo")
-        //                     {
-        //                         obj.EstatusDescripcion = 'Estas atendiendo este reporte';
-        //                     }
-            
-        //                     $("#NotificacionReporteListaFueraFraccionamiento").append("<li class='alert-list' id='liR" + obj.ReporteId + "'> <div class='row'> <div class='col-sm-10'>  <a href='alertas.php' class='p-t-10 p-b-10' data-navigate='view' data-view-port='#chat' data-view-animation='push-parrallax'> <p class='col-xs-height col-middle'> <span class='text-complete fs-10'> <img src='assets/img/RadioA.gif'" + " id='notiReportAtendiendo" + obj.ReporteId  + "' style='width: 25px;display:none;'> <img src='assets/img/Radio.gif'" + " id='notiReportEnEspera" + obj.ReporteId  + "' style='width: 25px;'></span> </p> <p class='p-l-10 col-xs-height col-middle col-xs-12 overflow-ellipsis fs-12'><span class='text-master link'>Nuevo reporte <span id='agoTime' class='text-master link' style='margin-left: calc(8%);float: right;'>" 
-        //                     + timeAgoReport + "</span> </span><br><span class='text-master'>Reporte: " + obj.TiporeporteDescripcion + "</span><br><span class='text-master'>Colono: " + obj.UsuarioNombreCompleto 
-        //                     + "</span></p> </a></div>    <div class='col-sm-2' style='background: white;height: 68px;padding: 0px;'> <button type='button' onclick='DialogToSendNotifications(" + estabId + "," + obj.ReporteId 
-        //                     + ",\"" + obj.TiporeporteDescripcion + "\"" +");' class='btn btn-default' style='border:solid 0px;margin-right: 20px;position: absolute;width: 100%;height: 68px;'> <i id='iconNotificacion" + obj.ReporteId +  "' class='fa fa-bell' aria-hidden='true'></i></button> </div>      </div></li>");                        
-                                                                     
-        //                     if(obj.EstatusDescripcion === "Estas atendiendo este reporte")
-        //                     {
-        //                         $('#notiReportEnEspera' + obj.ReporteId).css('display', 'none');
-        //                         $('#notiReportAtendiendo' + obj.ReporteId).css('display', 'initial');
-        //                     }
-            
-        //                     var snd = new Audio("assets/sounds/notificacionA.mp3"); // buffers automatically when created
-        //                     snd.play();
-        //                 }
-        //     }
-        // });
     });
 }
-
+$('body').on('click','.notificacion', function() {
+    var divnoti= $(this);
+    console.log(divnoti);
+    var url_request = "modules/module.turno.php";
+    var method = "POST";
+    $.ajax({
+        async: true,
+        url: url_request,
+        type: method,
+        data: {
+            cmd: "getDataTurno",
+            turno:$(this).attr('tid'),
+        },
+        success: function (response) {
+            var turno = JSON.parse(response)
+            console.log(turno);
+       
+            Swal.fire({
+                type: 'info',
+                title: 'Turno número: '+turno.turnoId,
+                html:   '<div style="margin:0 10%">' +
+                        '<b class="pull-left">Usuario:</b> <span class="pull-right">'+turno.nombre+' '+turno.apellidos+'</span><br>' +
+                        '<b class="pull-left">Recurso:</b> <span class="pull-right">'+turno.rNombre+'</span><br>' +
+                        '<b class="pull-left">Tipo de Sesión:</b> <span class="pull-right">'+turno.tsNombre+'</span><br>' +
+                        '<b class="pull-left">Fecha:</b> <span class="pull-right">'+turno.fecha+'</span><br>' +
+                        '<b class="pull-left">Hora de Inicio:</b> <span class="pull-right">'+turno.horaInicio+'</span><br>' +
+                        '<b class="pull-left">Hora de Fin:</b> <span class="pull-right">'+turno.horaFin+'</span><br>' +
+                        '<b class="pull-left">Estatus:</b> <span class="pull-right">'+turno.eNombre+'</span></div>', 
+                
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Agendar Turno!',
+                cancelButtonText: 'Cancelar Turno!',
+            }).then((result) => {
+                if (result.value) {
+                    //Atender
+                    $.ajax({
+                        async: true,
+                        url: API_URL+'?task=cambiarEstatusTurno&turnoId='+turno.turnoId+'&estatus='+AGENDADO+'&comentario=null&notificacion=true',
+                        type: "GET",
+                        success: function (response) {
+                            // console.log(response);
+                            var obj = response;
+                            Swal.fire({
+                                type: 'success',
+                                title: 'El turno '+obj.turnoId+' está Agendado',
+                                timer: 2000,
+                            });
+                        } 
+                    });
+                
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: 'Estas seguro de canelar el turno?',
+                        text: "Ingresa el comentario de cancelación",
+                        input: 'text',
+                        type: 'warning',
+                        inputValidator: (value) => {
+                            if (!value) {
+                              return 'Por favor escribe un comentario para cancelar el turno'
+                            }
+                          },
+                        showCancelButton: true,
+                        confirmButtonText: 'Si! cancelarlo',
+                        cancelButtonText: 'No',
+                    }).then((result) => {
+                        if (result.value) {
+                            $.ajax({
+                                async: true,
+                                url: API_URL+'?task=cambiarEstatusTurno&turnoId='+turno.turnoId+'&estatus='+CANCELADO+'&notificacion=true&comentario='+result.value,
+                                type: "GET",
+                                success: function (response) {
+                                    var obj = response;
+                                    Swal.fire({
+                                        type: 'success',
+                                        title: 'El turno '+obj.turnoId+' está Cancelado',
+                                    });
+                                } 
+                            });
+                        }
+                    });
+                    
+                }
+            });
+        }
+    });
+});
 
 
 function observableReporte_removed()

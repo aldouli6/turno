@@ -56,12 +56,17 @@ if(!empty($_POST)){
                 echo $jsonElements;
             break;
             case 'getTurnosHoy':
-                $sql="SELECT t.turnoId, t.establecimientoId, t.usuarioId,concat(u.nombre, ' | ',s.nombre ) as descripcion,  t.recursoId, t.tipoSesionId, t.fecha, t.horaInicio, t.horaFin, e.nombre as estatus
+                $sql="SELECT t.turnoId, t.establecimientoId, u.username, t.estatusId, s.nombre as servicio, r.nombre as nombreRecurso,
+                t.usuarioId,concat(u.nombre, ' | ',s.nombre ) as descripcion,  t.recursoId, t.tipoSesionId, t.fecha, t.horaInicio, t.horaFin, e.nombre as estatus
                 FROM turnos as t 
                 INNER JOIN usuarios as u on u.usuarioId=t.usuarioId
                 INNER JOIN tiposSesiones as s on s.tipoSesionId=t.tipoSesionId
-                INNER JOIN estatus as e on e.idestatus= t.estatusId where t.estatusId <> '4' and t.establecimientoId = ".$establecimiento." and t.fecha = ? and t.recursoId = ?";
-                $getElements = $database->getRows($sql, array( $date, $recurso));
+                INNER JOIN estatus as e on e.idestatus= t.estatusId 
+                INNER JOIN recursos as r on r.recursoId=t.recursoId
+                where t.estatusId <> '4' and t.establecimientoId = ".$establecimiento." 
+                and t.fecha = ? ";
+                $sql.=(isset($recurso))?"and t.recursoId = ".$recurso:"";
+                $getElements = $database->getRows($sql, array( $date));
                 $jsonElements=json_encode($getElements);
                 echo $jsonElements;
             break;

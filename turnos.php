@@ -27,8 +27,9 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                 <div class="content full-height">
                     <?php Mostrargeneral::mostrarTituloPage($_SESSION['permissions'][$varUbicacion]['label']); ?>
                     <div class="container-fluid full-height no-padding">
+
                         <div class="modal fade slide-up disable-scroll modalturno" id="formturno" tabindex="-1" role="dialog" aria-hidden="false">
-                            <div class="modal-dialog ">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content-wrapper">
                                     <div class="modal-content">
                                     <form role="form" class="formturno" id="formaturno" autocomplete="off" novalidate="novalidate">
@@ -122,11 +123,75 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                 </div>
                             </div>
                         </div>
+
                     </div>
+                    <!-- Modal -->
+                    <div class="modal fade slide-up disable-scroll modalturno" id="verturnos" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" >
+                            <div class="modal-content-wrapper">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <div class="row">
+                                            <div class="col-sm-1">
+                                                <i target="" id="prevday_view" class="iconmod_view fa fa-chevron-left" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <h5 >Turnos del día</h5>
+                                                    <p id="eldia_view" class="p-b-10"></p>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                <i target="" id="nextday_view" class="iconmod_view fa fa-chevron-right" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class=" table table-responsive">
+                                            <table id="tablaTurnos" class="table table-hover " cellspacing="0" width="100%" style="background: #f0f0f0;">
+                                                <thead>
+                                                <tr id="trTurno">
+                                                    <th>Hora Inicio</th>                                                                         
+                                                    <th>Recurso</th>
+                                                    <th>Servicio</th>
+                                                    <th>Estatus</th> 
+                                                    <th>Usuario</th> 
+                                                    <th>Hora Fin</th> 
+                                                    <th></th>
+                                                    <th></th>                                                                  
+                                                </tr>
+                                                </thead>
+                                                <tfoot>
+                                                <tr>
+                                                    <th>Hora Inicio</th>                                                                         
+                                                    <th>Recurso</th>
+                                                    <th>Servicio</th>
+                                                    <th>Estatus</th> 
+                                                    <th>Usuario</th> 
+                                                    <th>Hora Fin</th> 
+                                                    <th></th>
+                                                    <th></th>                                                        
+                                                </tr>
+                                                </tfoot>
+                                                <tbody id="contenidoTurno">
+                                            
+                                                </tbody>
+                                            </table>
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>       
                         <?php
                             MostrarPerfilUsuario::MostrarPerfil();
                         ?>
+                        
                         <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?= $_SESSION['EstablecimientoID']?>">
                         <input type="hidden" name="establecimientoStepping" id="establecimientoStepping" value="<?= $_SESSION['EstablecimientoStepping']?>">
                         <div class="" style="padding: 15px;background: #ffffff;margin-left: 10px;margin-right: 10px;border: 1px solid #e7e7e7;">
@@ -293,14 +358,15 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     cursor: pointer;
     padding:5px
 }
-.iconmod:hover{
+.iconmod:hover,.iconmod_view:hover{
     zoom:1.3;
 }
-.iconmod{
+.iconmod, .iconmod_view{
     font-size: 3vh;;
     cursor: pointer;
     padding:5px
 }
+
 .year{
     background: #019498;
     font-size:3.5vh;;
@@ -309,6 +375,11 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
     position: absolute;
     top: 1vh;
     right: 1vh;
+}
+.opciones {
+    position: absolute;
+    bottom: 0.5vh;
+    left: 0.5vw;
 }
 .dia{
     background: #f0f0f0;

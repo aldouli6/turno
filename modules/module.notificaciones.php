@@ -37,8 +37,8 @@ try {
                 echo $jsonElements;
             break;
             case 'getNotificacion':
-                $sql="SELECT n.establecimientoId,n.notificacionId, n.estatus as estatusId_n, n.fecha_hora,
-                    t.turnoId,   t.fecha, t.horaInicio, t.horaFin, t.estatusId estatusId_t,e.nombre estatus_t,
+                $sql="SELECT n.establecimientoId,n.notificacionId, n.estatus as estatusId_n, n.fecha_hora,n.hora_vista,
+                    t.turnoId,   t.fecha, t.horaInicio, t.horaFin, t.estatusId estatusId_t, e.nombre estatus_t,
                     u.usuarioId,u.username,concat(u.nombre,' ', u.apellidos) unombre,
                     ts.tipoSesionId, ts.nombre,
                     r.recursoId, r.nombre rnombre
@@ -49,6 +49,7 @@ try {
                     INNER JOIN estatus e on e.idestatus=t.estatusId
                     INNER JOIN recursos r on r.recursoId=t.recursoId
                     WHERE 1
+                    AND t.estatusId = 8 
                     AND n.establecimientoId = ".$establecimiento."
                     AND n.notificacionId = ".$noti."
                     ORDER BY fecha_hora DESC "; 

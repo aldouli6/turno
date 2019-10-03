@@ -2,8 +2,13 @@
 	header("Access-Control-Allow-Origin: *");
 	header('Content-Type: application/json');
 	include_once('../lib/nusoap/nusoap.php');
+	include('PushNotifications.php');
 	require __DIR__.'/vendor/autoload.php';
+	
 	use Kreait\Firebase\Factory;
+	use Kreait\Firebase;
+	use Kreait\Firebase\Messaging\CloudMessage;
+	use Kreait\Firebase\Messaging\Notification;
 	use Kreait\Firebase\ServiceAccount;
     $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'/secret/turno-1554146989867-17eb7d2a4084.json');
 	date_default_timezone_set('America/Mexico_City');
@@ -12,10 +17,41 @@
 		->create();
 
 	$database = $firebase->getDatabase();    
-	$c = new nusoap_client('http://localhost:8888/turno/ws/wsturno.php');
+	$messaging = $firebase->getMessaging();
+	$c = new nusoap_client('http://192.168.0.8:8888/turno/ws/wsturno.php');
 	$c->soap_defencoding = 'UTF-8';
 	$c->decode_utf8 = FALSE;
 	$error = $c->getError();
+
+	$push = new PushNotifications();
+	
+	
+
+
+
+	
+
+
+
+	// $title = 'Nuevo Turno';
+	// 		// $body = 'El turno '.$sp->turnoId.' ha sido solicitado';
+	// $body = 'El turno  ha sido solicitado';
+	// $notification = Notification::create()
+	// 	->withTitle($title)
+	// 	->withBody($body);
+	// $deviceTokens ='cUCbMlHYfiU:APA91bGPK5cjcftoqSFUOQhAw926zEE8LiPaGeXEb5QTW1UShwjpe1I90G51YDAzh-rFuEAKCQItSoC5i-aSr34sHVBGeYF9ytmAQujwt_PwGcaUwJGJqS7mh7HIw9_ugN2cUnrO0six';
+	// $message = CloudMessage::new()
+	// 			->withNotification($notification);
+	//  $messaging->sendMulticast($message, $deviceTokens);
+
+					// echo 'Successful sends: '.$report->successes()->count().PHP_EOL;
+					// echo 'Failed sends: '.$report->failures()->count().PHP_EOL;
+
+					// if ($report->hasFailures()) {
+					// 	foreach ($report->failures()->getItems() as $failure) {
+					// 		echo $failure->error()->getMessage().PHP_EOL;
+					// 	}
+					// }
 	if ($error) {
 
 	    // echo "<h2>Constructor error</h2><pre>" . $error . "</pre>";
@@ -24,10 +60,20 @@
 	switch ($_GET['task']) {
 
 		case 'login': //ndi.mx/prueba.php?task=login&em=jguzman@nextdata.com.mx&ps=3DB683C69D821F85F72829918FDC8D72A4FA55F6
-			$values = array( "email" => $_GET['em'], "password" => $_GET['ps']);
+			$values = array( "email" => $_GET['em'], 
+							"password" => $_GET['ps'],
+							"token" => $_GET['tkn'],
+							"plataforma" => $_GET['plat']);
     		$stockprice = $c->call('wsmethod',array('case'=>'login','value'=>json_encode($values)));
 		break;
-
+		case 'refreshToken': 
+			$values = array( "user"=>$_GET['user'],
+							"token" => $_GET['tkn'],
+							"plataforma" => $_GET['plat']);
+			$stockprice = $c->call('wsmethod',array('case'=>'refreshToken','value'=>json_encode($values)));
+			$message = array('title' => 'Token Actualizado', 'body' => 'El nuevo token es  '.$sp->token);
+			$push->sendAndroidNotifications($sp->tokens, $message, array('notification_foreground' => true));
+		break;
 		case 'listaCallesBySubFracc'://ndi.mx/prueba.php?task=listaCallesBySubFracc?&nombre=Carrizal
 			$values = array( "subfraccionamientoNombre" => $_GET['nombre']);
 			$stockprice = $c->call('wsmethod',array('case'=>'listaCallesBySubFracc','value'=>json_encode($values)));
@@ -77,8 +123,62 @@
 			$values = array( "categoria" => $_GET['id']);
 			$stockprice = $c->call('wsmethod',array('case'=>'getCategorias','value'=>json_encode($values)));
 		break;
-		case 'setTurno'://http://192.168.0.8:8888/turno/ws/api.php?task=setTurno&establecimientoId=23&usuarioId=19&recursoId=13&tipoSesionId=28&fecha=2019-08-27&horainicio=09:30:00&horafin=10:15:00
+		case 'getEstabsTurnos'://http://192.168.0.8:8888/turno/ws/api.php?task=getEstabsTurnos&usuarioId=19&estatusId=1
+			// echo "algo";
+			$values = array( "usuarioId" => $_GET['usuarioId'],
+					"estatusId" => $_GET['estatusId']
+				);
+			$stockprice = $c->call('wsmethod',array('case'=>'getEstabsTurnos','value'=>json_encode($values)));
+		break;
+		case 'getTurnosUsuario'://http://192.168.0.8:8888/turno/ws/api.php?task=getTurnosUsuario&usuarioId=1
+			// echo "algo";
+			$values = array( "usuarioId" => $_GET['usuarioId'],
+					"estatus" => $_GET['estatus'], 
+					"desde" => $_GET['desde'], 
+					"hasta" => $_GET['hasta'], 
+					"estab" => $_GET['estab'],
+					"orden" => $_GET['orden']
+				);
+			$stockprice = $c->call('wsmethod',array('case'=>'getTurnosUsuario','value'=>json_encode($values)));
+		break;
+		case 'notifiVistas'://http://192.168.0.8:8888/turno/ws/api.php?task=notifiVistas&notificacionId=168&estatus=1
 			$values = array( 
+				"notificacionId" => $_GET['notificacionId'], 
+				"estatus" => $_GET['estatus']
+			);
+			$stockprice = $c->call('wsmethod',array('case'=>'notifiVistas','value'=>json_encode($values)));
+			$sp = json_decode($stockprice);
+			if($sp->ws_error=='0'){
+				// $message = array('title' => 'Tur', 'body' => 'El turno '.$sp->turnoId.' ha sido '.$sp->estatusnombre);
+				$push->sendAndroidNotifications($sp->tokens, null, array('notification_foreground' => false,
+				'turnoId' => $sp->turnoId,
+				'opcion' => 'visto'));
+				$newPost = $database->getReference($sp->estabId . '-establecimiento/turno/' . $sp->notiId.'/notificacionEstatus')->set($_GET['estatus']);
+				$newPost = $database->getReference($sp->estabId . '-establecimiento/turno/' . $sp->notiId.'/notificacionVista')->set(date('Y-m-d H:i:s'));
+			}
+		break;
+		case 'cambiarEstatusTurno'://http://192.168.0.8:8888/turno/ws/api.php?task=cambiarEstatusTurno&turnoId=168&estatus=1
+			$values = array( 
+				"turnoId" => $_GET['turnoId'], 
+				"estatus" => $_GET['estatus'],
+				"comentario" => $_GET['comentario']
+			);
+			$stockprice = $c->call('wsmethod',array('case'=>'cambiarEstatusTurno','value'=>json_encode($values)));
+			$sp = json_decode($stockprice);
+			if($sp->ws_error=='0'){
+				if($_GET['notificacion']){
+					$message = array('title' => 'Turno '.$sp->estatusnombre, 'body' => 'El turno '.$sp->turnoId.' ha sido '.$sp->estatusnombre);
+					$push->sendAndroidNotifications($sp->tokens, $message, array('notification_foreground' => true));
+				}else{
+					$push->sendAndroidNotifications($sp->tokens, null, array('notification_foreground' => true,
+																		'title' => 'Turno '.$sp->estatusnombre,
+																		 'body' => 'El turno '.$sp->turnoId.' ha sido '.$sp->estatusnombre));
+				}
+			}
+		break;
+		case 'setTurno'://http://192.168.0.8:8888/turno/ws/api.php?task=setTurno&establecimientoId=23&usuarioId=19&recursoId=13&tipoSesionId=28&fecha=2019-08-27&horainicio=09:30:00&horafin=10:15:00
+			
+		$values = array( 
 					"establecimientoId" => $_GET['establecimientoId'], 
 					"usuarioId" => $_GET['usuarioId'], 
 					"recursoId" => $_GET['recursoId'], 
@@ -89,12 +189,22 @@
 				);
 			$stockprice = $c->call('wsmethod',array('case'=>'setTurno','value'=>json_encode($values)));
 			$sp = json_decode($stockprice);
+			// echo $stockprice;
 			if($sp->ws_error=='0'){
-				$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionId')->set($sp->notiId);
-				$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionEstatus')->set('5');
-				$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionTurnoId')->set($sp->turnoId);
-				$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionTime')->set(date('Y-m-d h:i:s'));
+				try{
+					$message = array('title' => 'Nuevo turno', 'body' => 'El turno '.$sp->turnoId.' ha sido solicitado');
+					$push->sendAndroidNotifications($sp->tokens, $message, array('notification_foreground' => true));
+
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionId')->set($sp->notiId);
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionEstatus')->set('5');
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionTurnoId')->set($sp->turnoId);
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionTime')->set(date('Y-m-d H:i:s'));
+					
+				} catch (Exception $e) {
+				echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+				}
 			}
+			
 			break;
 		case 'registroCliente':
             $dev = $_GET['udev'] == '2' ? 0 : $_GET['udev'];
@@ -189,7 +299,18 @@
 		break;
 		
 		default:
+		try {
+			//code...
+		
+			
+
+				 //print_r($message,true);
 			echo "default";
+		} catch (Exception $e) {
+			print_r($e);
+			echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+		}
+		
 		break;
 	}
 
@@ -203,14 +324,15 @@
 	else {
 	    $error = $c->getError();
 	    if ($error) {
-	        // echo "<h2>Error</h2><pre>" . $error . "</pre>";
+	         echo "<h2>Error</h2><pre>" . $error . "</pre>";
 			echo "Error .." .$error . "";
 			print_r($c);
+			die();
 	    }
 	    else {
 	        // echo "<pre>";
-	        echo $stockprice;
-			// echo "</pre>";
+			echo $stockprice;
+			
 	    }
 	}
 

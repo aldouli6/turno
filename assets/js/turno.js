@@ -66,14 +66,26 @@ var fechaglobal;
         target= new Date(target);
         cargarModal(target.getDate(),target.getMonth()+1,target.getFullYear(),establecimiento);
     });
-    $('body').on('click',".enmes.mayorhoy", function() {
+    $('body').on('click','.iconmod_view', function() {
+        var target= $(this).attr('target');
+        target= new Date(target);
+        cargarModal_view(target.getDate(),target.getMonth()+1,target.getFullYear(),establecimiento);
+    });
+    $('body').on('click',".enmes.mayorhoy  button", function() {
         aidi = $(this).attr('id').substring(3);
+        target = $(this).attr('data-target');
         year=aidi.substring(0,4);
         mes=aidi.substring(4,6);
         dia=aidi.substring(6,8);
         fechaglobal =new Date(year, mes-1, dia);
+        console.log(target);
         //console.log(dia,mes,year,establecimiento);
-        cargarModal(dia,mes,year,establecimiento);
+        if(target=="#formturno"){
+            cargarModal(dia,mes,year,establecimiento);
+        }else{
+            cargarModal_view(dia,mes,year,establecimiento);
+        }
+        //
     });
     $('body').on('hide.bs.modal',"#formturno", function(){
         limpiar();
@@ -216,6 +228,201 @@ function cargarModal(dia,mes,year, establecimiento) {
     cargaHorasDia(fecha);
     
 }
+function cargarModal_view(dia,mes,year, establecimiento) {
+    
+    var fecha=new Date(year, mes-1, dia);
+    var prevday = addDays(fecha, -1);
+    var nextday = addDays(fecha, 1);
+    var hoy=new Date()
+    var hoy2 =  new Date(hoy.getFullYear(),hoy.getMonth(), hoy.getDate() )
+    if(prevday>=hoy2){
+        $('#prevday_view').show();
+        $('#prevday_view').attr('target',prevday);
+    }else{
+        $('#prevday_view').hide();
+    }
+    $('#nextday_view').attr('target',nextday);
+    //$('#fecha').val(year+'-'+mes+'-'+dia);
+    $('#eldia_view').text(fechaNombre(fecha));
+    fechaglobal=fecha;
+    console.log(year+'-'+mes+'-'+dia);
+    getTurnosHoy(dia,mes,year, establecimiento);
+    
+}
+function getTurnosHoy(dia,mes,year, establecimiento) {
+    var url_request = "modules/module.turno.php";
+    var method = "POST";
+    console.log(year+'-'+mes+'-'+dia);
+    $.ajax({
+        async: true,
+        url: url_request,
+        type: method,
+        data: {
+            cmd: "getTurnosHoy",
+            establecimiento:establecimiento,
+            date: year+'-'+mes+'-'+dia
+        },
+        success: function (response) {
+            
+            var obj = JSON.parse(response);
+            console.log(obj);
+            var html='';
+            $.each(obj, function( key, value ) {
+                console.log(value);
+                html+= "<tr id='turnoId"+value.turnoId+"'>";
+                html+= "<td>"+value.horaInicio+"</td>";
+                html+= "<td>"+value.nombreRecurso+"</td>";
+                html+= "<td>"+value.servicio+"</td>";
+                html+= "<td>"+value.estatus+"</td>";
+                html+= "<td>"+value.username+"</td>";
+                html+= "<td>"+value.horaFin+"</td>";
+                html+="<td>";
+                html+=   '<button type="button" class="btn btn-default btn-sm"  onclick="editarTurno('+value.turnoId+')">';
+                html+=    '<span class="glyphicon glyphicon-pencil capa"></span>';
+                html+=    '</button>';
+                html+='</td>';
+
+                var currentdate = new Date();
+                horaActual="10:00";// currentdate.getHours() + ":"  + currentdate.getMinutes() ;
+                horai=obtenerMinutos(value.horaInicio);
+                horaa=obtenerMinutos(horaActual);
+                horaf=obtenerMinutos(value.horaFin);
+                var band=true;
+                if(value.estatusId==SOLICITADO){
+                    html+='<td>';
+                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Agendar" class="btn  btn-info btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+AGENDADO+' )">';
+                    html+=        '<span class="glyphicon glyphicon-plus-sign capa" ></span>';
+                    html+=    '</button>';
+                    html+='</td>';
+                    band=false;
+                }
+                 if(value.estatusId==AGENDADO && (horai<=horaa && horaf >=horaa)){
+                    html+='<td>';
+                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Atender" class="btn  btn-primary btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+ATENDIENDO+'  )">';
+                    html+=        '<span class="glyphicon glyphicon-ok-circle capa" ></span>';
+                    html+=    '</button>';
+                    html+='</td>';
+                    band=false;
+                }
+                 if(value.estatusId==ATENDIENDO && (horaa>=horai)){
+                    html+='<td>';
+                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Atendido" class="btn  btn-warnig btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+ATENDIDO+'  )">';
+                    html+=        '<span class="glyphicon glyphicon-ok-circle capa" ></span>';
+                    html+=    '</button>';
+                    html+='</td>';
+                    band=false;
+                }
+                if(band) {
+                    html+='<td>';
+                    html+=   '<button type="button"  class="btn btn-default btn-sm" disabled >';
+                    html+=        '<span class="glyphicon glyphicon-ban-circle" ></span>';
+                    html+=    '</button>';
+                    html+='</td>';
+                }
+
+                if(value.estatusId!=CANCELADO){
+                    html+='<td>';
+                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Cancelar" class="btn btn-danger btn-sm" onclick="cancelarTurno('+value.turnoId+' , '+CANCELADO+' )">';
+                    html+=        '<span class="glyphicon glyphicon-remove-circle capa" ></span>';
+                    html+=    '</button>';
+                    html+='</td>';
+                }
+                html+='</tr>';
+            });
+            $("#contenidoTurno").html(html);
+            referenceTableTurno("#tablaTurnos");
+            
+        }
+    });
+}
+function cancelarTurno(turno, estatus) {
+    Swal.fire({
+        title: 'Estas seguro de canelar el turno?',
+        text: "Ingresa el comentario de cancelación",
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+            if (!value) {
+              return 'Por favor escribe un comentario para cancelar el turno'
+            }
+          },
+        showCancelButton: true,
+        confirmButtonText: 'Si! cancelarlo',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.value) {
+            cambiarEstatus(turno, estatus, esult.value);
+        }
+    });
+}
+function cambiarEstatus(turno, estatus, coment='null') {
+    $.ajax({
+        async: true,
+        url: API_URL+'?task=cambiarEstatusTurno&turnoId='+turno+'&estatus='+estatus+'&comentario='+coment+'&notificacion=true',
+        type: "GET",
+        success: function (response) {
+            // console.log(response);
+            var obj = response;
+            if(obj.ws_error=="0"){
+                Swal.fire({
+                    type: 'success',
+                    title: 'El turno '+obj.turnoId+' ha sido '+obj.estatusnombre,
+                    timer: 2000,
+                });
+               
+                
+                var currentdate = new Date();
+                horaActual=horaActual="10:00";//currentdate.getHours() + ":"  + currentdate.getMinutes() ;
+                horai=obtenerMinutos(obj.horaInicio);
+                horaa=obtenerMinutos(horaActual);
+                horaf=obtenerMinutos(obj.horaFin);
+                console.log('horaa '+horaa);
+                console.log('horai '+horai);
+                console.log('horaf '+horaf);
+                var band=true;
+                if(obj.estatusId==AGENDADO && (horai<=horaa && horaf >=horaa)){
+                    var html="";
+                    console.log('----------');
+                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Atender" class="btn  btn-primary btn-sm" onclick="cambiarEstatus('+obj.turnoId+', '+ATENDIENDO+'  )">';
+                    html+=        '<span class="glyphicon glyphicon-ok-circle capa" ></span>';
+                    html+=    '</button>';
+                    $('#tablaTurnos').DataTable().cell(("#turnoId" +obj.turnoId),3).data(obj.estatusnombre); 
+                    $('#tablaTurnos').DataTable().cell(("#turnoId" +obj.turnoId),7).data(html); 
+                    band=false;
+                } 
+                if(obj.estatusId==ATENDIENDO && (horaa>=horai)){
+                    var html="";
+                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Atendido" class="btn  btn-warnig btn-sm" onclick="cambiarEstatus('+obj.turnoId+', '+ATENDIDO+'  )">';
+                    html+=        '<span class="glyphicon glyphicon-ok-circle capa" ></span>';
+                    html+=    '</button>';
+                    $('#tablaTurnos').DataTable().cell(("#turnoId" +obj.turnoId),7).data(html); 
+
+                    $('#tablaTurnos').DataTable().cell(("#turnoId" +obj.turnoId),3).data(obj.estatusnombre);
+                    band=false; 
+                }
+                if(obj.estatusId==CANCELADO){
+                    $('#tablaTurnos').DataTable().rows("#turnoId" + obj.turnoId).remove().draw();
+                }
+                if(band) {
+                    var html="";
+                    html+=   '<button type="button"  class="btn btn-default btn-sm" disabled >';
+                    html+=        '<span class="glyphicon glyphicon-ban-circle capa" ></span>';
+                    html+=    '</button>';
+                    $('#tablaTurnos').DataTable().cell(("#turnoId" +obj.turnoId),7).data(html); 
+                    $('#tablaTurnos').DataTable().cell(("#turnoId" +obj.turnoId),3).data(obj.estatusnombre);
+                }
+                
+            }
+            
+        } 
+    });
+}
+function obtenerMinutos(hora){
+    var spl = hora.split(":");
+    return parseInt(spl[0])*60+parseInt(spl[1]);
+    }
+    
+    
 function cargaTurnos(fecha,dia,mes,year,establecimiento, recurso) {
     var url_request = "modules/module.turno.php";
     var method = "POST";
@@ -293,14 +500,14 @@ function cargaTurnos(fecha,dia,mes,year,establecimiento, recurso) {
                         eluser=obj.usuarioId;
                         switch (obj.estatusId) {
                             case '1':
-                                textoconfirm='Atender Turno!'
-                                nuevoestatus='3'
-                                estatusletra= 'En atención!'
+                                textoconfirm='Atender Turno!';
+                                nuevoestatus=ATENDIENDO;
+                                estatusletra= 'En atención!';
                                 break;
                             case '3':
-                                textoconfirm='Turno Atendido!'
-                                nuevoestatus='2'
-                                estatusletra= 'Atendido'
+                                textoconfirm='Turno Atendido!';
+                                nuevoestatus=ATENDIDO;
+                                estatusletra= 'Atendido';
                                 break;
                             default:
                                 break;
@@ -755,7 +962,7 @@ function fechaNombre(fechaS) {
     return dias[fechaS.getDay()] +', '+ fechaS.getDate()+' de '+ meses[fechaS.getMonth()]+' del '+ fechaS.getFullYear();
 }
 function creaCalendario(hoy) {
-    console.log(hoy);
+    //console.log(hoy);
     var mes = hoy.getMonth(); 
     var dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
     var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -797,7 +1004,16 @@ function creaCalendario(hoy) {
             var enmes=(fecha.getMonth()==mes)?'enmes':'noenmes';
             enmes+=(fecha>today && fecha.getMonth()==mes)?' mayorhoy ':' menorhoy ';
             var modal=(fecha>today && fecha.getMonth()==mes)?'data-toggle="modal" data-target="#formturno"':'';
-            html+='<div   class="box ratio16_9"><div id="dia'+fecha.yyyymmdd()+'" '+modal+' class="'+enmes+' celda dia"><div class="numero" >'+fecha.getDate()+'</div> </div> ';
+            html+='<div   class="box ratio16_9"><div id="dia'+fecha.yyyymmdd()+'"  class="'+enmes+' celda dia"><div class="numero" >'+fecha.getDate()+'</div> ';
+           if(modal!=''){
+            html+='<div class="opciones ">'+
+                            '<button  id="aid'+fecha.yyyymmdd()+'" class="btn btnsmall blue" data-toggle="modal" data-target="#verturnos"><i class="fa fa-eye" aria-hidden="true"></i></button>'+
+                       
+                            '<button id="dia'+fecha.yyyymmdd()+'" class="btn btnsmall blue" '+modal+'><i class="fa fa-plus" aria-hidden="true"></i></button>'+
+                    
+                    '</div> ';
+           }
+            html+='</div> ';
             $('#semana'+week).append(html); 
             fecha.setDate(fecha.getDate() + 1);
         }
@@ -805,7 +1021,31 @@ function creaCalendario(hoy) {
     }
 }
 
+function referenceTableTurno(tabla) {
+    //Método que crea la referencia del datatable con la tabla que se está mandado llamar, y así implementar todas las características dadas por esta herramienta.
+    $(tabla).DataTable({
+        language: {
+            "sProcessing": "Procesando...",
+            "sLoadingRecords": "Cargando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sInfoFiltered": "(Datos filtrados de un total de _MAX_ registros)",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfoEmpty": "Mostrando 0-0 de un total de 0 registros",
+            "sInfo": "Mostrando _START_-_END_ de un total de _TOTAL_ registros",
+            "sSearch": "Buscar:",
+            "sZeroRecords": "No se encontraron resultados",
+            "oPaginate": {
+                "sNext": '<span class=" pg-arrow_right"></span>',
+                "sPrevious": '<span class=" pg-arrow_left"></span>'
+            },
+        },
+        columnDefs: [
+            { targets: [6, 7, 8], orderable: false}
+        ]
 
+     });
+    
+}
 
 
 
