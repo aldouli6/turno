@@ -44,7 +44,7 @@
                     <div class="container-fluid container-fixed-lg">
                         <!-- Contenido Inicia -->
                         
-                        <?php MostrarPerfilUsuario::MostrarPerfil();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios. ?>
+                        <?php MostrarPerfilUsuario::MostrarPerfil($_SESSION['EstablecimientoID']);//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios. ?>
                         <!--  start modal registro usuario -->
                         <!-- <div class="modal fade slide-up disable-scroll" id="formRegistroEstablecimiento" tabindex="-1" role="dialog" aria-hidden="false"> -->
                         <div class=" disable-scroll" id="formRegistroES" tabindex="-1" role="dialog" aria-hidden="false">

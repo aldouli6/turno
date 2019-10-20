@@ -14,9 +14,26 @@ include_once("../class/class.brain.php");
 
 $database = new db();
 try {
+    print_r($_POST);
     if(!empty($_POST)){            
         extract($_REQUEST);
         switch($cmd){
+            case 'subirImagen':
+                try {
+                    $file_ext = 'png';
+                    $target_path = $_SERVER['DOCUMENT_ROOT']."/turno/assets/img/profiles/";
+                    $target_path .= $tipo.'_'.$perfil.'.'.$file_ext; 
+                    if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+                        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/turno/assets/img/profiles/".$tipo."_".$perfil.".png";
+                        echo $actual_link;
+                    } else{
+                        echo 0;
+                    }
+                    
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
+            break;
             case 'getEstablecimiento':
                 $sql="SELECT *
                 FROM establecimientos 
@@ -29,6 +46,7 @@ try {
             case 'editnombrecontacto':
                 $editarDatosElement="UPDATE establecimientos set 
                         nombre='".$nombre."',
+                        descripcion='".$descripcion."',
                         emailEstablecimiento='".$emailEstablecimiento."',
                         telefonoEstablecimiento='".$telefonoEstablecimiento."',
                         categoriaId='".$categoria."',
@@ -178,7 +196,9 @@ try {
                     print_r($e);
                 }
                 break;
-            
+                default:
+                echo "default";
+                break;
 
 
         }

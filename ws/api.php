@@ -1,5 +1,6 @@
 <?php
 	header("Access-Control-Allow-Origin: *");
+	header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 	header('Content-Type: application/json');
 	include_once('../lib/nusoap/nusoap.php');
 	include('PushNotifications.php');
@@ -24,34 +25,7 @@
 	$error = $c->getError();
 
 	$push = new PushNotifications();
-	
-	
 
-
-
-	
-
-
-
-	// $title = 'Nuevo Turno';
-	// 		// $body = 'El turno '.$sp->turnoId.' ha sido solicitado';
-	// $body = 'El turno  ha sido solicitado';
-	// $notification = Notification::create()
-	// 	->withTitle($title)
-	// 	->withBody($body);
-	// $deviceTokens ='cUCbMlHYfiU:APA91bGPK5cjcftoqSFUOQhAw926zEE8LiPaGeXEb5QTW1UShwjpe1I90G51YDAzh-rFuEAKCQItSoC5i-aSr34sHVBGeYF9ytmAQujwt_PwGcaUwJGJqS7mh7HIw9_ugN2cUnrO0six';
-	// $message = CloudMessage::new()
-	// 			->withNotification($notification);
-	//  $messaging->sendMulticast($message, $deviceTokens);
-
-					// echo 'Successful sends: '.$report->successes()->count().PHP_EOL;
-					// echo 'Failed sends: '.$report->failures()->count().PHP_EOL;
-
-					// if ($report->hasFailures()) {
-					// 	foreach ($report->failures()->getItems() as $failure) {
-					// 		echo $failure->error()->getMessage().PHP_EOL;
-					// 	}
-					// }
 	if ($error) {
 
 	    // echo "<h2>Constructor error</h2><pre>" . $error . "</pre>";
@@ -129,6 +103,30 @@
 					"estatusId" => $_GET['estatusId']
 				);
 			$stockprice = $c->call('wsmethod',array('case'=>'getEstabsTurnos','value'=>json_encode($values)));
+		break;
+		case 'subirImagen'://http://192.168.0.8:8888/turno/ws/api.php?task=updateColumn&usuarioId=1
+			// echo "algo";
+			$values = array( "perfil" => $_GET['perfil'],
+							"tipo" => $_GET['tipo']
+				);
+			$stockprice = $c->call('wsmethod',array('case'=>'updateColumn','value'=>json_encode($values)));
+		break;
+		case 'updateColumn'://http://192.168.0.8:8888/turno/ws/api.php?task=updateColumn&usuarioId=1
+			// echo "algo";
+			$values = array( "tabla" => $_GET['tabla'],
+							"column" => $_GET['column'],
+							"valor" => $_GET['valor'],
+							"key" => $_GET['key'],
+							"id" => $_GET['id'],
+				);
+			$stockprice = $c->call('wsmethod',array('case'=>'updateColumn','value'=>json_encode($values)));
+		break;
+		case 'getDatosUsuario'://http://192.168.0.8:8888/turno/ws/api.php?task=getDatosUsuario&usuarioId=1
+			// echo "algo";
+			$values = array( "id" => $_GET['user'],
+							"tipo" => $_GET['tipo'],
+				);
+			$stockprice = $c->call('wsmethod',array('case'=>'getDatosUsuario','value'=>json_encode($values)));
 		break;
 		case 'getTurnosUsuario'://http://192.168.0.8:8888/turno/ws/api.php?task=getTurnosUsuario&usuarioId=1
 			// echo "algo";
@@ -305,7 +303,7 @@
 			
 
 				 //print_r($message,true);
-			echo "default";
+			echo json_decode(true);
 		} catch (Exception $e) {
 			print_r($e);
 			echo 'Excepción capturada: ',  $e->getMessage(), "\n";

@@ -124,6 +124,22 @@ switch ($case) {
     $result = json_encode($responseLogin);
     $wsReply = $result;
   break; 
+  case 'subirImagen':
+      try {
+          $file_ext = 'png';
+          $target_path = $_SERVER['DOCUMENT_ROOT']."/turno/assets/img/profiles/";
+          $target_path .= $tipo.'_'.$perfil.'.'.$file_ext; 
+          if(move_uploaded_file($_FILES['file']['tmp_name'], $target_path)) {
+              $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/turno/assets/img/profiles/".$tipo."_".$perfil.".png";
+              echo $actual_link;
+          } else{
+              echo 0;
+          }
+          
+      } catch (\Throwable $th) {
+          echo json_encode($th);
+      }
+  break;
   case 'resetEmail':
     $jsonEmailUsuario = json_decode($value);
     $jsonEmailReturn = null;
@@ -179,6 +195,29 @@ switch ($case) {
     }
     $wsReply = json_encode($result);
   break;
+  case 'updateColumn':
+    $jsonGet = json_decode($value);
+    $editarDatosElement="UPDATE ".$jsonGet->{"tabla"}." set ".$jsonGet->{"column"}." = '".$jsonGet->{"valor"}."'
+               where ".$jsonGet->{"key"}."= ?;";
+    $editElementData=$database->updateRow($editarDatosElement,array($jsonGet->{"id"}) );
+    if($editElementData==true){
+        $ConsultarGetElement="SELECT  *
+            FROM ".$jsonGet->{"tabla"}." 
+            WHERE 1
+            AND ".$jsonGet->{"key"}."=?";
+        $GetElement=$database->getRow($ConsultarGetElement,array($jsonGet->{"id"}));
+        if($GetElement){
+          $result = array(
+            $jsonGet->{"column"}=>$GetElement[$jsonGet->{"column"}],
+            'ws_error' => '0');
+        }else{
+          $result = array( 'ws_error' => '2','error' => 'No está el usuario');
+        }
+    }else{
+      $result = array( 'ws_error' => '1','error' => 'No se editó el usuario');
+    }
+    $wsReply = json_encode($result);
+  break;
   case 'cambiarEstatusTurno':
     $jsonGet = json_decode($value);
     $editarDatosElement="UPDATE turnos set estatusId='".$jsonGet->{"estatus"}."' ";
@@ -229,6 +268,19 @@ switch ($case) {
       and t.usuarioId=".$jsonGet->{"usuarioId"}." 
       AND t.estatusId=".$jsonGet->{"estatusId"}."";
       $get=$database->getRows($consulta);
+      $result = json_encode($get);
+      $wsReply = $result;
+  break;
+  case "getDatosUsuario":
+    $jsonGet = json_decode($value);
+      $consulta="
+      SELECT u.username, u.nombre, u.apellidos, u.email, u.telefono, u.emailVerificado, u.telefonoVerificado
+      FROM usuarios u
+      WHERE 1 
+      and u.estatus = 1
+      and u.tipoUsuarioId = ".$jsonGet->{"tipo"}."
+      and u.usuarioId=".$jsonGet->{"id"};
+      $get=$database->getRow($consulta);
       $result = json_encode($get);
       $wsReply = $result;
   break;

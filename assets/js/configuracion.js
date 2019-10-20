@@ -5,7 +5,7 @@ var cp;
 var colonia;
 var ciudad;
 var estado;
-var pais;
+var pais; 
 function initMap(lati,long) {
   var mapProp = {
       center: {lat: lati, lng: long},
@@ -124,6 +124,113 @@ $(document).ready(function() {
         tooltipayuda = 0;
         $("#tooltipayuda1").val(tooltipayuda);
     });
+    var elnewbody=document.getElementById('elnewbody');
+    var _this;
+    Dropzone.options.myDropzone = {
+      url: 'modules/module.establecimientos.php',
+      methor:'POST',
+      maxFiles: 1, 
+      dictDefaultMessage : 'Arrastra una imágen o dá click aquí!',
+      acceptedFiles:'image/*',
+      renameFile:'file',
+      init: function() {
+        _this=this;
+        _this.on("sending", function(file, xhr, formData) {
+          // Will send the filesize along with the file as POST data.
+          formData.append("cmd", "subirImagen");
+          formData.append("perfil", $('#establecimientoId').val());
+          formData.append("tipo", 'estab');
+        });
+        _this.on("success", function(file,response) { 
+          _this.removeAllFiles(true);
+          
+          if(response!='0'){
+            $('#myDropzone').hide();
+            d = new Date();
+            response=response+'?'+d.getTime();
+            console.log(response); 
+            Swal.fire({
+              type: 'success',
+              title: 'Se ha cambiado la imagen con exito',
+              timer: 2000,
+          });
+            $('.imgProfile').css("background-image", "url("+response+")"); 
+          }
+          
+        });
+      },
+      transformFile: function(file, done) { 
+        var myDropZone = this;
+        // Create the image editor overlay
+        var editor = document.createElement('div');
+        editor.style.position = 'absolute';
+        editor.style.left = 0;
+        editor.style.right = 0;
+        editor.style.top = 0;
+        editor.style.bottom = 0;
+        editor.style.zIndex = 9999;
+        editor.style.backgroundColor = '#000';
+        
+        elnewbody.appendChild(editor);
+        // Create confirm button at the top left of the viewport
+        var buttonConfirm = document.createElement('button');
+        buttonConfirm.className='btn btn-primary';
+        buttonConfirm.style.position = 'absolute';
+        buttonConfirm.style.right = '135px';
+        buttonConfirm.style.top = '10px';
+        buttonConfirm.style.zIndex = 9999;
+        buttonConfirm.innerHTML  = '<span class="glyphicon glyphicon-open"></span> Subir Imágen';
+        var buttonCancel = document.createElement('button');
+        buttonCancel.className='btn btn-danger';
+        buttonCancel.style.position = 'absolute';
+        buttonCancel.style.right = '10px';
+        buttonCancel.style.top = '10px';
+        buttonCancel.style.zIndex = 9999;
+        buttonCancel.innerHTML  = '<span class="glyphicon glyphicon-remove"></span> Cancelar';
+        editor.appendChild(buttonConfirm);
+        editor.appendChild(buttonCancel);
+        // Create an image node for Cropper.js
+        var image = new Image();
+        image.src = URL.createObjectURL(file);
+        editor.appendChild(image);
+        
+        // Create Cropper.js
+        var cropper = new Cropper(image, { 
+            aspectRatio: 1 ,
+          }
+          );
+        buttonCancel.addEventListener('click', function() {
+          _this.removeAllFiles(true);
+          elnewbody.removeChild(editor);
+        });
+        buttonConfirm.addEventListener('click', function() {
+          // Get the canvas with image data from Cropper.js
+          var canvas = cropper.getCroppedCanvas({
+            width: 256,
+            height: 256
+          });
+          // Turn the canvas into a Blob (file object without a name)
+          canvas.toBlob(function(blob) {
+            // Create a new Dropzone file thumbnail
+            myDropZone.createThumbnail(
+              blob,
+              myDropZone.options.thumbnailWidth,
+              myDropZone.options.thumbnailHeight,
+              myDropZone.options.thumbnailMethod,
+              false, 
+              function(dataURL) {
+                
+                // Update the Dropzone file thumbnail
+                myDropZone.emit('thumbnail', file, dataURL);
+                // Return the file to Dropzone
+                done(blob);
+            });
+          });
+          // Remove the editor from the view
+          elnewbody.removeChild(editor);
+        });
+      }
+     };
 });
 
 $('#formnombrecontacto').validate({
@@ -242,7 +349,9 @@ function cargaDatos(establecimiento) {
         },
         success: function(response){
             var obj = JSON.parse(response);
+            console.log(obj);
             $('#nombre').val(obj.nombre);  
+            $('#descripcion').val(obj.descripcion); 
             $('#emailEstablecimiento').val(obj.emailEstablecimiento); 
             $('#telefonoEstablecimiento').val(obj.telefonoEstablecimiento);  
             $('#categoria').select2("val",obj.categoriaId);

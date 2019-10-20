@@ -13279,3 +13279,17 @@ border-top: 1px solid #dddddd;
   font-size: 11px;
   color: #a7a7a7;
 }
+
+.imgProfile{
+  /* background-color: #005194; */
+  background-repeat: no-repeat;
+      background-size: 32px 32px;
+      display: block;
+      width: 32px;
+      height: 32px;
+}
+.imgProfile.muestra{
+      background-size: 5vh;
+      width:5vh;
+      height:5vh;
+}

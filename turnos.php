@@ -21,7 +21,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
             <?php Menus::menumostra($varUbicacion, $_SESSION['permissions'],$varUbicacion);?>
         </div>
         <div class="page-container">
-            <?php Mostrargeneral::header(); ?>
+            <?php Mostrargeneral::header($_SESSION['EstablecimientoID']); ?>
             
             <div class="page-content-wrapper">
                 <div class="content full-height">
@@ -189,7 +189,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
 
                 </div>       
                         <?php
-                            MostrarPerfilUsuario::MostrarPerfil();
+                            MostrarPerfilUsuario::MostrarPerfil($_SESSION['EstablecimientoID']);
                         ?>
                         
                         <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?= $_SESSION['EstablecimientoID']?>">

@@ -15,7 +15,9 @@
 //Mostrar plugins
 /*---------------------------------------------------------------*/
 class MostrarPlugins{
-	public static function mostrarConfigUser(){
+	public static function mostrarConfigUser($id){
+        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/turno/assets/img/profiles/estab_".$id.".png";
+
     echo '
       <!-- START User Info-->
       <div class="visible-lg visible-md m-t-10">            
@@ -28,7 +30,10 @@ class MostrarPlugins{
           <div class="dropdown pull-right">
               <button type="button" data-toggle="modal" data-target="#modalSlideLeft" style="background: white;border: solid 0px;">
               <span class="thumbnail-wrapper d32 circular inline m-t-5">
-                  <img src="assets/img/userAccount.png" alt="" data-src="assets/img/userAccount.png"  width="32" height="32">
+              <div id="imgProfile2" class="imgProfile" style="
+              background-image: url('.$actual_link.');
+              "></div>
+              <!-- <img src="assets/img/userAccount.png" alt="" data-src="assets/img/userAccount.png"  width="32" height="32">-->
               </span>
               </button>
               <!--<ul class="dropdown-menu profile-dropdown" role="menu">

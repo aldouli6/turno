@@ -1,8 +1,10 @@
 <?php 
     class MostrarPerfilUsuario
     {
-        public static function MostrarPerfil()
+        public static function MostrarPerfil($id)
         {
+            $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/turno/assets/img/profiles/estab_".$id.".png";
+
             echo '          
                 <div class="modal fade slide-right in" id="modalSlideLeft" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog modal-sm" style="width: 445px;">
@@ -15,7 +17,10 @@
                                         <div class="row" style="padding: 28px">
                                             <div class="row">
                                                 <div class="col-md-1">
-                                                    <img src="assets/img/userAccount.png" alt="" data-src="assets/img/userAccount.png" height="32" width="32" style="margin-top: 14px;">
+                                                <div class="imgProfile" style="
+                                                background-image: url('.$actual_link.');
+                                                "></div>
+                                                <!-- <img src="assets/img/userAccount.png" alt="" data-src="assets/img/userAccount.png" height="32" width="32" style="margin-top: 14px;">-->
                                                 </div>                                            
                                                 <div class="col-md-11">
                                                     <h2>Perfil de usuario</h2>

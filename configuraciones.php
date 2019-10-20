@@ -21,14 +21,14 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
             <?php Menus::menumostra($varUbicacion, $_SESSION['permissions'],$varUbicacion);?>
         </div>
         <div class="page-container">
-            <?php Mostrargeneral::header(); ?>
+            <?php Mostrargeneral::header($_SESSION['EstablecimientoID']); ?>
             
             <div class="page-content-wrapper">
                 <div class="content full-height">
                     <?php Mostrargeneral::mostrarTituloPage($_SESSION['permissions'][$varUbicacion]['label']); ?>
-                    <div class="container-fluid full-height no-padding">
+                    <div id="elnewbody" class="container-fluid full-height no-padding" style="position: relative;">
                         <?php
-                            MostrarPerfilUsuario::MostrarPerfil();
+                            MostrarPerfilUsuario::MostrarPerfil($_SESSION['EstablecimientoID']);
                         ?>
                         <input type="hidden" name="establecimientoId" id="establecimientoId" value="<?= $_SESSION['EstablecimientoID']?>">
                         
@@ -117,7 +117,37 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    
+                                                    <div class="row  ">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default ">
+                                                            <label>Descripción</label>
+                                                            <input type="text" class="form-control" name="descripcion" id="descripcion"  >
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row  ">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default ">
+                                                                <label>Imagen de perfil</label>
+                                                                <div class="row ">
+                                                                    <div class="col-xs-10">
+                                                                        <button class="btn btn-primary m-t-10 m-b-10" onclick="$('#myDropzone').show(); return false;">
+                                                                            <span class="glyphicon glyphicon-repeat"></span> Cambiar imagen
+                                                                        </button>
+                                                                    </div>
+                                                                    <?php 
+                                                                    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/turno/assets/img/profiles/estab_".$_SESSION['EstablecimientoID'].".png";
+                                                                    ?>
+                                                                    <div class="col-xs-2 imgProfile muestra" style="background-image: url( <?=$actual_link?>);">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row ">
+                                                                    <div class="dropzone" id="myDropzone" style="display:none;"></div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                        

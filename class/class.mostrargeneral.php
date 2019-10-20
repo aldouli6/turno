@@ -101,7 +101,10 @@ class Mostrargeneral
             case 'tipoSesiones':
                 $css .= '<link href="assets/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" media="screen">';
             break;
-
+            case 'configuraciones';
+              $css.='<link href="https://unpkg.com/dropzone/dist/dropzone.css" rel="stylesheet"/>
+                    <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"/>';
+            break;
             
             default:
                 $css .= '';
@@ -205,7 +208,9 @@ class Mostrargeneral
             case 'configuraciones':
               $javascript .= '<script src="assets/js/configuracion.js"></script>
               <script src="assets/js/datejs/build/date.js"></script>
-              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>';
+              <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>
+              <script src="https://unpkg.com/dropzone"></script>
+              <script src="https://unpkg.com/cropperjs"></script>';
               break;
             default:
               $javascript .= '';
@@ -249,7 +254,7 @@ class Mostrargeneral
          echo '<div id="appMenu" class="sidebar-overlay-slide from-top"></div>';
      }
     //Muestra el menu del mobile
-    public static function header(){
+    public static function header($id){
         echo '<div class="header ">
                 <div class="container-fluid relative">
                     <div class="pull-left full-height visible-sm visible-xs">
@@ -264,7 +269,7 @@ class Mostrargeneral
                     echo'</div>
                 </div>
                 <div class=" pull-right">';
-                     MostrarPlugins::mostrarConfigUser();         
+                     MostrarPlugins::mostrarConfigUser($id);         
                 echo'
                 <div class="col-xs-2" id="notidiv" >
                   <div id="notification_li">

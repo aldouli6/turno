@@ -21,14 +21,14 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
             <?php Menus::menumostra($varUbicacion, $_SESSION['permissions'],$varUbicacion);?>
         </div>
         <div class="page-container">
-            <?php Mostrargeneral::header(); ?>
+            <?php Mostrargeneral::header($_SESSION['EstablecimientoID']); ?>
             
             <div class="page-content-wrapper">
                 <div class="content full-height">
                     <?php Mostrargeneral::mostrarTituloPage($_SESSION['permissions'][$varUbicacion]['label']); ?>
                     <div class="container-fluid full-height no-padding">
                         <?php
-                            MostrarPerfilUsuario::MostrarPerfil();
+                            MostrarPerfilUsuario::MostrarPerfil($_SESSION['EstablecimientoID']);
                             MostrarHorario::modalHorario('New','Registrar');
                             MostrarHorario::modalHorario('Edit','Editar');
                         ?>

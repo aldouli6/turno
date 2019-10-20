@@ -22,7 +22,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
       <?php Menus::menumostra($varUbicacion, $_SESSION['permissions'],$varUbicacion);?>
     </div>
     <div class="page-container">
-    <?php Mostrargeneral::header(); ?>
+    <?php Mostrargeneral::header($_SESSION['EstablecimientoID']); ?>
         <div class="page-content-wrapper">
           <div class="content full-height">
             <?php Mostrargeneral::mostrarTituloPage($_SESSION['permissions'][$varUbicacion]['label']); ?>
@@ -30,7 +30,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
               <!-- Contenido Inicia -->
               <?php
                  //Este método se manda llamar desde la carpeta class/class.mostrarusuario.php
-                 MostrarPerfilUsuario::MostrarPerfil();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios.
+                 MostrarPerfilUsuario::MostrarPerfil($_SESSION['EstablecimientoID']);//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios.
                  MostrarUsuario::formularioRegistroUsuario();//Se carga el método formularioRegistroUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal del registro de usuarios.
                  MostrarUsuario::formularioEdicionUsuario();//Se carga el método formularioEdicionUsuario de la clase MostrarUsuario el cuál nos va a imprimir sobre la página el modal de edición de usuarios.
                 //  if($_SESSION['typeuser'] != "root"){
