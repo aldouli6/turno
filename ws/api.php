@@ -48,11 +48,6 @@
 			$message = array('title' => 'Token Actualizado', 'body' => 'El nuevo token es  '.$sp->token);
 			$push->sendAndroidNotifications($sp->tokens, $message, array('notification_foreground' => true));
 		break;
-		case 'listaCallesBySubFracc'://ndi.mx/prueba.php?task=listaCallesBySubFracc?&nombre=Carrizal
-			$values = array( "subfraccionamientoNombre" => $_GET['nombre']);
-			$stockprice = $c->call('wsmethod',array('case'=>'listaCallesBySubFracc','value'=>json_encode($values)));
-		break;
-
 		
 		case 'getDataforTurno'://http://192.168.0.8:8888/turno/ws/api.php?task=getDataforTurno&horainicio=09:00&sesion=28
 			$values = array( 	"horainicio" => $_GET['horainicio'],
@@ -151,11 +146,11 @@
 				$push->sendAndroidNotifications($sp->tokens, null, array('notification_foreground' => false,
 				'turnoId' => $sp->turnoId,
 				'opcion' => 'visto'));
-				$newPost = $database->getReference($sp->estabId . '-establecimiento/turno/' . $sp->notiId.'/notificacionEstatus')->set($_GET['estatus']);
-				$newPost = $database->getReference($sp->estabId . '-establecimiento/turno/' . $sp->notiId.'/notificacionVista')->set(date('Y-m-d H:i:s'));
+				$newPost = $database->getReference($sp->estabId . '-establecimiento/notificacion/' . $sp->notiId.'/notificacionEstatus')->set($_GET['estatus']);
+				$newPost = $database->getReference($sp->estabId . '-establecimiento/notificacion/' . $sp->notiId.'/notificacionVista')->set(date('Y-m-d H:i:s'));
 			}
 		break;
-		case 'cambiarEstatusTurno'://http://192.168.0.8:8888/turno/ws/api.php?task=cambiarEstatusTurno&turnoId=168&estatus=1
+		case 'cambiarEstatusTurno'://http://192.168.0.8:8888/turno/ws/api.php?task=cambiarEstatusTurno&turnoId=197&estatus=1
 			$values = array( 
 				"turnoId" => $_GET['turnoId'], 
 				"estatus" => $_GET['estatus'],
@@ -164,6 +159,8 @@
 			$stockprice = $c->call('wsmethod',array('case'=>'cambiarEstatusTurno','value'=>json_encode($values)));
 			$sp = json_decode($stockprice);
 			if($sp->ws_error=='0'){
+				$newPost = $database->getReference($sp->establecimientoId . '-establecimiento/turno/' . $sp->turnoId.'/turnoEstatus')->set($sp->estatusId);
+				
 				if($_GET['notificacion']){
 					$message = array('title' => 'Turno '.$sp->estatusnombre, 'body' => 'El turno '.$sp->turnoId.' ha sido '.$sp->estatusnombre);
 					$push->sendAndroidNotifications($sp->tokens, $message, array('notification_foreground' => true));
@@ -192,11 +189,12 @@
 				try{
 					$message = array('title' => 'Nuevo turno', 'body' => 'El turno '.$sp->turnoId.' ha sido solicitado');
 					$push->sendAndroidNotifications($sp->tokens, $message, array('notification_foreground' => true));
-
-					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionId')->set($sp->notiId);
-					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionEstatus')->set('5');
-					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionTurnoId')->set($sp->turnoId);
-					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/' . $sp->notiId.'/notificacionTime')->set(date('Y-m-d H:i:s'));
+					
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/turno/'.$sp->notiId)->set($sp);
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/notificacion/' . $sp->notiId.'/notificacionId')->set($sp->notiId);
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/notificacion/' . $sp->notiId.'/notificacionEstatus')->set('5');
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/notificacion/' . $sp->notiId.'/notificacionTurnoId')->set($sp->turnoId);
+					$newPost = $database->getReference($_GET['establecimientoId'] . '-establecimiento/notificacion/' . $sp->notiId.'/notificacionTime')->set(date('Y-m-d H:i:s'));
 					
 				} catch (Exception $e) {
 				echo 'Excepción capturada: ',  $e->getMessage(), "\n";

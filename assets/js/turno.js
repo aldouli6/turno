@@ -266,72 +266,73 @@ function getTurnosHoy(dia,mes,year, establecimiento) {
             
             var obj = JSON.parse(response);
             console.log(obj);
-            var html='';
-            $.each(obj, function( key, value ) {
-                console.log(value);
-                html+= "<tr id='turnoId"+value.turnoId+"'>";
-                html+= "<td>"+value.horaInicio+"</td>";
-                html+= "<td>"+value.nombreRecurso+"</td>";
-                html+= "<td>"+value.servicio+"</td>";
-                html+= "<td>"+value.estatus+"</td>";
-                html+= "<td>"+value.username+"</td>";
-                html+= "<td>"+value.horaFin+"</td>";
-                html+="<td>";
-                html+=   '<button type="button" class="btn btn-default btn-sm"  onclick="editarTurno('+value.turnoId+')">';
-                html+=    '<span class="glyphicon glyphicon-pencil capa"></span>';
-                html+=    '</button>';
-                html+='</td>';
+            // if(obj.length>0){
+                var html='';
+                $.each(obj, function( key, value ) {
+                    console.log(value);
+                    html+= "<tr id='turnoId"+value.turnoId+"'>";
+                    html+= "<td>"+value.horaInicio+"</td>";
+                    html+= "<td>"+value.nombreRecurso+"</td>";
+                    html+= "<td>"+value.servicio+"</td>";
+                    html+= "<td>"+value.estatus+"</td>";
+                    html+= "<td>"+value.username+"</td>";
+                    html+= "<td>"+value.horaFin+"</td>";
+                    html+="<td>";
+                    html+=   '<button type="button" class="btn btn-default btn-sm"  onclick="editarTurno('+value.turnoId+')">';
+                    html+=    '<span class="glyphicon glyphicon-pencil capa"></span>';
+                    html+=    '</button>';
+                    html+='</td>';
 
-                var currentdate = new Date();
-                horaActual="10:00";// currentdate.getHours() + ":"  + currentdate.getMinutes() ;
-                horai=obtenerMinutos(value.horaInicio);
-                horaa=obtenerMinutos(horaActual);
-                horaf=obtenerMinutos(value.horaFin);
-                var band=true;
-                if(value.estatusId==SOLICITADO){
-                    html+='<td>';
-                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Agendar" class="btn  btn-info btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+AGENDADO+' )">';
-                    html+=        '<span class="glyphicon glyphicon-plus-sign capa" ></span>';
-                    html+=    '</button>';
-                    html+='</td>';
-                    band=false;
-                }
-                 if(value.estatusId==AGENDADO && (horai<=horaa && horaf >=horaa)){
-                    html+='<td>';
-                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Atender" class="btn  btn-primary btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+ATENDIENDO+'  )">';
-                    html+=        '<span class="glyphicon glyphicon-ok-circle capa" ></span>';
-                    html+=    '</button>';
-                    html+='</td>';
-                    band=false;
-                }
-                 if(value.estatusId==ATENDIENDO && (horaa>=horai)){
-                    html+='<td>';
-                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Atendido" class="btn  btn-warnig btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+ATENDIDO+'  )">';
-                    html+=        '<span class="glyphicon glyphicon-ok-circle capa" ></span>';
-                    html+=    '</button>';
-                    html+='</td>';
-                    band=false;
-                }
-                if(band) {
-                    html+='<td>';
-                    html+=   '<button type="button"  class="btn btn-default btn-sm" disabled >';
-                    html+=        '<span class="glyphicon glyphicon-ban-circle" ></span>';
-                    html+=    '</button>';
-                    html+='</td>';
-                }
+                    var currentdate = new Date();
+                    horaActual="10:00";// currentdate.getHours() + ":"  + currentdate.getMinutes() ;
+                    horai=obtenerMinutos(value.horaInicio);
+                    horaa=obtenerMinutos(horaActual);
+                    horaf=obtenerMinutos(value.horaFin);
+                    var band=true;
+                    if(value.estatusId==SOLICITADO){
+                        html+='<td>';
+                        html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Agendar" class="btn  btn-info btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+AGENDADO+' )">';
+                        html+=        '<span class="glyphicon glyphicon-plus-sign capa" ></span>';
+                        html+=    '</button>';
+                        html+='</td>';
+                        band=false;
+                    }
+                    if(value.estatusId==AGENDADO && (horai<=horaa && horaf >=horaa)){
+                        html+='<td>';
+                        html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Atender" class="btn  btn-primary btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+ATENDIENDO+'  )">';
+                        html+=        '<span class="glyphicon glyphicon-ok-circle capa" ></span>';
+                        html+=    '</button>';
+                        html+='</td>';
+                        band=false;
+                    }
+                    if(value.estatusId==ATENDIENDO && (horaa>=horai)){
+                        html+='<td>';
+                        html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Atendido" class="btn  btn-warnig btn-sm" onclick="cambiarEstatus('+value.turnoId+', '+ATENDIDO+'  )">';
+                        html+=        '<span class="glyphicon glyphicon-ok-circle capa" ></span>';
+                        html+=    '</button>';
+                        html+='</td>';
+                        band=false;
+                    }
+                    if(band) {
+                        html+='<td>';
+                        html+=   '<button type="button"  class="btn btn-default btn-sm" disabled >';
+                        html+=        '<span class="glyphicon glyphicon-ban-circle" ></span>';
+                        html+=    '</button>';
+                        html+='</td>';
+                    }
 
-                if(value.estatusId!=CANCELADO){
-                    html+='<td>';
-                    html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Cancelar" class="btn btn-danger btn-sm" onclick="cancelarTurno('+value.turnoId+' , '+CANCELADO+' )">';
-                    html+=        '<span class="glyphicon glyphicon-remove-circle capa" ></span>';
-                    html+=    '</button>';
-                    html+='</td>';
-                }
-                html+='</tr>';
-            });
-            $("#contenidoTurno").html(html);
-            referenceTableTurno("#tablaTurnos");
-            
+                    if(value.estatusId!=CANCELADO){
+                        html+='<td>';
+                        html+=   '<button type="button" data-toggle="tooltip" data-placement="top" title="Cancelar" class="btn btn-danger btn-sm" onclick="cancelarTurno('+value.turnoId+' , '+CANCELADO+' )">';
+                        html+=        '<span class="glyphicon glyphicon-remove-circle capa" ></span>';
+                        html+=    '</button>';
+                        html+='</td>';
+                    }
+                    html+='</tr>';
+                });
+                $("#contenidoTurno").html(html);
+                referenceTableTurno("#tablaTurnos");
+            // }
         }
     });
 }
@@ -1039,6 +1040,7 @@ function referenceTableTurno(tabla) {
                 "sPrevious": '<span class=" pg-arrow_left"></span>'
             },
         },
+        "retrieve": true,
         columnDefs: [
             { targets: [6, 7, 8], orderable: false}
         ]

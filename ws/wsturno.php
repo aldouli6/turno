@@ -426,9 +426,12 @@ switch ($case) {
     $set = $database->insertRow($consultaInserta, $datainfo);
     if ($set == true){
       $getLastId = $database->lastIdDB();
-      $consultaGetlastId = "SELECT *
-                              FROM turnos
-                              WHERE turnoId = ?";
+      $consultaGetlastId = "SELECT t.*, u.nombre, u.username, s.nombre ts_nombre, e.nombre e_nombre
+                            FROM turnos t
+                          INNER JOIN usuarios u on u.usuarioId=t.usuarioId
+                          INNER JOIN tiposSesiones s on t.tipoSesionId = s.tipoSesionId
+                          INNER JOIN estatus e on t.estatusId = e.idestatus
+                                        WHERE t.turnoId= ?";
       $getId = $database->getRow($consultaGetlastId, array($getLastId));
       if($getId == true){
             $consultaGetlastIdnoti = "SELECT * FROM `notificaciones`
@@ -441,6 +444,14 @@ switch ($case) {
               
               $data = array('turnoId' => $getLastId,
                 'notiId' => $getIdnoti['notificacionId'], 
+                'usuarioId'=>$getId['usuarioId'],
+                'nombre'=>$getId['nombre'],
+                'username'=>$getId['username'],
+                'ts_nombre'=>$getId['ts_nombre'],
+                'e_nombre'=>$getId['e_nombre'],
+                'fecha'=>$getId['fecha'],
+                'horainicio'=>$getId['horaInicio'],
+                'horafin'=>$getId['horaFin'],
                 'turnoEstatus' => '8', 
                 'tokens' => array_column($gettokens,'token'),
                 'ws_error' => '0');

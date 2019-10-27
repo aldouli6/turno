@@ -13293,3 +13293,8 @@ border-top: 1px solid #dddddd;
       width:5vh;
       height:5vh;
 }
+.turnoaviso{
+  border: solid #005194;
+    padding: 1vw;
+    margin-bottom: 1vh;
+}

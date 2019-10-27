@@ -104,7 +104,7 @@ function creaNotificacion(noti, sonido) {
     var html='';
     html+='<div class="row fila notificacion" id="noti'+noti.notificacionId+'" nid="'+noti.notificacionId+'" tid="'+noti.turnoId+'">';
         html+='<div class="col-xs-3">';
-            html+='  <img style="max-width:67px" src="https://previews.123rf.com/images/yupiramos/yupiramos1705/yupiramos170514529/77978485-diseño-gráfico-del-ejemplo-del-vector-del-icono-del-perfil-del-hombre-joven.jpg" alt="">';
+            html+='  <img style="max-width:67px" src="http://'+IP_LOCAL+':8888/turno/assets/img/profiles/usuarios_'+noti.usuarioId+'.png" alt="">';
             html+=' <small>@'+noti.username+'</small>';
             html+='  <small><b>'+noti.unombre+'</b></small>';
         html+='</div>';
@@ -152,7 +152,7 @@ function observaNotificacion(sonido=true){
     $('#notificationsBodyvistas').empty();
     $('#notificationsBodynuevas').empty();
     var database  = firebase.database();
-    var notifRef  = database.ref(estabId + '-establecimiento/turno');
+    var notifRef  = database.ref(estabId + '-establecimiento/notificacion');
     notifRef.on('child_added', (snapshot) => {
         
         var noti = snapshot.val();

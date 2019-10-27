@@ -164,7 +164,7 @@ Sessions::validateType($_SESSION["typeuser"],$varUbicacion);
                                                     <th>Hora Inicio</th>                                                                         
                                                     <th>Recurso</th>
                                                     <th>Servicio</th>
-                                                    <th>Estatus</th> 
+                                                    <th>Estatus</th>  
                                                     <th>Usuario</th> 
                                                     <th>Hora Fin</th> 
                                                     <th></th>

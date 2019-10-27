@@ -203,7 +203,8 @@ class Mostrargeneral
               <script src="assets/js/datejs/build/date.js"></script>
               <script src="assets/js/recurso.js"></script>
               <script src="assets/js/perfilUsuario.js" type="text/javascript"></script>
-              <script src="assets/js/notificaciones.js" type="text/javascript"></script>';
+              <script src="assets/js/notificaciones.js" type="text/javascript"></script>
+              <script src="assets/js/avisos.js" type="text/javascript"></script>';
               break;
             case 'configuraciones':
               $javascript .= '<script src="assets/js/configuracion.js"></script>
