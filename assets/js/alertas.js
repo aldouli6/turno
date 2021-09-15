@@ -45,8 +45,8 @@ function observableColono()
 {
     var config =
     {
-        apiKey: "AIzaSyB25zmVjs9jxTUJGEowArgB23Jm7Z6HiJM",
-        databaseURL: "https://garde-aca75.firebaseio.com",
+        apiKey: "AIzaSyB25zmVjs9jxTUJrgB23Jm7Z6HiJM",
+        databaseURL: "https://geio.com",
     };
     firebase.initializeApp(config);
     // Get a reference to the database service
